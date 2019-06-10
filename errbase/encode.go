@@ -268,7 +268,7 @@ func RegisterLeafEncoder(theType TypeKey, encoder LeafEncoder) {
 
 // LeafEncoder is to be provided (via RegisterLeafEncoder above)
 // by additional wrapper types not yet known to this library.
-type LeafEncoder func(err error) (msg string, safeDetails []string, payload proto.Message)
+type LeafEncoder = func(err error) (msg string, safeDetails []string, payload proto.Message)
 
 // registry for RegisterLeafEncoder.
 var leafEncoders = map[TypeKey]LeafEncoder{}
@@ -291,7 +291,7 @@ func RegisterWrapperEncoder(theType TypeKey, encoder WrapperEncoder) {
 
 // WrapperEncoder is to be provided (via RegisterWrapperEncoder above)
 // by additional wrapper types not yet known to this library.
-type WrapperEncoder func(err error) (msgPrefix string, safeDetails []string, payload proto.Message)
+type WrapperEncoder = func(err error) (msgPrefix string, safeDetails []string, payload proto.Message)
 
 // registry for RegisterWrapperType.
 var encoders = map[TypeKey]WrapperEncoder{}
