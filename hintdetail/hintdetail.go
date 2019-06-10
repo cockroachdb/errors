@@ -23,6 +23,8 @@ import (
 
 // WithHint decorates an error with a textual hint.
 // The hint may contain PII and thus will not reportable.
+// Note: the hint does not appear in the main error message
+// returned with Error().
 func WithHint(err error, msg string) error {
 	if err == nil {
 		return nil
@@ -90,6 +92,8 @@ type ErrorHinter interface {
 
 // WithDetail decorates an error with a textual detail.
 // The detail may contain PII and thus will not reportable.
+// Note: the detail does not appear in the main error message
+// returned with Error().
 func WithDetail(err error, msg string) error {
 	if err == nil {
 		return nil
