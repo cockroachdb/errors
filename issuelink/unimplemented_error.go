@@ -41,7 +41,7 @@ func (w *unimplementedError) ErrorHint() string {
 }
 
 // UnimplementedErrorHint is the hint emitted upon unimplemented errors.
-const UnimplementedErrorHint = `You have attempted to use a feature not yet implemented in CockroachDB.`
+const UnimplementedErrorHint = `You have attempted to use a feature that is not yet implemented.`
 
 func (w *unimplementedError) Format(s fmt.State, verb rune) {
 	switch verb {
