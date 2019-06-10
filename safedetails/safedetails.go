@@ -68,3 +68,13 @@ func (st safeType) SafeMessage() string {
 func (st safeType) String() string {
 	return st.SafeMessage()
 }
+
+// Format implements fmt.Formatter.
+func (st safeType) Format(s fmt.State, verb rune) {
+	flags := ""
+	if s.Flag('+') {
+		flags += "+"
+	}
+	fmtString := fmt.Sprintf("%%%s%c", flags, verb)
+	fmt.Fprintf(s, fmtString, st.V)
+}
