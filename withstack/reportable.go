@@ -16,6 +16,7 @@ package withstack
 
 import (
 	"errors"
+	"fmt"
 	"runtime"
 	"strconv"
 	"strings"
@@ -75,24 +76,10 @@ func convertPkgStack(st pkgErr.StackTrace) *ReportableStackTrace {
 		return nil
 	}
 
-	frames := make([]*frame, len(st))
-	for i, f := range st {
-		file, line, fn := getSourceInfoFromPc(uintptr(f))
-		frame := &frame{
-			AbsolutePath: file,
-			Filename:     trimPath(file),
-			Lineno:       line,
-			InApp:        true,
-			Module:       "unknown",
-			Function:     "unknown",
-		}
-		if fn != nil {
-			frame.Module, frame.Function = functionName(fn.Name())
-		}
-		frames[len(st)-i-1] = frame
-	}
-
-	return &ReportableStackTrace{Frames: frames}
+	// Note: the stack trace logic changed between go 1.11 and 1.12.
+	// Trying to analyze the frame PCs point-wise will cause
+	// the output to change between the go versions.
+	return parsePrintedStack(fmt.Sprintf("%+v", st))
 }
 
 // getSourceInfoFromPc extracts the details for a given program counter.

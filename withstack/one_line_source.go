@@ -15,6 +15,7 @@
 package withstack
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -64,11 +65,12 @@ func getOneLineSourceFromPkgStack(
 	st pkgErr.StackTrace,
 ) (file string, line int, fn string, ok bool) {
 	if len(st) > 0 {
-		file, line, f := getSourceInfoFromPc(uintptr(st[0]))
-		if f != nil {
-			_, fn = functionName(f.Name())
-		}
-		return filepath.Base(file), line, fn, true
+		st = st[:1]
+		// Note: the stack trace logic changed between go 1.11 and 1.12.
+		// Trying to analyze the frame PCs point-wise will cause
+		// the output to change between the go versions.
+		stS := fmt.Sprintf("%+v", st)
+		return getOneLineSourceFromPrintedStack(stS)
 	}
 	return "", 0, "", false
 }

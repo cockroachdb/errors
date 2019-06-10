@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/withstack"
 	"github.com/cockroachdb/errors/testutils"
+	"github.com/cockroachdb/errors/withstack"
 	pkgErr "github.com/pkg/errors"
 )
 
@@ -39,11 +39,16 @@ func TestOneLineSource(t *testing.T) {
 	}
 
 	for _, err := range testData {
-		file, line, fn, ok := withstack.GetOneLineSource(err)
-		tt.CheckEqual(ok, true)
-		tt.CheckEqual(file, "one_line_source_test.go")
-		tt.CheckEqual(fn, "TestOneLineSource")
-		tt.Check(line > 21)
+		tt.Run(err.Error(), func(tt testutils.T) {
+			file, line, fn, ok := withstack.GetOneLineSource(err)
+			tt.CheckEqual(ok, true)
+			tt.CheckEqual(file, "one_line_source_test.go")
+			tt.CheckEqual(fn, "TestOneLineSource")
+			tt.Check(line > 21)
+			if tt.Failed() {
+				tt.Logf("looking at: %+v", err)
+			}
+		})
 	}
 }
 
