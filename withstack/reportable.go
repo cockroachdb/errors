@@ -134,7 +134,7 @@ func parsePrintedStack(st string) *ReportableStackTrace {
 			AbsolutePath: file,
 			Filename:     trimPath(file),
 			Lineno:       line,
-			InApp:        false,
+			InApp:        true,
 			Module:       "unknown",
 			Function:     fnName,
 		}
