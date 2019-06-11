@@ -17,7 +17,8 @@ package withstack
 import (
 	"errors"
 	"fmt"
-	"runtime"
+	"go/build"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -82,30 +83,38 @@ func convertPkgStack(st pkgErr.StackTrace) *ReportableStackTrace {
 	return parsePrintedStack(fmt.Sprintf("%+v", st))
 }
 
-// getSourceInfoFromPc extracts the details for a given program counter.
-func getSourceInfoFromPc(pc uintptr) (file string, line int, fn *runtime.Func) {
-	fn = runtime.FuncForPC(pc)
-	if fn != nil {
-		file, line = fn.FileLine(pc)
-	} else {
-		file = "unknown"
-	}
-	return file, line, fn
-}
-
 // trimPath is a copy of the same function in package raven-go.
 func trimPath(filename string) string {
-	const src = "/src/"
-	prefix := strings.LastIndex(filename, src)
-	if prefix == -1 {
-		return filename
+	for _, prefix := range trimPaths {
+		if trimmed := strings.TrimPrefix(filename, prefix); len(trimmed) < len(filename) {
+			return trimmed
+		}
 	}
-	return filename[prefix+len(src):]
+	return filename
+}
+
+var trimPaths []string
+
+// init is a copy of the same function in package raven-go.
+func init() {
+	// Collect all source directories, and make sure they
+	// end in a trailing "separator"
+	for _, prefix := range build.Default.SrcDirs() {
+		if prefix[len(prefix)-1] != filepath.Separator {
+			prefix += string(filepath.Separator)
+		}
+		trimPaths = append(trimPaths, prefix)
+	}
 }
 
 // functionName is an adapted copy of the same function in package raven-go.
 func functionName(fnName string) (pack string, name string) {
 	name = fnName
+	// We get this:
+	//	runtime/debug.*T·ptrmethod
+	// and want this:
+	//  pack = runtime/debug
+	//	name = *T.ptrmethod
 	if idx := strings.LastIndex(name, "."); idx != -1 {
 		pack = name[:idx]
 		name = name[idx+1:]
