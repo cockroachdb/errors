@@ -15,6 +15,7 @@
 package errors
 
 import (
+	"github.com/cockroachdb/errors/barriers"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errutil"
 )
@@ -38,8 +39,19 @@ func Errorf(format string, args ...interface{}) error {
 	return errutil.NewWithDepthf(1, format, args...)
 }
 
-// Cause forwards a definition.
+// Cause is provided for compatibility with github.com/pkg/errors.
 func Cause(err error) error { return errbase.UnwrapOnce(err) }
+
+// Unwrap is provided for compatibility with xerrors.
+func Unwrap(err error) error { return errbase.UnwrapOnce(err) }
+
+// Wrapper is provided for compatibility with xerrors.
+type Wrapper interface {
+	Unwrap() error
+}
+
+// Opaque is provided for compatibility with xerrors.
+func Opaque(err error) error { return barriers.Handled(err) }
 
 // WithMessage forwards a definition.
 func WithMessage(err error, msg string) error { return errutil.WithMessage(err, msg) }
