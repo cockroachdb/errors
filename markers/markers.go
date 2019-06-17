@@ -115,7 +115,7 @@ func equalMarks(m1, m2 errorMark) bool {
 		return false
 	}
 	for i, t := range m1.types {
-		if t != m2.types[i] {
+		if !t.Equals(m2.types[i]) {
 			return false
 		}
 	}

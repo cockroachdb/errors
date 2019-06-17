@@ -40,7 +40,7 @@ func TestTypeName(t *testing.T) {
 
 	tt := testutils.T{T: t}
 
-	tt.Check(tn1 != tn2)
+	tt.Check(!tn1.Equals(tn2))
 	tt.CheckEqual(tn1.FamilyName, tn2.FamilyName)
 	tt.Check(tn1.Extension != tn2.Extension)
 }
