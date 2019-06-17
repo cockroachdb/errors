@@ -20,3 +20,8 @@ import "github.com/cockroachdb/errors/secondary"
 func WithSecondaryError(err error, additionalErr error) error {
 	return secondary.WithSecondaryError(err, additionalErr)
 }
+
+// CombineErrors forwards a definition.
+func CombineErrors(err, otherErr error) error {
+	return secondary.CombineErrors(err, otherErr)
+}

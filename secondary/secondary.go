@@ -19,9 +19,22 @@ package secondary
 // second error does not participate in cause analysis (Is, etc) and
 // is only revealed when printing out the error or collecting safe
 // (PII-free) details for reporting.
+//
+// If additionalErr is nil, the first error is returned as-is.
+//
+// Tip: consider using CombineErrors() below in the general case.
 func WithSecondaryError(err error, additionalErr error) error {
-	if err == nil {
-		return nil
+	if err == nil || additionalErr == nil {
+		return err
 	}
 	return &withSecondaryError{cause: err, secondaryError: additionalErr}
+}
+
+// CombineErrors returns err, or, if err is nil, otherErr.
+// if err is non-nil, otherErr is attached as secondary error.
+func CombineErrors(err error, otherErr error) error {
+	if err == nil {
+		return otherErr
+	}
+	return WithSecondaryError(err, otherErr)
 }

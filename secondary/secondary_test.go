@@ -75,3 +75,27 @@ func TestSecondaryErrorMaskedDetails(t *testing.T) {
 	errV = fmt.Sprintf("%+v", newB)
 	tt.Check(strings.Contains(errV, "original"))
 }
+
+// This test demonstrates how CombineErrors preserves both errors
+// regardless of whether either is nil.
+func TestCombineErrors(t *testing.T) {
+	tt := testutils.T{T: t}
+	err1 := errors.New("err1")
+	err2 := errors.New("err2")
+
+	testData := []struct {
+		errA error
+		errB error
+		errC error
+	}{
+		{nil, nil, nil},
+		{err1, nil, err1},
+		{nil, err2, err2},
+		{err1, err2, secondary.WithSecondaryError(err1, err2)},
+	}
+
+	for _, test := range testData {
+		err := secondary.CombineErrors(test.errA, test.errB)
+		tt.CheckDeepEqual(err, test.errC)
+	}
+}
