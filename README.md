@@ -73,7 +73,7 @@ older version of the package.
   - how to access the detail: `Error()`, regular Go formatting. Details redacted in Sentry report.
   - see also: Section [Error composition](#Error-composition-summary) below. `errors.NewWithDepth()` variants to customize at which call depth the stack trace is captured.
 
-- `AssertionFailedf(string, ...interface{}) error`, `NewAssertionFailureWithWrappedErrf(error, string, ...interface{})` error: signals an assertion failure / programming error.
+- `AssertionFailedf(string, ...interface{}) error`, `NewAssertionFailureWithWrappedErrf(error, string, ...interface{}) error`: signals an assertion failure / programming error.
   - **when to use: when an invariant is violated; when an unreachable code path is reached.**
   - what it does: also captures the stack trace at point of call, redacts the provided strings for safe reporting, prepares a hint to inform a human user.
   - how to access the detail: `IsAssertionFailure()`/`HasAssertionFailure()`, format with `%+v`, Safe details included in Sentry reports.
