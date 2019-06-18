@@ -49,21 +49,21 @@ older version of the package.
 
 ## What comes out of an error?
 
-| Error detail                                                    | `Error()` and format `%s`/`%q`/`%v` | format `%+v` | `GetSafeDetails()`    | Sentry report via `ReportError()` |
-|-----------------------------------------------------------------|-------------------------------------|--------------|-----------------------|-----------------------------------|
-| main message, eg `New()`                                        | visible                             | visible      | redacted              | redacted                          |
-| wrap prefix, eg `WithMessage()`                                 | visible (as prefix)                 | visible      | redacted              | redacted                          |
-| stack trace, eg `WithStack()`                                   | not visible                         | visible      | yes                   | full                              |
-| hint , eg `WithHint()`                                          | not visible                         | visible      | no                    | type only                         |
-| detail, eg `WithDetail()`                                       | not visible                         | visible      | no                    | type only                         |
-| assertion failure annotation, eg `WithAssertionFailure()`       | not visible                         | visible      | no                    | type only                         |
-| issue links, eg `WithIssueLink()`, `UnimplementedError()`       | not visible                         | visible      | yes                   | full                              |
-| safe details, eg `WithSafeDetails()`                            | not visible                         | visible      | yes                   | full                              |
-| telemetry keys, eg. `WithTelemetryKey()`                        | not visible                         | visible      | yes                   | full                              |
-| secondary errors, eg. `WithSecondaryError()`, `CombineErrors()` | not visible                         | visible      | redacted, recursively | redacted, recursively             |
-| barrier origins, eg. `Handled()`                                | not visible                         | visible      | redacted, recursively | redacted, recursively             |
-| error domain, eg. `WithDomain()`                                | not visible                         | visible      | yes                   | full                              |
-| context tags, eg. `WithContextTags()`                           | not visible                         | visible      | no                    | keys visible, values redacted     |
+| Error detail                                                    | `Error()` and format `%s`/`%q`/`%v` | format `%+v` | `GetSafeDetails()`            | Sentry report via `ReportError()` |
+|-----------------------------------------------------------------|-------------------------------------|--------------|-------------------------------|-----------------------------------|
+| main message, eg `New()`                                        | visible                             | visible      | redacted                      | redacted                          |
+| wrap prefix, eg `WithMessage()`                                 | visible (as prefix)                 | visible      | redacted                      | redacted                          |
+| stack trace, eg `WithStack()`                                   | not visible                         | visible      | yes                           | full                              |
+| hint , eg `WithHint()`                                          | not visible                         | visible      | no                            | type only                         |
+| detail, eg `WithDetail()`                                       | not visible                         | visible      | no                            | type only                         |
+| assertion failure annotation, eg `WithAssertionFailure()`       | not visible                         | visible      | no                            | type only                         |
+| issue links, eg `WithIssueLink()`, `UnimplementedError()`       | not visible                         | visible      | yes                           | full                              |
+| safe details, eg `WithSafeDetails()`                            | not visible                         | visible      | yes                           | full                              |
+| telemetry keys, eg. `WithTelemetryKey()`                        | not visible                         | visible      | yes                           | full                              |
+| secondary errors, eg. `WithSecondaryError()`, `CombineErrors()` | not visible                         | visible      | redacted, recursively         | redacted, recursively             |
+| barrier origins, eg. `Handled()`                                | not visible                         | visible      | redacted, recursively         | redacted, recursively             |
+| error domain, eg. `WithDomain()`                                | not visible                         | visible      | yes                           | full                              |
+| context tags, eg. `WithContextTags()`                           | not visible                         | visible      | keys visible, values redacted | keys visible, values redacted     |
 
 ## Available error leaves
 
