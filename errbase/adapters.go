@@ -15,6 +15,7 @@
 package errbase
 
 import (
+	"context"
 	goErr "errors"
 	"fmt"
 
@@ -30,7 +31,7 @@ import (
 // able to extract everything about it.
 
 // we can then decode it exactly.
-func decodeErrorString(msg string, _ []string, _ proto.Message) error {
+func decodeErrorString(_ context.Context, msg string, _ []string, _ proto.Message) error {
 	return goErr.New(msg)
 }
 
@@ -40,7 +41,9 @@ func decodeErrorString(msg string, _ []string, _ proto.Message) error {
 // the stack trace in a safe reporting detail field, and decode
 // it as an opaqueLeaf instance in this package.
 
-func encodePkgFundamental(err error) (msg string, safe []string, _ proto.Message) {
+func encodePkgFundamental(
+	_ context.Context, err error,
+) (msg string, safe []string, _ proto.Message) {
 	msg = err.Error()
 	iErr := err.(interface{ StackTrace() pkgErr.StackTrace })
 	safeDetails := []string{fmt.Sprintf("%+v", iErr.StackTrace())}
@@ -52,7 +55,9 @@ func encodePkgFundamental(err error) (msg string, safe []string, _ proto.Message
 // logic in EncodeWrapper() is able to extract everything from it.
 
 // we can then decode it exactly.
-func decodeWithMessage(cause error, msgPrefix string, _ []string, _ proto.Message) error {
+func decodeWithMessage(
+	_ context.Context, cause error, msgPrefix string, _ []string, _ proto.Message,
+) error {
 	return pkgErr.WithMessage(cause, msgPrefix)
 }
 
@@ -62,7 +67,9 @@ func decodeWithMessage(cause error, msgPrefix string, _ []string, _ proto.Messag
 // the stack trace in a safe reporting detail field, and decode
 // it as an opaqueWrapper instance in this package.
 
-func encodePkgWithStack(err error) (msgPrefix string, safe []string, _ proto.Message) {
+func encodePkgWithStack(
+	_ context.Context, err error,
+) (msgPrefix string, safe []string, _ proto.Message) {
 	iErr := err.(interface{ StackTrace() pkgErr.StackTrace })
 	safeDetails := []string{fmt.Sprintf("%+v", iErr.StackTrace())}
 	return "" /* withStack does not have a message prefix */, safeDetails, nil

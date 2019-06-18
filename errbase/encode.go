@@ -29,16 +29,16 @@ import (
 type EncodedError = errorspb.EncodedError
 
 // EncodeError encodes an error.
-func EncodeError(err error) EncodedError {
+func EncodeError(ctx context.Context, err error) EncodedError {
 	if cause := UnwrapOnce(err); cause != nil {
-		return encodeWrapper(err, cause)
+		return encodeWrapper(ctx, err, cause)
 	}
 	// Not a causer.
-	return encodeLeaf(err)
+	return encodeLeaf(ctx, err)
 }
 
 // encodeLeaf encodes a leaf error.
-func encodeLeaf(err error) EncodedError {
+func encodeLeaf(ctx context.Context, err error) EncodedError {
 	var msg string
 	var details errorspb.EncodedErrorDetails
 
@@ -53,7 +53,7 @@ func encodeLeaf(err error) EncodedError {
 		// If we have a manually registered encoder, use that.
 		typeKey := TypeKey(details.ErrorTypeMark.FamilyName)
 		if enc, ok := leafEncoders[typeKey]; ok {
-			msg, details.ReportablePayload, payload = enc(err)
+			msg, details.ReportablePayload, payload = enc(ctx, err)
 		} else {
 			// No encoder. Let's try to manually extract fields.
 
@@ -71,7 +71,7 @@ func encodeLeaf(err error) EncodedError {
 			payload, _ = err.(proto.Message)
 		}
 		// If there is a detail payload, encode it.
-		details.FullDetails = encodeAsAny(err, payload)
+		details.FullDetails = encodeAsAny(ctx, err, payload)
 	}
 
 	return EncodedError{
@@ -89,14 +89,14 @@ var WarningFn = func(ctx context.Context, format string, args ...interface{}) {
 	log.Printf(format, args...)
 }
 
-func encodeAsAny(err error, payload proto.Message) *types.Any {
+func encodeAsAny(ctx context.Context, err error, payload proto.Message) *types.Any {
 	if payload == nil {
 		return nil
 	}
 
 	any, marshalErr := types.MarshalAny(payload)
 	if marshalErr != nil {
-		WarningFn(context.Background(),
+		WarningFn(ctx,
 			"error %+v (%T) announces proto message, but marshaling fails: %+v",
 			err, err, marshalErr)
 		return nil
@@ -106,7 +106,7 @@ func encodeAsAny(err error, payload proto.Message) *types.Any {
 }
 
 // encodeWrapper encodes an error wrapper.
-func encodeWrapper(err, cause error) EncodedError {
+func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 	var msg string
 	var details errorspb.EncodedErrorDetails
 
@@ -121,7 +121,7 @@ func encodeWrapper(err, cause error) EncodedError {
 		// If we have a manually registered encoder, use that.
 		typeKey := TypeKey(details.ErrorTypeMark.FamilyName)
 		if enc, ok := encoders[typeKey]; ok {
-			msg, details.ReportablePayload, payload = enc(err)
+			msg, details.ReportablePayload, payload = enc(ctx, err)
 		} else {
 			// No encoder.
 			// In that case, we'll try to compute a message prefix
@@ -136,13 +136,13 @@ func encodeWrapper(err, cause error) EncodedError {
 			// That's all we can get.
 		}
 		// If there is a detail payload, encode it.
-		details.FullDetails = encodeAsAny(err, payload)
+		details.FullDetails = encodeAsAny(ctx, err, payload)
 	}
 
 	return EncodedError{
 		Error: &errorspb.EncodedError_Wrapper{
 			Wrapper: &errorspb.EncodedWrapper{
-				Cause:         EncodeError(cause),
+				Cause:         EncodeError(ctx, cause),
 				MessagePrefix: msg,
 				Details:       details,
 			},
@@ -272,7 +272,7 @@ func RegisterLeafEncoder(theType TypeKey, encoder LeafEncoder) {
 
 // LeafEncoder is to be provided (via RegisterLeafEncoder above)
 // by additional wrapper types not yet known to this library.
-type LeafEncoder = func(err error) (msg string, safeDetails []string, payload proto.Message)
+type LeafEncoder = func(ctx context.Context, err error) (msg string, safeDetails []string, payload proto.Message)
 
 // registry for RegisterLeafEncoder.
 var leafEncoders = map[TypeKey]LeafEncoder{}
@@ -295,7 +295,7 @@ func RegisterWrapperEncoder(theType TypeKey, encoder WrapperEncoder) {
 
 // WrapperEncoder is to be provided (via RegisterWrapperEncoder above)
 // by additional wrapper types not yet known to this library.
-type WrapperEncoder = func(err error) (msgPrefix string, safeDetails []string, payload proto.Message)
+type WrapperEncoder = func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message)
 
 // registry for RegisterWrapperType.
 var encoders = map[TypeKey]WrapperEncoder{}

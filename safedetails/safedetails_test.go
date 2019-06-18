@@ -15,6 +15,7 @@
 package safedetails_test
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
@@ -59,8 +60,8 @@ func TestDetailCapture(t *testing.T) {
 	})
 
 	// Same tests, across the network.
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	t.Run("remote", func(t *testing.T) {
 		subTest(t, newErr)

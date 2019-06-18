@@ -14,7 +14,11 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/errbase"
+import (
+	"context"
+
+	"github.com/cockroachdb/errors/errbase"
+)
 
 // UnwrapOnce forwards a definition.
 func UnwrapOnce(err error) error { return errbase.UnwrapOnce(err) }
@@ -26,10 +30,10 @@ func UnwrapAll(err error) error { return errbase.UnwrapAll(err) }
 type EncodedError = errbase.EncodedError
 
 // EncodeError forwards a definition.
-func EncodeError(err error) EncodedError { return errbase.EncodeError(err) }
+func EncodeError(ctx context.Context, err error) EncodedError { return errbase.EncodeError(ctx, err) }
 
 // DecodeError forwards a definition.
-func DecodeError(enc EncodedError) error { return errbase.DecodeError(enc) }
+func DecodeError(ctx context.Context, enc EncodedError) error { return errbase.DecodeError(ctx, enc) }
 
 // SafeDetailer forwards a definition.
 type SafeDetailer = errbase.SafeDetailer

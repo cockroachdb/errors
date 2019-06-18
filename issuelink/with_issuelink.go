@@ -16,6 +16,7 @@ package issuelink
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -74,7 +75,9 @@ func (w *withIssueLink) Format(s fmt.State, verb rune) {
 	}
 }
 
-func decodeWithIssueLink(cause error, _ string, details []string, _ proto.Message) error {
+func decodeWithIssueLink(
+	_ context.Context, cause error, _ string, details []string, _ proto.Message,
+) error {
 	var issueLink IssueLink
 	if len(details) > 0 {
 		issueLink.IssueURL = details[0]

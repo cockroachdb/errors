@@ -73,8 +73,8 @@ type fundamental struct {
 func (e *fundamental) Error() string { return e.msg }
 
 func network(err error) error {
-	enc := errbase.EncodeError(err)
-	return errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	return errbase.DecodeError(context.Background(), enc)
 }
 
 // This test demonstrates that the equivalence

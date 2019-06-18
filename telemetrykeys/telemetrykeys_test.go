@@ -15,6 +15,7 @@
 package telemetrykeys_test
 
 import (
+	"context"
 	"fmt"
 	"sort"
 	"strings"
@@ -50,8 +51,8 @@ func TestTelemetry(t *testing.T) {
 	tt.Check(strings.Contains(errV, `telemetry keys: [a b]`))
 	tt.Check(strings.Contains(errV, `telemetry keys: [b c]`))
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Check(markers.Is(newErr, baseErr))
 	tt.CheckEqual(newErr.Error(), "hello: world")

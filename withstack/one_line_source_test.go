@@ -15,6 +15,7 @@
 package withstack_test
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"testing"
@@ -31,11 +32,11 @@ func TestOneLineSource(t *testing.T) {
 	simpleErr := errors.New("hello")
 	testData := []error{
 		withstack.WithStack(simpleErr),
-		errbase.DecodeError(errbase.EncodeError(withstack.WithStack(simpleErr))),
+		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), withstack.WithStack(simpleErr))),
 		pkgErr.WithStack(simpleErr),
-		errbase.DecodeError(errbase.EncodeError(pkgErr.WithStack(simpleErr))),
+		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), pkgErr.WithStack(simpleErr))),
 		pkgErr.New("woo"),
-		errbase.DecodeError(errbase.EncodeError(pkgErr.New("woo"))),
+		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), pkgErr.New("woo"))),
 	}
 
 	for _, err := range testData {
@@ -64,9 +65,9 @@ func TestOneLineSourceInner(t *testing.T) {
 	// innermost context, not this one.
 	testData := []error{
 		withstack.WithStack(simpleErr),
-		errbase.DecodeError(errbase.EncodeError(withstack.WithStack(simpleErr))),
+		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), withstack.WithStack(simpleErr))),
 		pkgErr.WithStack(simpleErr),
-		errbase.DecodeError(errbase.EncodeError(pkgErr.WithStack(simpleErr))),
+		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), pkgErr.WithStack(simpleErr))),
 	}
 
 	for _, err := range testData {

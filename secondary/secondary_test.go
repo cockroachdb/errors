@@ -15,6 +15,7 @@
 package secondary_test
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"testing"
@@ -60,8 +61,8 @@ func TestSecondaryErrorMaskedDetails(t *testing.T) {
 	tt.Check(strings.Contains(errV, "original"))
 
 	// Simulate a network traversal.
-	enc := errbase.EncodeError(b)
-	newB := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), b)
+	newB := errbase.DecodeError(context.Background(), enc)
 
 	t.Logf("decoded: %# v", pretty.Formatter(newB))
 

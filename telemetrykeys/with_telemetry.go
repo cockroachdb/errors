@@ -15,6 +15,7 @@
 package telemetrykeys
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -45,7 +46,9 @@ func (w *withTelemetry) Format(s fmt.State, verb rune) {
 	}
 }
 
-func decodeWithTelemetry(cause error, _ string, keys []string, _ proto.Message) error {
+func decodeWithTelemetry(
+	_ context.Context, cause error, _ string, keys []string, _ proto.Message,
+) error {
 	return &withTelemetry{cause: cause, keys: keys}
 }
 

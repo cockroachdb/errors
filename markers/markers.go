@@ -15,6 +15,8 @@
 package markers
 
 import (
+	"context"
+
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errorspb"
 	"github.com/gogo/protobuf/proto"
@@ -158,13 +160,13 @@ func (m *withMark) Error() string { return m.cause.Error() }
 func (m *withMark) Cause() error  { return m.cause }
 func (m *withMark) Unwrap() error { return m.cause }
 
-func encodeMark(err error) (msg string, _ []string, payload proto.Message) {
+func encodeMark(_ context.Context, err error) (msg string, _ []string, payload proto.Message) {
 	m := err.(*withMark)
 	payload = &errorspb.MarkPayload{Msg: m.mark.msg, Types: m.mark.types}
 	return "", nil, payload
 }
 
-func decodeMark(cause error, _ string, _ []string, payload proto.Message) error {
+func decodeMark(_ context.Context, cause error, _ string, _ []string, payload proto.Message) error {
 	m, ok := payload.(*errorspb.MarkPayload)
 	if !ok {
 		// If this ever happens, this means some version of the library

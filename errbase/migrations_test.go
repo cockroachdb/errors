@@ -15,6 +15,7 @@
 package errbase_test
 
 import (
+	"context"
 	"reflect"
 	"testing"
 
@@ -33,10 +34,10 @@ func TestSimpleMigrationForward(t *testing.T) {
 	// == Scenario on v1 ==
 	origErr := fooErr{}
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(origErr),
-		func(_ string, _ []string, _ proto.Message) error { return fooErr{} })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return fooErr{} })
 
 	// Send the error to v2.
-	enc := errbase.EncodeError(origErr)
+	enc := errbase.EncodeError(context.Background(), origErr)
 	// Clean up, so that type foo becomes unknown.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(origErr), nil)
 
@@ -45,9 +46,9 @@ func TestSimpleMigrationForward(t *testing.T) {
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", barErr{})
 	// Register the bar decoder.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}),
-		func(_ string, _ []string, _ proto.Message) error { return barErr{} })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return barErr{} })
 	// Receive the error from v1.
-	dec := errbase.DecodeError(enc)
+	dec := errbase.DecodeError(context.Background(), enc)
 	// Clean up, so that type bar becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}), nil)
 
@@ -70,7 +71,7 @@ func TestSimpleMigrationBackward(t *testing.T) {
 	// Register the fact that foo was migrated to bar.
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", origErr)
 	// Send the error to v1.
-	enc := errbase.EncodeError(origErr)
+	enc := errbase.EncodeError(context.Background(), origErr)
 	// Clean up the decoder, so that type becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(origErr), nil)
 	// Erase the migration we have set up above, so that the test
@@ -79,10 +80,10 @@ func TestSimpleMigrationBackward(t *testing.T) {
 
 	// == Scenario on v1 ==
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(fooErr{}),
-		func(_ string, _ []string, _ proto.Message) error { return fooErr{} })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return fooErr{} })
 
 	// Receive the error from v2.
-	dec := errbase.DecodeError(enc)
+	dec := errbase.DecodeError(context.Background(), enc)
 	// Clean up, so that type foo becomes unknown.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(fooErr{}), nil)
 
@@ -100,10 +101,10 @@ func TestSimpleMigrationForwardPtr(t *testing.T) {
 	// == Scenario on v1 ==
 	origErr := (*fooErrP)(nil)
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(origErr),
-		func(_ string, _ []string, _ proto.Message) error { return (*fooErrP)(nil) })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return (*fooErrP)(nil) })
 
 	// Send the error to v2.
-	enc := errbase.EncodeError(origErr)
+	enc := errbase.EncodeError(context.Background(), origErr)
 	// Clean up, so that type foo becomes unknown.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(origErr), nil)
 
@@ -112,9 +113,9 @@ func TestSimpleMigrationForwardPtr(t *testing.T) {
 	errbase.RegisterTypeMigration(myPkgPath, "*errbase_test.fooErrP", (*barErrP)(nil))
 	// Register the bar decoder.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey((*barErrP)(nil)),
-		func(_ string, _ []string, _ proto.Message) error { return (*barErrP)(nil) })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return (*barErrP)(nil) })
 	// Receive the error from v1.
-	dec := errbase.DecodeError(enc)
+	dec := errbase.DecodeError(context.Background(), enc)
 	// Clean up, so that type bar becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey((*barErrP)(nil)), nil)
 
@@ -141,7 +142,7 @@ func TestSimultaneousMigration(t *testing.T) {
 	// Register the fact that foo was migrated to bar.
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", origErr)
 	// Send the error to vB.
-	enc := errbase.EncodeError(origErr)
+	enc := errbase.EncodeError(context.Background(), origErr)
 	// Clean up the decoder, so that type becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(origErr), nil)
 	// Erase the migration we have set up above, so that the test
@@ -154,9 +155,9 @@ func TestSimultaneousMigration(t *testing.T) {
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", quxErr{})
 	// Register the qux decoder.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(quxErr{}),
-		func(_ string, _ []string, _ proto.Message) error { return quxErr{} })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return quxErr{} })
 	// Receive the error from vA.
-	dec := errbase.DecodeError(enc)
+	dec := errbase.DecodeError(context.Background(), enc)
 	// Clean up, so that type qux becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(quxErr{}), nil)
 
@@ -179,7 +180,7 @@ func TestMigratedErrorPassingThrough(t *testing.T) {
 	// Register the fact that foo was migrated to bar.
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", origErr)
 	// Send the error to v1.
-	enc := errbase.EncodeError(origErr)
+	enc := errbase.EncodeError(context.Background(), origErr)
 	// Clean up the decoder, so that type becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(origErr), nil)
 	// Erase the migration we have set up above, so that the test
@@ -188,11 +189,11 @@ func TestMigratedErrorPassingThrough(t *testing.T) {
 
 	// == Scenario on v1 ==
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(fooErr{}),
-		func(_ string, _ []string, _ proto.Message) error { return fooErr{} })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return fooErr{} })
 	// Receive the error from v2.b.
-	dec := errbase.DecodeError(enc)
+	dec := errbase.DecodeError(context.Background(), enc)
 	// Send the error to v2.b.
-	enc2 := errbase.EncodeError(dec)
+	enc2 := errbase.EncodeError(context.Background(), dec)
 	// Clean up, so that type foo becomes unknown.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(fooErr{}), nil)
 
@@ -200,9 +201,9 @@ func TestMigratedErrorPassingThrough(t *testing.T) {
 	// Register the fact that foo was migrated to bar.
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", barErr{})
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}),
-		func(_ string, _ []string, _ proto.Message) error { return barErr{} })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return barErr{} })
 	// Receive the error from v1.
-	dec2 := errbase.DecodeError(enc2)
+	dec2 := errbase.DecodeError(context.Background(), enc2)
 	// Clean up the decoder, so that type becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}), nil)
 	// Erase the migration we have set up above, so that the test
@@ -230,7 +231,7 @@ func TestMigratedErrorPassingThroughAsUnknown(t *testing.T) {
 	// Register the fact that foo was migrated to bar.
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", origErr)
 	// Send the error to v1.
-	enc := errbase.EncodeError(origErr)
+	enc := errbase.EncodeError(context.Background(), origErr)
 	// Clean up the decoder, so that type becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(origErr), nil)
 	// Erase the migration we have set up above, so that the test
@@ -239,17 +240,17 @@ func TestMigratedErrorPassingThroughAsUnknown(t *testing.T) {
 
 	// == Scenario on v1 ==
 	// Receive the error from v2.b. Will decode as opaqueLeaf{}.
-	dec := errbase.DecodeError(enc)
+	dec := errbase.DecodeError(context.Background(), enc)
 	// Send the error to v2.b.
-	enc2 := errbase.EncodeError(dec)
+	enc2 := errbase.EncodeError(context.Background(), dec)
 
 	// == Scenario on v2.b ==
 	// Register the fact that foo was migrated to bar.
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", barErr{})
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}),
-		func(_ string, _ []string, _ proto.Message) error { return barErr{} })
+		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return barErr{} })
 	// Receive the error from v1.
-	dec2 := errbase.DecodeError(enc2)
+	dec2 := errbase.DecodeError(context.Background(), enc2)
 	// Clean up the decoder, so that type becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}), nil)
 	// Erase the migration we have set up above, so that the test
@@ -274,20 +275,20 @@ func TestUnknownErrorComparisonAfterHeterogeneousMigration(t *testing.T) {
 
 	// == Scenario on v1 ==
 	// Send the error to v0.
-	enc1 := errbase.EncodeError(fooErr{})
+	enc1 := errbase.EncodeError(context.Background(), fooErr{})
 
 	// == Scenario on v2 ==
 	// Register the fact that foo was migrated to bar.
 	errbase.RegisterTypeMigration(myPkgPath, "errbase_test.fooErr", barErr{})
 	// Send the error to v0.
-	enc2 := errbase.EncodeError(barErr{})
+	enc2 := errbase.EncodeError(context.Background(), barErr{})
 	// Clear the migration so that the type is invisible to v0 below.
 	defer errbase.TestingWithEmptyMigrationRegistry()()
 
 	// == Scenario on v0 ==
 	// Receive the two errors.
-	dec1 := errbase.DecodeError(enc1)
-	dec2 := errbase.DecodeError(enc2)
+	dec1 := errbase.DecodeError(context.Background(), enc1)
+	dec2 := errbase.DecodeError(context.Background(), enc2)
 
 	// Main test: check that v0 recognizes the two errors as equivalent.
 	if !markers.Is(dec1, dec2) {

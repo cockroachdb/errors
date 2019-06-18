@@ -15,6 +15,7 @@
 package hintdetail_test
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"testing"
@@ -57,8 +58,8 @@ func TestDetail(t *testing.T) {
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }
@@ -94,8 +95,8 @@ func TestHint(t *testing.T) {
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }
@@ -123,8 +124,8 @@ func TestIssueLinkHint(t *testing.T) {
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }
@@ -145,8 +146,8 @@ func TestUnimplementedHint(t *testing.T) {
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }
@@ -167,8 +168,8 @@ func TestUnimplementedNoIssueHint(t *testing.T) {
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }
@@ -189,8 +190,8 @@ func TestAssertionHints(t *testing.T) {
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }

@@ -15,6 +15,8 @@
 package assert
 
 import (
+	"context"
+
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
 	"github.com/cockroachdb/errors/stdstrings"
@@ -65,7 +67,9 @@ func (w *withAssertionFailure) Error() string { return w.cause.Error() }
 func (w *withAssertionFailure) Cause() error  { return w.cause }
 func (w *withAssertionFailure) Unwrap() error { return w.cause }
 
-func decodeAssertFailure(cause error, _ string, _ []string, _ proto.Message) error {
+func decodeAssertFailure(
+	_ context.Context, cause error, _ string, _ []string, _ proto.Message,
+) error {
 	return &withAssertionFailure{cause: cause}
 }
 

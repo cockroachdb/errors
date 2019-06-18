@@ -23,14 +23,14 @@ import (
 )
 
 // DecodeError decodes an error.
-func DecodeError(enc EncodedError) error {
+func DecodeError(ctx context.Context, enc EncodedError) error {
 	if w := enc.GetWrapper(); w != nil {
-		return decodeWrapper(w)
+		return decodeWrapper(ctx, w)
 	}
-	return decodeLeaf(enc.GetLeaf())
+	return decodeLeaf(ctx, enc.GetLeaf())
 }
 
-func decodeLeaf(enc *errorspb.EncodedErrorLeaf) error {
+func decodeLeaf(ctx context.Context, enc *errorspb.EncodedErrorLeaf) error {
 	// In case there is a detailed payload, decode it.
 	var payload proto.Message
 	if enc.Details.FullDetails != nil {
@@ -39,7 +39,7 @@ func decodeLeaf(enc *errorspb.EncodedErrorLeaf) error {
 		if err != nil {
 			// It's OK if we can't decode. We'll use
 			// the opaque type below.
-			WarningFn(context.Background(), "error while unmarshalling error: %+v", err)
+			WarningFn(ctx, "error while unmarshalling error: %+v", err)
 		} else {
 			payload = d.Message
 		}
@@ -49,7 +49,7 @@ func decodeLeaf(enc *errorspb.EncodedErrorLeaf) error {
 	typeKey := TypeKey(enc.Details.ErrorTypeMark.FamilyName)
 	if decoder, ok := leafDecoders[typeKey]; ok {
 		// Yes, use it.
-		genErr := decoder(enc.Message, enc.Details.ReportablePayload, payload)
+		genErr := decoder(ctx, enc.Message, enc.Details.ReportablePayload, payload)
 		if genErr != nil {
 			// Decoding succeeded. Use this.
 			return genErr
@@ -73,9 +73,9 @@ func decodeLeaf(enc *errorspb.EncodedErrorLeaf) error {
 	}
 }
 
-func decodeWrapper(enc *errorspb.EncodedWrapper) error {
+func decodeWrapper(ctx context.Context, enc *errorspb.EncodedWrapper) error {
 	// First decode the cause.
-	cause := DecodeError(enc.Cause)
+	cause := DecodeError(ctx, enc.Cause)
 
 	// In case there is a detailed payload, decode it.
 	var payload proto.Message
@@ -85,7 +85,7 @@ func decodeWrapper(enc *errorspb.EncodedWrapper) error {
 		if err != nil {
 			// It's OK if we can't decode. We'll use
 			// the opaque type below.
-			WarningFn(context.Background(), "error while unmarshalling wrapper error: %+v", err)
+			WarningFn(ctx, "error while unmarshalling wrapper error: %+v", err)
 		} else {
 			payload = d.Message
 		}
@@ -95,7 +95,7 @@ func decodeWrapper(enc *errorspb.EncodedWrapper) error {
 	typeKey := TypeKey(enc.Details.ErrorTypeMark.FamilyName)
 	if decoder, ok := decoders[typeKey]; ok {
 		// Yes, use it.
-		genErr := decoder(cause, enc.MessagePrefix, enc.Details.ReportablePayload, payload)
+		genErr := decoder(ctx, cause, enc.MessagePrefix, enc.Details.ReportablePayload, payload)
 		if genErr != nil {
 			// Decoding succeeded. Use this.
 			return genErr
@@ -130,7 +130,7 @@ func RegisterLeafDecoder(theType TypeKey, decoder LeafDecoder) {
 // LeafDecoder is to be provided (via RegisterLeafDecoder above)
 // by additional wrapper types not yet known to this library.
 // A nil return indicates that decoding was not successful.
-type LeafDecoder = func(msg string, safeDetails []string, payload proto.Message) error
+type LeafDecoder = func(ctx context.Context, msg string, safeDetails []string, payload proto.Message) error
 
 // registry for RegisterLeafDecoder.
 var leafDecoders = map[TypeKey]LeafDecoder{}
@@ -154,7 +154,7 @@ func RegisterWrapperDecoder(theType TypeKey, decoder WrapperDecoder) {
 // WrapperDecoder is to be provided (via RegisterWrapperDecoder above)
 // by additional wrapper types not yet known to this library.
 // A nil return indicates that decoding was not successful.
-type WrapperDecoder = func(cause error, msgPrefix string, safeDetails []string, payload proto.Message) error
+type WrapperDecoder = func(ctx context.Context, cause error, msgPrefix string, safeDetails []string, payload proto.Message) error
 
 // registry for RegisterWrapperType.
 var decoders = map[TypeKey]WrapperDecoder{}

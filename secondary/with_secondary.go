@@ -15,6 +15,7 @@
 package secondary
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -59,13 +60,15 @@ func (e *withSecondaryError) Error() string { return e.cause.Error() }
 func (e *withSecondaryError) Cause() error  { return e.cause }
 func (e *withSecondaryError) Unwrap() error { return e.cause }
 
-func encodeWithSecondaryError(err error) (string, []string, proto.Message) {
+func encodeWithSecondaryError(ctx context.Context, err error) (string, []string, proto.Message) {
 	e := err.(*withSecondaryError)
-	enc := errbase.EncodeError(e.secondaryError)
+	enc := errbase.EncodeError(ctx, e.secondaryError)
 	return "", nil, &enc
 }
 
-func decodeWithSecondaryError(cause error, _ string, _ []string, payload proto.Message) error {
+func decodeWithSecondaryError(
+	ctx context.Context, cause error, _ string, _ []string, payload proto.Message,
+) error {
 	enc, ok := payload.(*errbase.EncodedError)
 	if !ok {
 		// If this ever happens, this means some version of the library
@@ -74,7 +77,10 @@ func decodeWithSecondaryError(cause error, _ string, _ []string, payload proto.M
 		// DecodeError use the opaque type.
 		return nil
 	}
-	return &withSecondaryError{cause: cause, secondaryError: errbase.DecodeError(*enc)}
+	return &withSecondaryError{
+		cause:          cause,
+		secondaryError: errbase.DecodeError(ctx, *enc),
+	}
 }
 
 func init() {

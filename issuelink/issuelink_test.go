@@ -15,6 +15,7 @@
 package issuelink_test
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"testing"
@@ -64,8 +65,8 @@ func TestIssueLink(t *testing.T) {
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 

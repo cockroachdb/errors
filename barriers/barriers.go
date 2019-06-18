@@ -15,6 +15,7 @@
 package barriers
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -102,16 +103,18 @@ func (e *barrierError) Format(s fmt.State, verb rune) {
 }
 
 // A barrier error is encoded exactly.
-func encodeBarrier(err error) (msg string, details []string, payload proto.Message) {
+func encodeBarrier(
+	ctx context.Context, err error,
+) (msg string, details []string, payload proto.Message) {
 	e := err.(*barrierError)
-	enc := errbase.EncodeError(e.maskedErr)
+	enc := errbase.EncodeError(ctx, e.maskedErr)
 	return e.msg, e.SafeDetails(), &enc
 }
 
 // A barrier error is decoded exactly.
-func decodeBarrier(msg string, _ []string, payload proto.Message) error {
+func decodeBarrier(ctx context.Context, msg string, _ []string, payload proto.Message) error {
 	enc := payload.(*errbase.EncodedError)
-	return &barrierError{msg: msg, maskedErr: errbase.DecodeError(*enc)}
+	return &barrierError{msg: msg, maskedErr: errbase.DecodeError(ctx, *enc)}
 }
 
 func init() {

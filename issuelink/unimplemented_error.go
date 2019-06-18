@@ -16,6 +16,7 @@ package issuelink
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -62,7 +63,9 @@ func (w *unimplementedError) Format(s fmt.State, verb rune) {
 	}
 }
 
-func decodeUnimplementedError(msg string, details []string, _ proto.Message) error {
+func decodeUnimplementedError(
+	_ context.Context, msg string, details []string, _ proto.Message,
+) error {
 	var issueLink IssueLink
 	if len(details) > 0 {
 		issueLink.IssueURL = details[0]

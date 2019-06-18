@@ -15,6 +15,7 @@
 package hintdetail
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -46,12 +47,14 @@ func (w *withDetail) Format(s fmt.State, verb rune) {
 	}
 }
 
-func encodeWithDetail(err error) (string, []string, proto.Message) {
+func encodeWithDetail(_ context.Context, err error) (string, []string, proto.Message) {
 	w := err.(*withDetail)
 	return "", nil, &errorspb.StringPayload{Msg: w.detail}
 }
 
-func decodeWithDetail(cause error, _ string, _ []string, payload proto.Message) error {
+func decodeWithDetail(
+	_ context.Context, cause error, _ string, _ []string, payload proto.Message,
+) error {
 	m, ok := payload.(*errorspb.StringPayload)
 	if !ok {
 		// If this ever happens, this means some version of the library

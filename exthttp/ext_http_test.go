@@ -15,6 +15,7 @@
 package exthttp_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -28,8 +29,8 @@ func TestHTTP(t *testing.T) {
 	err = exthttp.WrapWithHTTPCode(err, 302)
 
 	// Simulate a network transfer.
-	enc := errors.EncodeError(err)
-	otherErr := errors.DecodeError(enc)
+	enc := errors.EncodeError(context.Background(), err)
+	otherErr := errors.DecodeError(context.Background(), enc)
 
 	tt := testutils.T{T: t}
 

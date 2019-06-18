@@ -15,14 +15,15 @@
 package withstack_test
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"testing"
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
-	"github.com/cockroachdb/errors/withstack"
 	"github.com/cockroachdb/errors/testutils"
+	"github.com/cockroachdb/errors/withstack"
 	"github.com/kr/pretty"
 )
 
@@ -41,8 +42,8 @@ func TestWithStack(t *testing.T) {
 		tt.Check(len(details) > 0 && strings.Contains(details[0], "withstack_test.go"))
 	}
 
-	enc := errbase.EncodeError(origErr)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), origErr)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	// In any case, the library preserves the error message.
 	tt.CheckEqual(newErr.Error(), origErr.Error())

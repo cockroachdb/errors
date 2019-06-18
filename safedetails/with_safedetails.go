@@ -15,6 +15,7 @@
 package safedetails
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -55,7 +56,9 @@ func (e *withSafeDetails) Error() string { return e.cause.Error() }
 func (e *withSafeDetails) Cause() error  { return e.cause }
 func (e *withSafeDetails) Unwrap() error { return e.cause }
 
-func decodeWithSafeDetails(cause error, _ string, safeDetails []string, _ proto.Message) error {
+func decodeWithSafeDetails(
+	_ context.Context, cause error, _ string, safeDetails []string, _ proto.Message,
+) error {
 	return &withSafeDetails{cause: cause, safeDetails: safeDetails}
 }
 

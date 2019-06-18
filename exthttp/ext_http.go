@@ -15,6 +15,7 @@
 package exthttp
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -60,7 +61,7 @@ func (w *withHTTPCode) Cause() error  { return w.cause }
 func (w *withHTTPCode) Unwrap() error { return w.cause }
 
 // it's an encodable error.
-func encodeWithHTTPCode(err error) (string, []string, proto.Message) {
+func encodeWithHTTPCode(_ context.Context, err error) (string, []string, proto.Message) {
 	w := err.(*withHTTPCode)
 	details := []string{fmt.Sprintf("HTTP %d", w.code)}
 	payload := &EncodedHTTPCode{Code: uint32(w.code)}
@@ -68,7 +69,9 @@ func encodeWithHTTPCode(err error) (string, []string, proto.Message) {
 }
 
 // it's a decodable error.
-func decodeWithHTTPCode(cause error, _ string, _ []string, payload proto.Message) error {
+func decodeWithHTTPCode(
+	_ context.Context, cause error, _ string, _ []string, payload proto.Message,
+) error {
 	wp := payload.(*EncodedHTTPCode)
 	return &withHTTPCode{cause: cause, code: int(wp.Code)}
 }

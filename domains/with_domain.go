@@ -15,6 +15,7 @@
 package domains
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -69,7 +70,9 @@ func (e *withDomain) Format(s fmt.State, verb rune) {
 }
 
 // A domain-annotated error is decoded exactly.
-func decodeWithDomain(cause error, _ string, details []string, _ proto.Message) error {
+func decodeWithDomain(
+	_ context.Context, cause error, _ string, details []string, _ proto.Message,
+) error {
 	if len(details) == 0 {
 		// decoding failure: expecting at least one detail string
 		// (the one that carries the domain string).

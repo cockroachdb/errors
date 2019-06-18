@@ -15,6 +15,7 @@
 package barriers_test
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"testing"
@@ -72,8 +73,8 @@ func TestBarrierMaskedDetails(t *testing.T) {
 	tt.Check(strings.Contains(errV, "friends"))
 
 	// Simulate a network traversal.
-	enc := errbase.EncodeError(b)
-	newB := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), b)
+	newB := errbase.DecodeError(context.Background(), enc)
 
 	// The friends message is hidden.
 	tt.Check(!strings.Contains(b.Error(), "friends"))

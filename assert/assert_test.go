@@ -15,6 +15,7 @@
 package assert_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/cockroachdb/errors/assert"
@@ -40,8 +41,8 @@ func TestAssert(t *testing.T) {
 
 	tt.CheckEqual(err.Error(), "hello: world")
 
-	enc := errbase.EncodeError(err)
-	newErr := errbase.DecodeError(enc)
+	enc := errbase.EncodeError(context.Background(), err)
+	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Check(markers.Is(newErr, baseErr))
 

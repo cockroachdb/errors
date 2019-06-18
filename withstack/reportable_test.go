@@ -15,14 +15,15 @@
 package withstack_test
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"testing"
 
 	"github.com/cockroachdb/errors/errbase"
+	"github.com/cockroachdb/errors/testutils"
 	"github.com/cockroachdb/errors/withstack"
 	"github.com/cockroachdb/errors/withstack/internal"
-	"github.com/cockroachdb/errors/testutils"
 	"github.com/kr/pretty"
 	pkgErr "github.com/pkg/errors"
 )
@@ -35,8 +36,8 @@ func TestReportableStackTrace(t *testing.T) {
 		t.Run("local", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
-		enc := errbase.EncodeError(err)
-		err = errbase.DecodeError(enc)
+		enc := errbase.EncodeError(context.Background(), err)
+		err = errbase.DecodeError(context.Background(), enc)
 		t.Run("remote", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
@@ -47,8 +48,8 @@ func TestReportableStackTrace(t *testing.T) {
 		t.Run("local", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
-		enc := errbase.EncodeError(err)
-		err = errbase.DecodeError(enc)
+		enc := errbase.EncodeError(context.Background(), err)
+		err = errbase.DecodeError(context.Background(), enc)
 		t.Run("remote", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
@@ -59,8 +60,8 @@ func TestReportableStackTrace(t *testing.T) {
 		t.Run("local", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
-		enc := errbase.EncodeError(err)
-		err = errbase.DecodeError(enc)
+		enc := errbase.EncodeError(context.Background(), err)
+		err = errbase.DecodeError(context.Background(), enc)
 		t.Run("remote", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})

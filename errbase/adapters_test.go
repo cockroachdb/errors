@@ -15,6 +15,7 @@
 package errbase_test
 
 import (
+	"context"
 	goErr "errors"
 	"fmt"
 	"reflect"
@@ -30,9 +31,9 @@ import (
 
 func network(t *testing.T, err error) error {
 	t.Helper()
-	enc := errbase.EncodeError(err)
+	enc := errbase.EncodeError(context.Background(), err)
 	t.Logf("encoded: %# v", pretty.Formatter(enc))
-	newErr := errbase.DecodeError(enc)
+	newErr := errbase.DecodeError(context.Background(), enc)
 	t.Logf("decoded: %# v", pretty.Formatter(newErr))
 	return newErr
 }
