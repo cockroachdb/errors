@@ -37,7 +37,7 @@ type StackTrace = raven.Stacktrace
 
 // It also implements the interface ReportableObjet below and is
 // thus suitable for use with SendReport().
-var _ ReportableObject = &StackTrace{}
+var _ ReportableObject = (*StackTrace)(nil)
 
 // PrintStackTrace produces a human-readable partial representation of
 // the stack trace.

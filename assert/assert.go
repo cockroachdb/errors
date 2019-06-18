@@ -70,5 +70,5 @@ func decodeAssertFailure(cause error, _ string, _ []string, _ proto.Message) err
 }
 
 func init() {
-	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&withAssertionFailure{}), decodeAssertFailure)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withAssertionFailure)(nil)), decodeAssertFailure)
 }

@@ -32,7 +32,7 @@ type withContext struct {
 	tags *logtags.Buffer
 }
 
-var _ error = &withContext{}
+var _ error = (*withContext)(nil)
 
 // withContext is an error. The original error message is preserved.
 func (w *withContext) Error() string { return w.cause.Error() }
@@ -91,6 +91,6 @@ func decodeWithContext(cause error, _ string, _ []string, payload proto.Message)
 }
 
 func init() {
-	errbase.RegisterWrapperEncoder(errbase.GetTypeKey(&withContext{}), encodeWithContext)
-	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&withContext{}), decodeWithContext)
+	errbase.RegisterWrapperEncoder(errbase.GetTypeKey((*withContext)(nil)), encodeWithContext)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withContext)(nil)), decodeWithContext)
 }

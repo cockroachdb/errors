@@ -64,6 +64,6 @@ func decodeWithDetail(cause error, _ string, _ []string, payload proto.Message) 
 }
 
 func init() {
-	errbase.RegisterWrapperEncoder(errbase.GetTypeKey(&withDetail{}), encodeWithDetail)
-	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&withDetail{}), decodeWithDetail)
+	errbase.RegisterWrapperEncoder(errbase.GetTypeKey((*withDetail)(nil)), encodeWithDetail)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withDetail)(nil)), decodeWithDetail)
 }

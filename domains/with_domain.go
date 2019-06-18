@@ -31,9 +31,9 @@ type withDomain struct {
 	domain Domain
 }
 
-var _ error = &withDomain{}
-var _ errbase.SafeDetailer = &withDomain{}
-var _ errbase.TypeKeyMarker = &withDomain{}
+var _ error = (*withDomain)(nil)
+var _ errbase.SafeDetailer = (*withDomain)(nil)
+var _ errbase.TypeKeyMarker = (*withDomain)(nil)
 
 // withDomain is an error. The original error message is preserved.
 func (e *withDomain) Error() string { return e.cause.Error() }
@@ -79,6 +79,6 @@ func decodeWithDomain(cause error, _ string, details []string, _ proto.Message) 
 }
 
 func init() {
-	tn := errbase.GetTypeKey(&withDomain{})
+	tn := errbase.GetTypeKey((*withDomain)(nil))
 	errbase.RegisterWrapperDecoder(tn, decodeWithDomain)
 }

@@ -60,7 +60,7 @@ func decodeWithSafeDetails(cause error, _ string, safeDetails []string, _ proto.
 }
 
 func init() {
-	tn := errbase.GetTypeKey(&withSafeDetails{})
+	tn := errbase.GetTypeKey((*withSafeDetails)(nil))
 	errbase.RegisterWrapperDecoder(tn, decodeWithSafeDetails)
 	// Note: no encoder needed, the default implementation is suitable.
 }

@@ -139,7 +139,7 @@ report_test.go:\d+: \*withstack.withStack \(2\)
 }
 
 func wrapWithMigratedType(err error) error {
-	errbase.RegisterTypeMigration("some/previous/path", "prevpkg.prevType", &myWrapper{})
+	errbase.RegisterTypeMigration("some/previous/path", "prevpkg.prevType", (*myWrapper)(nil))
 	return &myWrapper{cause: err}
 }
 

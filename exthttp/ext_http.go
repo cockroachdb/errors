@@ -74,6 +74,6 @@ func decodeWithHTTPCode(cause error, _ string, _ []string, payload proto.Message
 }
 
 func init() {
-	errbase.RegisterWrapperEncoder(errbase.GetTypeKey(&withHTTPCode{}), encodeWithHTTPCode)
-	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&withHTTPCode{}), decodeWithHTTPCode)
+	errbase.RegisterWrapperEncoder(errbase.GetTypeKey((*withHTTPCode)(nil)), encodeWithHTTPCode)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withHTTPCode)(nil)), decodeWithHTTPCode)
 }

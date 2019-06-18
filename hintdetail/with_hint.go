@@ -64,6 +64,6 @@ func decodeWithHint(cause error, _ string, _ []string, payload proto.Message) er
 }
 
 func init() {
-	errbase.RegisterWrapperEncoder(errbase.GetTypeKey(&withHint{}), encodeWithHint)
-	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&withHint{}), decodeWithHint)
+	errbase.RegisterWrapperEncoder(errbase.GetTypeKey((*withHint)(nil)), encodeWithHint)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withHint)(nil)), decodeWithHint)
 }

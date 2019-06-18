@@ -46,7 +46,7 @@ func encodeLeaf(err error) EncodedError {
 		msg = e.msg
 		details = e.details
 	} else {
-		details.OriginalTypeName, details.ErrorTypeMark.FamilyName, details.ErrorTypeMark.Extension = getTypeDetails(err)
+		details.OriginalTypeName, details.ErrorTypeMark.FamilyName, details.ErrorTypeMark.Extension = getTypeDetails(err, false /*onlyFamily*/)
 
 		var payload proto.Message
 
@@ -114,7 +114,7 @@ func encodeWrapper(err, cause error) EncodedError {
 		msg = e.prefix
 		details = e.details
 	} else {
-		details.OriginalTypeName, details.ErrorTypeMark.FamilyName, details.ErrorTypeMark.Extension = getTypeDetails(err)
+		details.OriginalTypeName, details.ErrorTypeMark.FamilyName, details.ErrorTypeMark.Extension = getTypeDetails(err, false /*onlyFamily*/)
 
 		var payload proto.Message
 
@@ -170,7 +170,7 @@ func extractPrefix(err, cause error) string {
 }
 
 func getTypeDetails(
-	err error,
+	err error, onlyFamily bool,
 ) (origTypeName string, typeKeyFamily string, typeKeyExtension string) {
 	// If we have received an error of type not known locally,
 	// we still know its type name. Return that.
@@ -187,6 +187,10 @@ func getTypeDetails(
 	fm := tn
 	if prevKey, ok := backwardRegistry[TypeKey(tn)]; ok {
 		fm = string(prevKey)
+	}
+
+	if onlyFamily {
+		return tn, fm, ""
 	}
 
 	// If the error has an extra type marker, add it.
@@ -239,14 +243,14 @@ type TypeKey string
 // GetTypeKey retrieve the type key for a given error object. This
 // is meant for use in combination with the Register functions.
 func GetTypeKey(err error) TypeKey {
-	_, familyName, _ := getTypeDetails(err)
+	_, familyName, _ := getTypeDetails(err, true /*onlyFamily*/)
 	return TypeKey(familyName)
 }
 
 // GetTypeMark retrieves the ErrorTypeMark for a given error object.
 // This is meant for use in the markers sub-package.
 func GetTypeMark(err error) errorspb.ErrorTypeMark {
-	_, familyName, extension := getTypeDetails(err)
+	_, familyName, extension := getTypeDetails(err, false /*onlyFamily*/)
 	return errorspb.ErrorTypeMark{FamilyName: familyName, Extension: extension}
 }
 

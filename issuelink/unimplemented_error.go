@@ -74,5 +74,5 @@ func decodeUnimplementedError(msg string, details []string, _ proto.Message) err
 }
 
 func init() {
-	errbase.RegisterLeafDecoder(errbase.GetTypeKey(&unimplementedError{}), decodeUnimplementedError)
+	errbase.RegisterLeafDecoder(errbase.GetTypeKey((*unimplementedError)(nil)), decodeUnimplementedError)
 }

@@ -67,8 +67,8 @@ type barrierError struct {
 	maskedErr error
 }
 
-var _ error = &barrierError{}
-var _ errbase.SafeDetailer = &barrierError{}
+var _ error = (*barrierError)(nil)
+var _ errbase.SafeDetailer = (*barrierError)(nil)
 
 // barrierError is an error.
 func (e *barrierError) Error() string { return e.msg }
@@ -115,7 +115,7 @@ func decodeBarrier(msg string, _ []string, payload proto.Message) error {
 }
 
 func init() {
-	tn := errbase.GetTypeKey(&barrierError{})
+	tn := errbase.GetTypeKey((*barrierError)(nil))
 	errbase.RegisterLeafDecoder(tn, decodeBarrier)
 	errbase.RegisterLeafEncoder(tn, encodeBarrier)
 }

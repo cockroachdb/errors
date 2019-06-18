@@ -78,7 +78,7 @@ func decodeWithSecondaryError(cause error, _ string, _ []string, payload proto.M
 }
 
 func init() {
-	tn := errbase.GetTypeKey(&withSecondaryError{})
+	tn := errbase.GetTypeKey((*withSecondaryError)(nil))
 	errbase.RegisterWrapperDecoder(tn, decodeWithSecondaryError)
 	errbase.RegisterWrapperEncoder(tn, encodeWithSecondaryError)
 }

@@ -42,7 +42,7 @@ func GetAllSafeDetails(err error) []SafeDetailPayload {
 // object. If it is a wrapper, only the details from the wrapper are
 // returned.
 func GetSafeDetails(err error) (payload SafeDetailPayload) {
-	origTypeName, famName, ext := getTypeDetails(err)
+	origTypeName, famName, ext := getTypeDetails(err, false /*onlyFamily*/)
 	payload.OriginalTypeName = origTypeName
 	payload.ErrorTypeMark = errorspb.ErrorTypeMark{
 		FamilyName: famName,

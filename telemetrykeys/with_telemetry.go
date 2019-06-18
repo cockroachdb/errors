@@ -50,5 +50,5 @@ func decodeWithTelemetry(cause error, _ string, keys []string, _ proto.Message) 
 }
 
 func init() {
-	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&withTelemetry{}), decodeWithTelemetry)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withTelemetry)(nil)), decodeWithTelemetry)
 }

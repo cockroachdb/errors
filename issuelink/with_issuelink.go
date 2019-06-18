@@ -86,5 +86,5 @@ func decodeWithIssueLink(cause error, _ string, details []string, _ proto.Messag
 }
 
 func init() {
-	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&withIssueLink{}), decodeWithIssueLink)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withIssueLink)(nil)), decodeWithIssueLink)
 }

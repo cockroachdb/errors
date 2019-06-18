@@ -69,7 +69,7 @@ func TestUnknownErrorTraversal(t *testing.T) {
 		m := err.(*myError)
 		return "", nil, &internal.MyPayload{Val: int32(m.val)}
 	}
-	tn := errbase.GetTypeKey(&myError{})
+	tn := errbase.GetTypeKey((*myError)(nil))
 	errbase.RegisterLeafEncoder(tn, myEncode)
 
 	// Encode the error, this will use the encoder.
@@ -165,7 +165,7 @@ func TestUnknownWrapperTraversal(t *testing.T) {
 		m := err.(*myWrap)
 		return "", nil, &internal.MyPayload{Val: int32(m.val)}
 	}
-	tn := errbase.GetTypeKey(&myWrap{})
+	tn := errbase.GetTypeKey((*myWrap)(nil))
 	errbase.RegisterWrapperEncoder(tn, myEncode)
 
 	// Encode the error, this will use the encoder.

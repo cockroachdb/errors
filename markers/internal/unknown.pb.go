@@ -3,11 +3,14 @@
 
 package internal
 
-import proto "github.com/gogo/protobuf/proto"
-import fmt "fmt"
-import math "math"
+import (
+	fmt "fmt"
+	io "io"
+	math "math"
 
-import io "io"
+	proto "github.com/gogo/protobuf/proto"
+)
+
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal

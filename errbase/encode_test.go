@@ -27,7 +27,7 @@ func (e *myE) Error() string { return "woo" }
 
 func (e *myE) ErrorKeyMarker() string { return e.marker }
 
-var _ errbase.TypeKeyMarker = &myE{}
+var _ errbase.TypeKeyMarker = (*myE)(nil)
 
 // This test shows how the extended type marker changes the visible
 // type and thus the identity of an error.

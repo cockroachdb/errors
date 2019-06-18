@@ -177,6 +177,6 @@ func decodeMark(cause error, _ string, _ []string, payload proto.Message) error 
 }
 
 func init() {
-	errbase.RegisterWrapperEncoder(errbase.GetTypeKey(&withMark{}), encodeMark)
-	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&withMark{}), decodeMark)
+	errbase.RegisterWrapperEncoder(errbase.GetTypeKey((*withMark)(nil)), encodeMark)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withMark)(nil)), decodeMark)
 }
