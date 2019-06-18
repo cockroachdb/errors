@@ -26,14 +26,19 @@ import (
 
 type withContext struct {
 	cause error
-	// tags stores the context k/v pairs.
+	// tags stores the context k/v pairs, non-redacted.
 	// The errors library only gives access to the string representation
 	// of the value part. This is because the network encoding of
 	// a withContext instance only stores the string.
 	tags *logtags.Buffer
+	// redactedTags stores the context k/v pairs, redacted.
+	// When this is defined, SafeDetails() uses it. Otherwise, it
+	// re-redact tags above.
+	redactedTags []string
 }
 
 var _ error = (*withContext)(nil)
+var _ errbase.SafeDetailer = (*withContext)(nil)
 
 // withContext is an error. The original error message is preserved.
 func (w *withContext) Error() string { return w.cause.Error() }
@@ -59,17 +64,25 @@ func (w *withContext) Format(s fmt.State, verb rune) {
 	}
 }
 
+// SafeDetails implements the errbase.SafeDetailer interface.
+func (w *withContext) SafeDetails() []string {
+	if w.redactedTags != nil {
+		return w.redactedTags
+	}
+	return redactTags(w.tags)
+}
+
 func encodeWithContext(_ context.Context, err error) (string, []string, proto.Message) {
 	w := err.(*withContext)
 	p := &errorspb.TagsPayload{}
 	for _, t := range w.tags.Get() {
 		p.Tags = append(p.Tags, errorspb.TagPayload{Tag: t.Key(), Value: t.ValueStr()})
 	}
-	return "", nil, p
+	return "", w.SafeDetails(), p
 }
 
 func decodeWithContext(
-	_ context.Context, cause error, _ string, _ []string, payload proto.Message,
+	_ context.Context, cause error, _ string, redactedTags []string, payload proto.Message,
 ) error {
 	m, ok := payload.(*errorspb.TagsPayload)
 	if !ok {
@@ -79,7 +92,7 @@ func decodeWithContext(
 		// DecodeError use the opaque type.
 		return nil
 	}
-	if len(m.Tags) == 0 {
+	if len(m.Tags) == 0 && len(redactedTags) == 0 {
 		// There are no tags stored. Either there are no tags stored, or
 		// we received some new version of the protobuf message which does
 		// things differently. Again, use the opaque type.
@@ -90,7 +103,7 @@ func decodeWithContext(
 	for _, t := range m.Tags {
 		b = b.Add(t.Tag, t.Value)
 	}
-	return &withContext{cause: cause, tags: b}
+	return &withContext{cause: cause, tags: b, redactedTags: redactedTags}
 }
 
 func init() {

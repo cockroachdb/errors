@@ -18,6 +18,7 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors/errbase"
+	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/logtags"
 )
 
@@ -81,6 +82,21 @@ func hasNonStringValue(b *logtags.Buffer) bool {
 func convertToStringsOnly(b *logtags.Buffer) (res *logtags.Buffer) {
 	for _, t := range b.Get() {
 		res = res.Add(t.Key(), t.ValueStr())
+	}
+	return res
+}
+
+func redactTags(b *logtags.Buffer) []string {
+	res := make([]string, len(b.Get()))
+	for i, t := range b.Get() {
+		res[i] = t.Key()
+		v := t.Value()
+		if v != nil {
+			if len(res[i]) > 1 {
+				res[i] += "="
+			}
+			res[i] += safedetails.Redact(v)
+		}
 	}
 	return res
 }

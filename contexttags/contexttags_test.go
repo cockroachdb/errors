@@ -83,3 +83,55 @@ func TestWithContext(t *testing.T) {
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }
+
+func TestTagRedaction(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	// Create an example context with decoration.
+	ctx := context.Background()
+	ctx = logtags.AddTag(ctx, "foo1", 123)
+	ctx = logtags.AddTag(ctx, "x", 456)
+	ctx = logtags.AddTag(ctx, "bar1", nil)
+	ctx = logtags.AddTag(ctx, "foo2", errors.Safe(123))
+	ctx = logtags.AddTag(ctx, "y", errors.Safe(456))
+	ctx = logtags.AddTag(ctx, "bar2", nil)
+
+	// Create another example context. We use two to demonstrate that an
+	// error can store multiple sets of context tags.
+	ctx2 := context.Background()
+	ctx2 = logtags.AddTag(ctx2, "planet1", "universe")
+	ctx2 = logtags.AddTag(ctx2, "planet2", errors.Safe("universe"))
+
+	// This will be our reference expected value.
+	refStrings := [][]string{
+		[]string{"planet1=string", "planet2=universe"},
+		[]string{"foo1=int", "xint", "bar1", "foo2=123", "y456", "bar2"},
+	}
+
+	// Construct the error object.
+	origErr := errors.New("hello")
+	decoratedErr := errors.WithContextTags(origErr, ctx)
+	decoratedErr = errors.WithContextTags(decoratedErr, ctx2)
+
+	theTest := func(tt testutils.T, err error) {
+		details := errors.GetAllSafeDetails(err)
+		var strs [][]string
+		for _, d := range details {
+			strs = append(strs, d.SafeDetails)
+		}
+		// Discard the inner details. We only care about the WithContext
+		// decorations.
+		if len(strs) > 2 {
+			strs = strs[:2]
+		}
+		tt.CheckDeepEqual(strs, refStrings)
+	}
+
+	tt.Run("local", func(tt testutils.T) { theTest(tt, decoratedErr) })
+
+	enc := errbase.EncodeError(context.Background(), decoratedErr)
+	newErr := errbase.DecodeError(context.Background(), enc)
+
+	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
+
+}
