@@ -30,6 +30,7 @@ type SafeDetailer interface {
 
 // GetAllSafeDetails collects the safe details from the given error object
 // and all its causes.
+// The details are collected from outermost to innermost level of cause.
 func GetAllSafeDetails(err error) []SafeDetailPayload {
 	var details []SafeDetailPayload
 	for ; err != nil; err = UnwrapOnce(err) {
