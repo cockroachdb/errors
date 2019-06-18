@@ -27,6 +27,11 @@ import (
 // identifies causes. However, it retains it for the purpose of
 // printing the error out (e.g. for troubleshooting). The error
 // message is preserved in full.
+//
+// Detail is shown:
+// - via `errors.GetSafeDetails()`, shows details from hidden error.
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func Handled(err error) error {
 	if err == nil {
 		return nil

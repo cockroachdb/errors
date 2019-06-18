@@ -23,6 +23,11 @@ package secondary
 // If additionalErr is nil, the first error is returned as-is.
 //
 // Tip: consider using CombineErrors() below in the general case.
+//
+// Detail is shown:
+// - via `errors.GetSafeDetails()`, shows details from secondary error.
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func WithSecondaryError(err error, additionalErr error) error {
 	if err == nil || additionalErr == nil {
 		return err
@@ -32,6 +37,7 @@ func WithSecondaryError(err error, additionalErr error) error {
 
 // CombineErrors returns err, or, if err is nil, otherErr.
 // if err is non-nil, otherErr is attached as secondary error.
+// See the documentation of `WithSecondaryError()` for details.
 func CombineErrors(err error, otherErr error) error {
 	if err == nil {
 		return otherErr

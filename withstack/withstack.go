@@ -27,6 +27,12 @@ import (
 // customize the depth at which the stack trace is captured.
 
 // WithStack annotates err with a stack trace at the point WithStack was called.
+//
+// Detail is shown:
+// - via `errors.GetSafeDetails()`
+// - when formatting with `%+v`.
+// - in Sentry reports.
+// - when innermost stack capture, with `errors.GetOneLineSource()`.
 func WithStack(err error) error {
 	// Skip the frame of WithStack itself, this mirrors the behavior
 	// of WithStack() in github.com/pkg/errors.
@@ -36,6 +42,7 @@ func WithStack(err error) error {
 // WithStackDepth annotates err with a stack trace starting from the
 // given call depth. The value zero identifies the caller
 // of WithStackDepth itself.
+// See the documentation of WithStack() for more details.
 func WithStackDepth(err error, depth int) error {
 	if err == nil {
 		return nil

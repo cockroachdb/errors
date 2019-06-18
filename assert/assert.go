@@ -26,6 +26,10 @@ import (
 // WithAssertionFailure decorates the error with an assertion failure marker.
 // This is not intended to be used directly (see AssertionFailed() for
 // further decoration).
+//
+// Detail is shown:
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func WithAssertionFailure(err error) error {
 	if err == nil {
 		return nil

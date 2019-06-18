@@ -22,8 +22,10 @@ import "fmt"
 // Arguments can be reported as-is (without redaction) by wrapping
 // them using the Safe() function.
 //
-// The annotated strings are not visible in the resulting error's
-// main message rechable via Error().
+// Detail is shown:
+// - via `errors.GetSafeDetails()`
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func WithSafeDetails(err error, format string, args ...interface{}) error {
 	if err == nil {
 		return nil

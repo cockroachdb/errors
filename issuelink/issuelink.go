@@ -26,6 +26,12 @@ import (
 //
 // The url and detail strings may contain PII and will
 // be considered reportable.
+//
+// Detail is shown:
+// - via `errors.GetSafeDetails()`
+// - when formatting with `%+v`.
+// - in Sentry reports.
+// - via `errors.GetAllHints()` / `errors.FlattenHints()`
 func WithIssueLink(err error, issue IssueLink) error {
 	if err == nil {
 		return nil
@@ -63,6 +69,12 @@ func GetAllIssueLinks(err error) (issues []IssueLink) {
 
 // UnimplementedError creates a new leaf error that indicates that
 // some feature was not (yet) implemented.
+//
+// Detail is shown:
+// - via `errors.GetSafeDetails()`
+// - when formatting with `%+v`.
+// - in Sentry reports.
+// - via `errors.GetAllHints()` / `errors.FlattenHints()`
 func UnimplementedError(issueLink IssueLink, msg string) error {
 	return &unimplementedError{IssueLink: issueLink, msg: msg}
 }

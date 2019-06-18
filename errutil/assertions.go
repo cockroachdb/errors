@@ -20,12 +20,18 @@ import (
 )
 
 // AssertionFailedf creates an internal error.
+//
+// Detail is shown:
+// - via `errors.GetSafeDetails()`, shows redacted strings.
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func AssertionFailedf(format string, args ...interface{}) error {
 	return AssertionFailedWithDepthf(1, format, args...)
 }
 
 // AssertionFailedWithDepthf creates an internal error
 // with a stack trace collected at the specified depth.
+// See the doc of `AssertionFailedf()` for more details.
 func AssertionFailedWithDepthf(depth int, format string, args ...interface{}) error {
 	err := NewWithDepthf(1+depth, format, args...)
 	err = assert.WithAssertionFailure(err)
@@ -36,6 +42,7 @@ func AssertionFailedWithDepthf(depth int, format string, args ...interface{}) er
 // an assertion error. Both details from the original error and the
 // context of the caller are preserved. The original error is not
 // visible as cause any more. The original error message is preserved.
+// See the doc of `AssertionFailedf()` for more details.
 func NewAssertionErrorWithWrappedErrf(origErr error, format string, args ...interface{}) error {
 	return NewAssertionErrorWithWrappedErrDepthf(1, origErr, format, args...)
 }
@@ -43,6 +50,7 @@ func NewAssertionErrorWithWrappedErrf(origErr error, format string, args ...inte
 // NewAssertionErrorWithWrappedErrDepthf is like
 // NewAssertionErrorWithWrappedErrf but the depth at which the call
 // stack is captured can be specified.
+// See the doc of `AssertionFailedf()` for more details.
 func NewAssertionErrorWithWrappedErrDepthf(
 	depth int, origErr error, format string, args ...interface{},
 ) error {

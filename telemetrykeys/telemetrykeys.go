@@ -18,7 +18,12 @@ import "github.com/cockroachdb/errors/errbase"
 
 // WithTelemetry annotates err with the given telemetry key(s).
 // The telemetry keys must be PII-free.
-// Also see GetTelemetryKeys below.
+//
+// Detail is shown:
+// - via `errors.GetSafeDetails()`.
+// - via `GetTelemetryKeys()` below.
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func WithTelemetry(err error, keys ...string) error {
 	if err == nil {
 		return nil

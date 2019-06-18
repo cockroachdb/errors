@@ -49,6 +49,11 @@ func GetDomain(err error) Domain {
 }
 
 // WithDomain wraps an error so that it appears to come from the given domain.
+//
+// Domain is shown:
+// - via `errors.GetSafeDetails()`.
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func WithDomain(err error, domain Domain) error {
 	if err == nil {
 		return nil
@@ -58,6 +63,11 @@ func WithDomain(err error, domain Domain) error {
 
 // New creates an error in the implicit domain (see PackageDomain() below)
 // of its caller.
+//
+// Domain is shown:
+// - via `errors.GetSafeDetails()`.
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func New(msg string) error {
 	return WithDomain(errors.New(msg), PackageDomainAtDepth(1))
 }
@@ -69,6 +79,8 @@ func New(msg string) error {
 // debugging. The original error is hidden and does not become a
 // "cause" for the new error. The original's error _message_
 // is preserved.
+//
+// See the documentation of `WithDomain()` and `errors.Handled()` for details.
 func HandledInDomain(err error, domain Domain) error {
 	return WithDomain(barriers.Handled(err), domain)
 }
@@ -80,6 +92,8 @@ func HandledInDomainWithMessage(err error, domain Domain, msg string) error {
 
 // Handled creates a handled error in the implicit domain (see
 // PackageDomain() below) of its caller.
+//
+// See the documentation of `errors.Handled()` for details.
 func Handled(err error) error {
 	return HandledInDomain(err, PackageDomainAtDepth(1))
 }

@@ -30,6 +30,12 @@ import (
 // (where the user code needs to know whether an error has traveled
 // through the network or not), the library restricts access to the
 // value part as strings. See GetContextTags() below.
+//
+// Detail is shown:
+// - via `errors.GetSafeDetails()`.
+// - via `GetContextTags()` below.
+// - when formatting with `%+v`.
+// - in Sentry reports.
 func WithContextTags(err error, ctx context.Context) error {
 	if err == nil {
 		return nil

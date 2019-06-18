@@ -24,6 +24,10 @@ import (
 // WithHint decorates an error with a textual hint.
 // The hint may contain PII and thus will not reportable.
 //
+// Hint is shown:
+// - when formatting with `%+v`.
+// - with `GetAllHints()` / `FlattenHints()` below.
+//
 // Note: the hint does not appear in the main error message returned
 // with Error(). Use GetAllHints() or FlattenHints() to retrieve it.
 func WithHint(err error, msg string) error {
@@ -93,6 +97,10 @@ type ErrorHinter interface {
 
 // WithDetail decorates an error with a textual detail.
 // The detail may contain PII and thus will not reportable.
+//
+// Detail is shown:
+// - when formatting with `%+v`.
+// - with `GetAllHints()` / `FlattenHints()` below.
 //
 // Note: the detail does not appear in the main error message returned
 // with Error(). Use GetAllDetails() or FlattenDetails() to retrieve
