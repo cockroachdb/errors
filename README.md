@@ -21,8 +21,8 @@ https://github.com/cockroachdb/cockroach/pull/37121
 | wrappers for user-facing hints and details                                                            |                     |                         |                            | ✔                    |
 | wrappers to attach secondary causes                                                                   |                     |                         |                            | ✔                    |
 | wrappers to attach [`logtags`](https://github.com/cockroachdb/logtags) details from `context.Context` |                     |                         |                            | ✔                    |
-| `errors.As()`                                                                                         |                     |                         | ✔                          | (in construction)    |
-| `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | ✔                          | (in construction)    |
+| `errors.As()`                                                                                         |                     |                         | ✔                          | (under construction)    |
+| `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | ✔                          | (under construction)    |
 
 "Forward compatibility" above refers to the ability of this library to
 recognize and properly handle network communication of error types it
