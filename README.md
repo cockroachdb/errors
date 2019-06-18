@@ -192,7 +192,7 @@ return errors.Wrap(foo())
   - what it does: captures the string. The telemetry key is considered safe for reporting.
   - how to access the detail: `errors.GetTelemetryKeys()`,  `errors.GetSafeDetails()`, format with `%+v`, Sentry report.
 
-- `WithDomain(error, Domain) error`, `HandledInDomain(error, Domain) error`, `HandledInDomainWithMessage(error, Domain, string)` **(experimental)**: annotate an error with an origin package.
+- `WithDomain(error, Domain) error`, `HandledInDomain(error, Domain) error`, `HandledInDomainWithMessage(error, Domain, string) error` **(experimental)**: annotate an error with an origin package.
   - **when to use: at package boundaries.**
   - what it does: captures the identity of the error domain. Can be asserted with `errors.EnsureNotInDomain()`, `errors.NotInDomain()`.
   - how to access the detail: format with `%+v`, Sentry report.
