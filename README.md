@@ -67,24 +67,24 @@ older version of the package.
 
 ## Available error leaves
 
-- `New()`, `Newf()`, `Errorf()`: leaf errors with message
+- `New(string) error`, `Newf(string, ...interface{}) error`, `Errorf(string, ...interface{}) error`: leaf errors with message
   - **when to use: common error cases.**
   - what it does: also captures the stack trace at point of call and redacts the provided message for safe reporting.
   - how to access the detail: `Error()`, regular Go formatting. Details redacted in Sentry report.
   - see also: Section [Error composition](#Error-composition-summary) below. `errors.NewWithDepth()` variants to customize at which call depth the stack trace is captured.
 
-- `AssertionFailedf()`, `NewAssertionFailureWithWrappedErrf()`: signals an assertion failure / programming error.
+- `AssertionFailedf(string, ...interface{}) error`, `NewAssertionFailureWithWrappedErrf(error, string, ...interface{})` error: signals an assertion failure / programming error.
   - **when to use: when an invariant is violated; when an unreachable code path is reached.**
   - what it does: also captures the stack trace at point of call, redacts the provided strings for safe reporting, prepares a hint to inform a human user.
   - how to access the detail: `IsAssertionFailure()`/`HasAssertionFailure()`, format with `%+v`, Safe details included in Sentry reports.
   - see also: Section [Error composition](#Error-composition-summary) below. `errors.AssertionFailedWithDepthf()` variant to customize at which call depth the stack trace is captured.
 
-- `Handled()`, `Opaque()`, `HandledWithMessage()`: captures an error cause but make it invisible to `Unwrap()` / `Is()`.
+- `Handled(error) error`, `Opaque(error) error`, `HandledWithMessage(error, string) error`: captures an error cause but make it invisible to `Unwrap()` / `Is()`.
   - **when to use: when a new error occurs while handling an error, and the original error must be "hidden".**
   - what it does: captures the cause in a hidden field. The error message is preserved unless the `...WithMessage()` variant is used.
   - how to access the detail: format with `%+v`, redacted details reported in Sentry reports.
 
-- `UnimplementedError()`: captures a message string and a URL reference to an external resource to denote a feature that was not yet implemented.
+- `UnimplementedError(IssueLink, string) error`: captures a message string and a URL reference to an external resource to denote a feature that was not yet implemented.
   - **when to use: to inform (human) users that some feature is not implemented yet and refer them to some external resource.**
   - what it does: captures the message, URL and detail in a wrapper. The URL and detail are considered safe for reporting.
   - how to access the detail: `errors.GetAllHints()`, `errors.FlattenHints()`, format with `%+v`, URL and detail included in Sentry report (not the message).
@@ -106,29 +106,29 @@ they behave as no-ops in this case:
 return errors.Wrap(foo())
 ```
 
-- `Wrap()`, `Wrapf()`:
+- `Wrap(error, string) error`, `Wrapf(error, string, ...interface{}) error`:
   - **when to use: on error return paths.**
   - what it does: combines `WithMessage()`, `WithStack()`, `WithSafeDetails()`.
   - how to access the details: `Error()`, regular Go formatting. Details redacted in Sentry report.
   - see also: Section [Error composition](#Error-composition-summary) below. `WrapWithDepth()` variants to customize at which depth the stack trace is captured.
 
-- `WithSecondaryError()`: annotate an error with a secondary error.
+- `WithSecondaryError(error, error) error`: annotate an error with a secondary error.
   - **when to use: when an additional error occurs in the code that is handling a primary error.** Consider using `errors.CombineErrors()` instead (see below).
   - what it does: it captures the secondary error but hides it from `errors.Is()`.
   - how to access the detail: format with `%+v`, redacted recursively in Sentry reports.
   - see also: `errors.CombineErrors()`
 
-- `CombineErrors()`: combines two errors into one.
+- `CombineErrors(error, error) error`: combines two errors into one.
   - **when to use: when two operations occur concurrently and either can return an error, and only one final error must be returned.**
   - what it does: returns either of its arguments if the other is `nil`, otherwise calls `WithSecondaryError()`.
   - how to access the detail: see `WithSecondaryError()` above.
 
-- `Mark()`: gives the identity of one error to another error.
+- `Mark(error, error) error`: gives the identity of one error to another error.
   - **when to use: when a caller expects to recognize a sentinel error with `errors.Is()` but the callee provides a diversity of error messages.**
   - what it does: it overrides the "error mark" used internally by `errors.Is()`.
   - how to access the detail: format with `%+v`, Sentry reports.
 
-- `WithStack()`: annotate with stack trace
+- `WithStack(error) error`: annotate with stack trace
   - **when to use:** usually not needed, use `errors.Wrap()`/`errors.Wrapf()` instead.
 
     **Special cases:**
@@ -161,48 +161,48 @@ return errors.Wrap(foo())
   - how to access the details: format with `%+v`, `errors.GetSafeDetails()`, Sentry reports. The stack trace is considered safe for reporting.
   - see also: `WithStackDepth()` to customize the call depth at which the stack trace is captured.
 
-- `WithSafeDetails()`: safe details for reporting.
+- `WithSafeDetails(error, string, ...interface{}) error`: safe details for reporting.
   - when to use: probably never. Use `errors.Wrap()`/`errors.Wrapf()` instead.
   - what it does: saves some strings for safe reporting.
   - how to access the detail: format with `%+v`, `errors.GetSafeDetails()`, Sentry report.
 
-- `WithMessage()`: message prefix.
+- `WithMessage(error, string) error`, `WithMessagef(error, string, ...interface{}) error`: message prefix.
   - when to use: probably never. Use `errors.Wrap()`/`errors.Wrapf()` instead.
   - what it does: adds a message prefix.
   - how to access the detail: `Error()`, regular Go formatting. Not included in Sentry reports.
 
-- `WithDetail()`, `WithDetailf()`, user-facing detail with contextual information.
+- `WithDetail(error, string) error`, `WithDetailf(error, string, ...interface{}) error`, user-facing detail with contextual information.
   - **when to use: need to embark a message string to output when the error is presented to a human.**
   - what it does: captures detail strings.
   - how to access the detail: `errors.GetAllDetails()`, `errors.FlattenDetails()` (all details are preserved), format with `%+v`.
 
-- `WithHint()`, `WithHintf()`: user-facing detail with suggestion for action to take.
+- `WithHint(error, string) error`, `WithHintf(error, string, ...interface{}) error`: user-facing detail with suggestion for action to take.
   - **when to use: need to embark a message string to output when the error is presented to a human.**
   - what it does: captures hint strings.
   - how to access the detail: `errors.GetAllHints()`, `errors.FlattenHints()` (hints are de-duplicated), format with `%+v`.
 
-- `WithIssueLink()`: annotate an error with an URL and arbitrary string.
+- `WithIssueLink(error, IssueLink) error`: annotate an error with an URL and arbitrary string.
   - **when to use: to refer (human) users to some external resources.**
   - what it does: captures the URL and detail in a wrapper. Both are considered safe for reporting.
   - how to access the detail: `errors.GetAllHints()`, `errors.FlattenHints()`,  `errors.GetSafeDetails()`, format with `%+v`, Sentry report.
   - see also: `errors.UnimplementedError()` to construct leaves (see previous section).
 
-- `WithTelemetry()`: annotate an error with a key suitable for telemetry.
+- `WithTelemetry(error, string) error`: annotate an error with a key suitable for telemetry.
   - **when to use: to gather strings during error handling, for capture in the telemetry sub-system of a server package.**
   - what it does: captures the string. The telemetry key is considered safe for reporting.
   - how to access the detail: `errors.GetTelemetryKeys()`,  `errors.GetSafeDetails()`, format with `%+v`, Sentry report.
 
-- `WithDomain()`, `HandledInDomain()`, `HandledInDomainWithMessage()` **(experimental)**: annotate an error with an origin package.
+- `WithDomain(error, Domain) error`, `HandledInDomain(error, Domain) error`, `HandledInDomainWithMessage(error, Domain, string)` **(experimental)**: annotate an error with an origin package.
   - **when to use: at package boundaries.**
   - what it does: captures the identity of the error domain. Can be asserted with `errors.EnsureNotInDomain()`, `errors.NotInDomain()`.
   - how to access the detail: format with `%+v`, Sentry report.
 
-- `WithAssertionFailure()`: annotate an error as being an assertion failure.
+- `WithAssertionFailure(error) error`: annotate an error as being an assertion failure.
   - when to use: probably never. Use `errors.AssertionFailedf()` and variants.
   - what it does: wraps the error with a special type. Triggers an auto-generated hint.
   - how to access the detail: `IsAssertionFailure()`/`HasAssertionFailure()`, `errors.GetAllHints()`, `errors.FlattenHints()`, format with `%+v`, Sentry report.
 
-- `WithContextTags()`: annotate an error with the k/v pairs attached to a `context.Context` instance with the [`logtags`](https://github.com/cockroachdb/logtags) package.
+- `WithContextTags(error, context.Context) error`: annotate an error with the k/v pairs attached to a `context.Context` instance with the [`logtags`](https://github.com/cockroachdb/logtags) package.
   - **when to use: when capturing/producing an error and a `context.Context` is available.**
   - what it does: it captures the `logtags.Buffer` object in the wrapper.
   - how to access the detail: `errors.GetContextTags()`, format with `%+v`, Sentry reports.
