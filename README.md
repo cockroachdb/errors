@@ -1,8 +1,28 @@
 # cockroachdb/errors: Go errors with network portability
 
-This library was designed in the fashion discussed in
-https://github.com/cockroachdb/cockroach/pull/36987 and
-https://github.com/cockroachdb/cockroach/pull/37121
+This library aims to be used as a drop-in replacement to
+`github.com/pkg/errors` and Go's standard `errors` package.  It also
+provides *network portability* of error objects, in ways suitable for
+distributed systems with mixed-version software compatibility.
+
+It also provides native and comprehensive support for [PII](https://en.wikipedia.org/wiki/Personal_data)-free details
+and an opt-in [Sentry.io](https://sentry.io/) reporting mechanism that
+automatically formats error details and strips them of PII.
+
+See also [the design RFC](https://github.com/cockroachdb/cockroach/blob/master/docs/RFCS/20190318_error_handling.md).
+
+Table of contents:
+
+- [Features](#Features)
+- [How to use](#How-to-use)
+- [What comes out of an error?](#What-comes-out-of-an-error)
+- [Available error leaves](#Available-error-leaves)
+- [Available wrapper constructors](#Available-wrapper-constructors)
+- [Building your own error types](#Building-your-own-error-types)
+- [Error composition (summary)](#Error-composition-summary)
+- [API (not constructing error objects)](#API-not-constructing-error-objects)
+
+## Features
 
 | Feature                                                                                               | Go's <1.13 `errors` | `github.com/pkg/errors` | Go 1.13 `errors`/`xerrors` | `cockroachdb/errors` |
 |-------------------------------------------------------------------------------------------------------|---------------------|-------------------------|----------------------------|----------------------|
@@ -45,7 +65,7 @@ older version of the package.
 - implement your own error leaf types and wrapper types:
   - implement the `error` and `errors.Wrapper` interfaces as usual.
   - register encode/decode functions: call `errors.Register{Leaf,Wrapper}{Encoder,Decoder}()` in a `init()` function in your package.
-  - see the sub-package `exthttp` for an example.
+  - see the section [Building your own error types](#Building-your-own-error-types) below.
 
 ## What comes out of an error?
 
@@ -206,6 +226,147 @@ return errors.Wrap(foo())
   - **when to use: when capturing/producing an error and a `context.Context` is available.**
   - what it does: it captures the `logtags.Buffer` object in the wrapper.
   - how to access the detail: `errors.GetContextTags()`, format with `%+v`, Sentry reports.
+
+## Building your own error types
+
+You can create an error type as usual in Go: implement the `error`
+interface, and, if your type is also a wrapper, the `errors.Wrapper`
+interface (an `Unwrap()` method). You may also want to implement the
+`Cause()` method for backward compatibility with
+`github.com/pkg/errors`, if your project also uses that.
+
+Additionally, you may want your new error type to be portable across
+the network.
+
+If your error type is a leaf, and already implements `proto.Message`
+(from [gogoproto](https://github.com/gogo/protobuf)), you are all set
+and the errors library will use that automatically. If you do not or
+cannot implement `proto.Message`, or your error type is a wrapper,
+read on.
+
+At a minimum, you will need a *decoder function*: while
+`cockroachdb/errors` already does a bunch of encoding/decoding work on
+new types automatically, the one thing it really cannot do on its own
+is instantiate a Go object using your new type.
+
+Here is the simplest decode function for a new leaf error type and a
+new wrapper type:
+
+```go
+// note: we use the gogoproto `proto` sub-package.
+func yourDecode(_ string, _ []string, _ proto.Message) error {
+   return &yourType{}
+}
+
+func init() {
+   errors.RegisterLeafEncoder((*yourType)(nil), yourDecodeFunc)
+}
+
+func yourDecodeWrapper(cause error, _ string, _ []string, _ proto.Message) error {
+   // Note: the library already takes care of encoding/decoding the cause.
+   return &yourWrapperType{cause: cause}
+}
+
+func init() {
+   errors.RegisterWrapperDecoder((*yourWrapperType)(nil), yourDecodeWrapper)
+}
+```
+
+In the case where your type does not have any other field (empty
+struct for leafs, just a cause for wrappers), this is all you have to
+do.
+
+(See the type `withAssertionFailure` in
+[`assert/assert.go`](assert/assert.go) for an example of this simple
+case.)
+
+If your type does have additional fields, you *may* still not need a
+custom encoder.  This is because the library automatically
+encodes/decodes the main error message and any safe strings that your
+error types makes available via the `errors.SafeDetailer` interface
+(the `SafeDetails()` method).
+
+Say, for example, you have the following leaf type:
+
+```go
+type myLeaf struct {
+   code int
+}
+
+func (m *myLeaf) Error() string { return fmt.Sprintf("my error: %d" + m.code }
+```
+
+In that case, the library will automatically encode the result of
+calling `Error()`. This string will then be passed back to your
+decoder function as the first argument. This makes it possible
+to decode the `code` field exactly:
+
+```go
+func myLeafDecoder(msg string, _ []string, _ proto.Message) error {
+	codeS := strings.TrimPrefix(msg, "my error: ")
+	code, _ := strconv.Atoi(codeS)
+	// Note: error handling for strconv is omitted here to simplify
+	// the explanation. If your decoder function should fail, simply
+	// return a `nil` error object (not another unrelated error!).
+	return &myLeaf{code: code}
+}
+```
+
+Likewise, if your fields are PII-free, they are safe to expose via the
+`errors.SafeDetailer` interface. Those strings also get encoded
+automatically, and get passed to the decoder function as the second
+argument.
+
+For example, say you have the following leaf type:
+
+```go
+type myLeaf struct {
+   // both fields are PII-free.
+   code int
+   tag string
+}
+
+func (m *myLeaf) Error() string { ... }
+```
+
+Then you can expose the fields as safe details as follows:
+
+```go
+func (m *myLeaf) SafeDetails() []string {
+  return []string{fmt.Sprintf("%d", m.code), m.tag}
+}
+```
+
+(If the data is PII-free, then it is good to do this in any case: it
+enables any network system that receives an error of your type, but
+does not know about it, to still produce useful Sentry reports.)
+
+Once you have this, the decode function receives the strings and you
+can use them to re-construct the error:
+
+```go
+func myLeafDecoder(_ string, details []string, _ proto.Message) error {
+    // Note: you may want to test the length of the details slice
+	// is correct.
+    code, _ := strconv.Atoi(details[0])
+    tag := details[1]
+	return &myLeaf{code: code, tag: tag}
+}
+```
+
+(For an example, see the `withTelemetry` type in [`telemetry/with_telemetry.go`](telemetry/with_telemetry.go).)
+
+**The only case where you need a custom encoder is when your error
+type contains some fields that are not reflected in the error message
+(so you can't extract them back from there), and are not PII-free and
+thus cannot be reported as "safe details".**
+
+To take inspiration from examples, see the following types in the
+library that need a custom encoder:
+
+- Hints/details in [`hintdetail/with_hint.go`](hintdetail/with_hint.go) and [`hintdetail/with_detail.go`](hintdetail/with_detail.go).
+- Secondary error wrappers in [`secondary/with_secondary.go`](secondary/with_secondary.go).
+- Marker error wrappers at the end of [`markers/markers.go`](markers/markers.go).
 
 ## Error composition (summary)
 
