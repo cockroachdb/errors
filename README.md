@@ -18,6 +18,7 @@ Table of contents:
 - [What comes out of an error?](#What-comes-out-of-an-error)
 - [Available error leaves](#Available-error-leaves)
 - [Available wrapper constructors](#Available-wrapper-constructors)
+- [Providing PII-free details](#Providing-PII-free-details)
 - [Building your own error types](#Building-your-own-error-types)
 - [Error composition (summary)](#Error-composition-summary)
 - [API (not constructing error objects)](#API-not-constructing-error-objects)
@@ -226,6 +227,48 @@ return errors.Wrap(foo())
   - **when to use: when capturing/producing an error and a `context.Context` is available.**
   - what it does: it captures the `logtags.Buffer` object in the wrapper.
   - how to access the detail: `errors.GetContextTags()`, format with `%+v`, Sentry reports.
+
+## Providing PII-free details
+
+The library support PII-free strings essentially as follows:
+
+- by default, strings included in an error object are considered to be
+  PII-unsafe, and are stripped out when building a Sentry report.
+- some fields in the library are whitelisted by default.
+- you can opt additional strings in to Sentry reports.
+
+The following strings from this library are "whitelisted" upfront,
+considered to be PII-free, and thus included in Sentry reports automatically:
+
+- the *type* of error objects,
+- stack traces (containing only file paths, line numbers, function names - arguments are not included),
+- issue tracker links (including URL and detail field),
+- telemetry keys,
+- error domains,
+- context tag keys,
+- the `format string` argument of `Newf`, `AssertionFailedf`, etc (the constructors ending with `...f()`),
+- the *type* of the additional arguments passed to the `...f()` constructors,
+- the *value of specific argument types* passed to the `...f()` constructors, when known to be PII-safe.
+  For details of which arguments are considered PII-free, see the [`Redact()` function](safedetails/redact.go).
+
+It is possible to opt additional in to Sentry reporting, using either of the following methods:
+
+- implement the `errors.SafeDetailer` interface, providing the
+  `SafeDetails() []string` method on your error type.
+
+- enclose additional arguments passed to the `...f()` constructors with `errors.Safe()`. For example:
+  `err := errors.Newf("my code: %d", errors.Safe(123))`
+  — in this example, the value 123 will be included when a Sentry report is constructed.
+  - it also makes it available via `errors.GetSafeDetails()`/`GetAllSafeDetails()`.
+  - the value 123 is also part of the main error message returned by `Error()`.
+
+- attach additional arbitrary strings with `errors.WithSafeDetails(error, string, ...interface{}) error` and
+  also use `errors.Safe()`.
+  For example: `err = errors.WithSafeDetails(err, "additional data: %s", errors.Safe("hello"))`.
+  - in this example, the string "hello" will be included in Sentry reports.
+  - however, it is not part of the main error message returned by `Error()`.
+
+For more details on how Sentry reports are built, see the [`report`](report) sub-package.
 
 ## Building your own error types
 
