@@ -30,7 +30,7 @@ Table of contents:
 | error constructors (`New`, `Errorf` etc)                                                              | ✔                   | ✔                       | ✔                          | ✔                    |
 | error causes (`Cause` / `Unwrap`)                                                                     |                     | ✔                       | ✔                          | ✔                    |
 | cause barriers (`Opaque` / `Handled`)                                                                 |                     |                         | ✔                          | ✔                    |
-| `errors.Is()`                                                                                         |                     |                         | ✔                          | ✔                    |
+| `errors.As()`, `errors.Is()`                                                                          |                     |                         | ✔                          | ✔                    |
 | standard wrappers with efficient stack trace capture                                                  |                     | ✔                       |                            | ✔                    |
 | **transparent protobuf encode/decode with forward compatibility**                                     |                     |                         |                            | ✔                    |
 | **`errors.Is()` recognizes errors across the network**                                                |                     |                         |                            | ✔                    |
@@ -42,8 +42,7 @@ Table of contents:
 | wrappers for user-facing hints and details                                                            |                     |                         |                            | ✔                    |
 | wrappers to attach secondary causes                                                                   |                     |                         |                            | ✔                    |
 | wrappers to attach [`logtags`](https://github.com/cockroachdb/logtags) details from `context.Context` |                     |                         |                            | ✔                    |
-| `errors.As()`                                                                                         |                     |                         | ✔                          | (under construction)    |
-| `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | ✔                          | (under construction)    |
+| `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | ✔                          | (under construction) |
 
 "Forward compatibility" above refers to the ability of this library to
 recognize and properly handle network communication of error types it
@@ -444,6 +443,7 @@ type Wrapper interface { ... } // compatibility
 func Is(err, reference error) bool
 func IsAny(err error, references ...error) bool
 func If(err error, pred func(err error) (interface{}, bool)) (interface{}, bool)
+func As(err error, target interface{}) bool
 
 // Encode/decode errors.
 type EncodedError // this is protobuf-encodable

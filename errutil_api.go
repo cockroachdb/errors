@@ -93,3 +93,6 @@ func AssertionFailedWithDepthf(depth int, format string, args ...interface{}) er
 func NewAssertionErrorWithWrappedErrf(origErr error, format string, args ...interface{}) error {
 	return errutil.NewAssertionErrorWithWrappedErrDepthf(1, origErr, format, args...)
 }
+
+// As forwards a definition
+func As(err error, target interface{}) bool { return errutil.As(err, target) }
