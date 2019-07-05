@@ -16,6 +16,7 @@ package assert
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
@@ -59,6 +60,10 @@ type withAssertionFailure struct {
 	cause error
 }
 
+var _ error = (*withAssertionFailure)(nil)
+var _ fmt.Formatter = (*withAssertionFailure)(nil)
+var _ errbase.Formatter = (*withAssertionFailure)(nil)
+
 // ErrorHint implements the hintdetail.ErrorHinter interface.
 func (w *withAssertionFailure) ErrorHint() string {
 	return AssertionErrorHint + stdstrings.IssueReferral
@@ -70,6 +75,14 @@ const AssertionErrorHint = `You have encountered an unexpected error.`
 func (w *withAssertionFailure) Error() string { return w.cause.Error() }
 func (w *withAssertionFailure) Cause() error  { return w.cause }
 func (w *withAssertionFailure) Unwrap() error { return w.cause }
+
+func (w *withAssertionFailure) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+func (w *withAssertionFailure) FormatError(p errbase.Printer) error {
+	if p.Detail() {
+		p.Print("assertion failure")
+	}
+	return w.cause
+}
 
 func decodeAssertFailure(
 	_ context.Context, cause error, _ string, _ []string, _ proto.Message,

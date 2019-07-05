@@ -28,6 +28,11 @@ type unimplementedError struct {
 	IssueLink
 }
 
+var _ error = (*unimplementedError)(nil)
+var _ fmt.Formatter = (*unimplementedError)(nil)
+var _ errbase.Formatter = (*unimplementedError)(nil)
+var _ errbase.SafeDetailer = (*unimplementedError)(nil)
+
 func (w *unimplementedError) Error() string { return w.msg }
 func (w *unimplementedError) SafeDetails() []string {
 	return []string{w.IssueURL, w.Detail}
@@ -44,23 +49,20 @@ func (w *unimplementedError) ErrorHint() string {
 // UnimplementedErrorHint is the hint emitted upon unimplemented errors.
 const UnimplementedErrorHint = `You have attempted to use a feature that is not yet implemented.`
 
-func (w *unimplementedError) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%s", w.msg)
-			if w.IssueURL != "" {
-				fmt.Fprintf(s, "\n-- issue: %s", w.IssueURL)
-			}
-			if w.Detail != "" {
-				fmt.Fprintf(s, "\n-- detail: %s", w.Detail)
-			}
-			return
+func (w *unimplementedError) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+func (w *unimplementedError) FormatError(p errbase.Printer) error {
+	p.Print(w.msg)
+	if p.Detail() {
+		p.Print("\n(unimplemented error)")
+		if w.IssueURL != "" {
+			p.Printf("\nissue: %s", w.IssueURL)
 		}
-		fallthrough
-	case 's', 'q':
-		fmt.Fprintf(s, fmt.Sprintf("%%%c", verb), w.msg)
+		if w.Detail != "" {
+			p.Printf("\ndetail: %s", w.Detail)
+		}
 	}
+	return nil
 }
 
 func decodeUnimplementedError(

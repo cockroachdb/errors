@@ -59,3 +59,62 @@ func TestUnimplementedError(t *testing.T) {
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 
 }
+
+func TestFormatUnimp(t *testing.T) {
+	tt := testutils.T{t}
+
+	link := issuelink.IssueLink{IssueURL: "http://mysite"}
+	const woo = `woo`
+	const waawoo = `waa: woo`
+	testCases := []struct {
+		name          string
+		err           error
+		expFmtSimple  string
+		expFmtVerbose string
+	}{
+		{"unimp",
+			issuelink.UnimplementedError(link, "woo"),
+			woo, `
+woo:
+    (unimplemented error)
+    issue: http://mysite`},
+		{"unimp-details",
+			issuelink.UnimplementedError(issuelink.IssueLink{IssueURL: "http://mysite", Detail: "see more"}, "woo"),
+			woo, `
+woo:
+    (unimplemented error)
+    issue: http://mysite
+    detail: see more`},
+
+		{"wrapper + unimp",
+			&werrFmt{issuelink.UnimplementedError(link, "woo"), "waa"},
+			waawoo, `
+waa:
+    -- verbose wrapper:
+    waa
+  - woo:
+    (unimplemented error)
+    issue: http://mysite`},
+	}
+
+	for _, test := range testCases {
+		tt.Run(test.name, func(tt testutils.T) {
+			err := test.err
+
+			// %s is simple formatting
+			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+
+			// %v is simple formatting too, for compatibility with the past.
+			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+
+			// %q is always like %s but quotes the result.
+			ref := fmt.Sprintf("%q", test.expFmtSimple)
+			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+
+			// %+v is the verbose mode.
+			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
+			spv := fmt.Sprintf("%+v", err)
+			tt.CheckEqual(spv, refV)
+		})
+	}
+}
