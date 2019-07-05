@@ -59,7 +59,7 @@ type Formatter = errbase.Formatter
 type Printer = errbase.Printer
 
 // FormatError can be used to implement the fmt.Formatter interface.
-func FormatError(err Formatter, s fmt.State, verb rune) { errbase.FormatError(err, s, verb) }
+func FormatError(err error, s fmt.State, verb rune) { errbase.FormatError(err, s, verb) }
 
 // Opaque is provided for compatibility with xerrors.
 func Opaque(err error) error { return barriers.Handled(err) }
