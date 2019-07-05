@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cockroachdb/errors"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
 	"github.com/gogo/protobuf/proto"
@@ -59,6 +60,15 @@ func (w *withHTTPCode) Error() string { return w.cause.Error() }
 // it's also a wrapper.
 func (w *withHTTPCode) Cause() error  { return w.cause }
 func (w *withHTTPCode) Unwrap() error { return w.cause }
+
+// it knows how to format itself.
+func (w *withHTTPCode) Format(s fmt.State, verb rune) { errors.FormatError(w, s, verb) }
+func (w *withHTTPCode) FormatError(p errors.Printer) (next error) {
+	if p.Detail() {
+		p.Printf("http code: %d", w.code)
+	}
+	return w.cause
+}
 
 // it's an encodable error.
 func encodeWithHTTPCode(_ context.Context, err error) (string, []string, proto.Message) {

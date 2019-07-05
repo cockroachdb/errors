@@ -28,23 +28,23 @@ type withHint struct {
 	hint  string
 }
 
+var _ error = (*withHint)(nil)
+var _ ErrorHinter = (*withHint)(nil)
+var _ fmt.Formatter = (*withHint)(nil)
+var _ errbase.Formatter = (*withHint)(nil)
+
 func (w *withHint) ErrorHint() string { return w.hint }
 func (w *withHint) Error() string     { return w.cause.Error() }
 func (w *withHint) Cause() error      { return w.cause }
 func (w *withHint) Unwrap() error     { return w.cause }
 
-func (w *withHint) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%+v", w.cause)
-			fmt.Fprintf(s, "\n-- hint:\n%s", w.hint)
-			return
-		}
-		fallthrough
-	case 's', 'q':
-		errbase.FormatError(s, verb, w.cause)
+func (w *withHint) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+func (w *withHint) FormatError(p errbase.Printer) error {
+	if p.Detail() {
+		p.Printf("error with user hint: %s", w.hint)
 	}
+	return w.cause
 }
 
 func encodeWithHint(_ context.Context, err error) (string, []string, proto.Message) {

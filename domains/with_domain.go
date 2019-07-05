@@ -35,6 +35,8 @@ type withDomain struct {
 var _ error = (*withDomain)(nil)
 var _ errbase.SafeDetailer = (*withDomain)(nil)
 var _ errbase.TypeKeyMarker = (*withDomain)(nil)
+var _ fmt.Formatter = (*withDomain)(nil)
+var _ errbase.Formatter = (*withDomain)(nil)
 
 // withDomain is an error. The original error message is preserved.
 func (e *withDomain) Error() string { return e.cause.Error() }
@@ -43,7 +45,7 @@ func (e *withDomain) Error() string { return e.cause.Error() }
 func (e *withDomain) Cause() error  { return e.cause }
 func (e *withDomain) Unwrap() error { return e.cause }
 
-// FullErrorTypeMarker implements the TypeNameMarker interface.
+// ErrorKeyMarker implements the TypeNameMarker interface.
 // The full type name of barriers is extended with the domain as extra marker.
 // This ensures that domain-annotated errors appear to be of different types
 // for the purpose of Is().
@@ -54,19 +56,13 @@ func (e *withDomain) SafeDetails() []string {
 	return []string{string(e.domain)}
 }
 
-// Printing a barrier reveals its domain.
-func (e *withDomain) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%+v", e.cause)
-			fmt.Fprintf(s, "\n-- %s", e.domain)
-			return
-		}
-		fallthrough
-	case 's', 'q':
-		errbase.FormatError(s, verb, e.cause)
+func (e *withDomain) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+
+func (e *withDomain) FormatError(p errbase.Printer) error {
+	if p.Detail() {
+		p.Print(e.domain)
 	}
+	return e.cause
 }
 
 // A domain-annotated error is decoded exactly.

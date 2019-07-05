@@ -20,7 +20,6 @@ import (
 
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/withstack"
-	pkgErr "github.com/pkg/errors"
 )
 
 // New creates an error with a simple error message.
@@ -61,21 +60,6 @@ func NewWithDepthf(depth int, format string, args ...interface{}) error {
 	return err
 }
 
-// WithMessage wraps an error with a simple error message prefix.
-//
-// Detail output:
-// - message prefix via `Error()` and formatting using `%v`/`%s`/`%q`.
-func WithMessage(err error, msg string) error {
-	return pkgErr.WithMessage(err, msg)
-}
-
-// WithMessagef wraps an error with a simple error message prefix.
-func WithMessagef(err error, format string, args ...interface{}) error {
-	err = pkgErr.WithMessagef(err, format, args...)
-	err = safedetails.WithSafeDetails(err, format, args...)
-	return err
-}
-
 // Wrap wraps an error with a message prefix.
 // A stack trace is retained.
 //
@@ -93,7 +77,7 @@ func Wrap(err error, msg string) error {
 // The the doc of `Wrap()` for more details.
 func WrapWithDepth(depth int, err error, msg string) error {
 	if msg != "" {
-		err = pkgErr.WithMessage(err, msg)
+		err = WithMessage(err, msg)
 	}
 	err = withstack.WithStackDepth(err, depth+1)
 	return err
@@ -117,7 +101,7 @@ func Wrapf(err error, format string, args ...interface{}) error {
 // The the doc of `Wrapf()` for more details.
 func WrapWithDepthf(depth int, err error, format string, args ...interface{}) error {
 	if format != "" {
-		err = pkgErr.WithMessagef(err, format, args...)
+		err = WithMessagef(err, format, args...)
 	}
 	err = safedetails.WithSafeDetails(err, format, args...)
 	err = withstack.WithStackDepth(err, depth+1)

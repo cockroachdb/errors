@@ -34,7 +34,7 @@ func WithSafeDetails(err error, format string, args ...interface{}) error {
 	details := make([]string, 1, 1+len(args))
 	details[0] = format
 	for i, a := range args {
-		details = append(details, fmt.Sprintf("-- arg %d: %s", i, Redact(a)))
+		details = append(details, fmt.Sprintf("-- arg %d: %s", i+1, Redact(a)))
 	}
 	return &withSafeDetails{cause: err, safeDetails: details}
 }

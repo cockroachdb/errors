@@ -29,6 +29,11 @@ type opaqueLeaf struct {
 	details errorspb.EncodedErrorDetails
 }
 
+var _ error = (*opaqueLeaf)(nil)
+var _ SafeDetailer = (*opaqueLeaf)(nil)
+var _ fmt.Formatter = (*opaqueLeaf)(nil)
+var _ Formatter = (*opaqueLeaf)(nil)
+
 // opaqueWrapper is used when receiving an unknown wrapper type.
 // Its important property is that if it is communicated
 // back to some network system that _does_ know about
@@ -39,7 +44,10 @@ type opaqueWrapper struct {
 	details errorspb.EncodedErrorDetails
 }
 
-// the opaque error types are errors too.
+var _ error = (*opaqueWrapper)(nil)
+var _ SafeDetailer = (*opaqueWrapper)(nil)
+var _ fmt.Formatter = (*opaqueWrapper)(nil)
+var _ Formatter = (*opaqueWrapper)(nil)
 
 func (e *opaqueLeaf) Error() string { return e.msg }
 
@@ -54,6 +62,38 @@ func (e *opaqueWrapper) Error() string {
 func (e *opaqueWrapper) Cause() error  { return e.cause }
 func (e *opaqueWrapper) Unwrap() error { return e.cause }
 
-// they implement the safedetailer interface too.
 func (e *opaqueLeaf) SafeDetails() []string    { return e.details.ReportablePayload }
 func (e *opaqueWrapper) SafeDetails() []string { return e.details.ReportablePayload }
+
+func (e *opaqueLeaf) Format(s fmt.State, verb rune)    { FormatError(e, s, verb) }
+func (e *opaqueWrapper) Format(s fmt.State, verb rune) { FormatError(e, s, verb) }
+
+func (e *opaqueLeaf) FormatError(p Printer) (next error) {
+	p.Print(e.msg)
+	if p.Detail() {
+		p.Print("\n(opaque error leaf)")
+		p.Printf("\ntype name: %s", e.details.OriginalTypeName)
+		for i, d := range e.details.ReportablePayload {
+			p.Printf("\nreportable %d:\n%s", i, d)
+		}
+		if e.details.FullDetails != nil {
+			p.Printf("\npayload type: %s", e.details.FullDetails.TypeUrl)
+		}
+	}
+	return nil
+}
+
+func (e *opaqueWrapper) FormatError(p Printer) (next error) {
+	p.Print(e.prefix)
+	if p.Detail() {
+		p.Print("\n(opaque error wrapper)")
+		p.Printf("\ntype name: %s", e.details.OriginalTypeName)
+		for i, d := range e.details.ReportablePayload {
+			p.Printf("\nreportable %d:\n%s", i, d)
+		}
+		if e.details.FullDetails != nil {
+			p.Printf("\npayload type: %s", e.details.FullDetails.TypeUrl)
+		}
+	}
+	return e.cause
+}

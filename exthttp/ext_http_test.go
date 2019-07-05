@@ -43,4 +43,10 @@ func TestHTTP(t *testing.T) {
 	// If there are multiple codes, the most recent one wins.
 	otherErr = exthttp.WrapWithHTTPCode(otherErr, 404)
 	tt.CheckEqual(exthttp.GetHTTPCode(otherErr, 100), 404)
+
+	// The code is hidden when the error is printed with %v.
+	tt.CheckEqual(fmt.Sprintf("%v", err), `hello`)
+	// The code appears when the error is printed verbosely.
+	tt.CheckEqual(fmt.Sprintf("%+v", err), `http code: 302
+  - hello`)
 }

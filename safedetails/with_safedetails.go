@@ -32,24 +32,20 @@ func (e *withSafeDetails) SafeDetails() []string {
 	return e.safeDetails
 }
 
+var _ fmt.Formatter = (*withSafeDetails)(nil)
+var _ errbase.Formatter = (*withSafeDetails)(nil)
+
 // Printing a withSecondary reveals the details.
-func (e *withSafeDetails) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%+v", e.cause)
-			if len(e.safeDetails) > 0 {
-				fmt.Fprintf(s, "\n-- safe details:")
-				for _, d := range e.safeDetails {
-					fmt.Fprintf(s, "\n%s", d)
-				}
-			}
-			return
+func (e *withSafeDetails) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+
+func (e *withSafeDetails) FormatError(p errbase.Printer) error {
+	if p.Detail() && len(e.safeDetails) > 0 {
+		p.Printf("error with embedded safe details: %s", e.safeDetails[0])
+		for _, d := range e.safeDetails[1:] {
+			p.Printf("\n%s", d)
 		}
-		fallthrough
-	case 's', 'q':
-		errbase.FormatError(s, verb, e.cause)
 	}
+	return e.cause
 }
 
 func (e *withSafeDetails) Error() string { return e.cause.Error() }

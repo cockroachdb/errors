@@ -15,10 +15,14 @@
 package domains_test
 
 import (
+	goErr "errors"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/cockroachdb/errors/domains"
 	"github.com/cockroachdb/errors/domains/internal"
+	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
 	"github.com/cockroachdb/errors/testutils"
 	"github.com/kr/pretty"
@@ -170,4 +174,81 @@ func TestDomainsBreakErrorEquivalence(t *testing.T) {
 
 	tt.Check(!markers.Is(err1, err2))
 	tt.Check(!markers.Is(err2, err1))
+}
+
+func TestFormat(t *testing.T) {
+	tt := testutils.T{t}
+
+	baseErr := goErr.New("woo")
+	const woo = `woo`
+	const waawoo = `waa: woo`
+	testCases := []struct {
+		name          string
+		err           error
+		expFmtSimple  string
+		expFmtVerbose string
+	}{
+		{"keys",
+			domains.WithDomain(baseErr, domains.NoDomain),
+			woo, `
+error domain: <none>
+  - woo`},
+
+		{"keys + wrapper",
+			domains.WithDomain(&werrFmt{baseErr, "waa"}, domains.NoDomain),
+			waawoo, `
+error domain: <none>
+  - waa:
+    -- verbose wrapper:
+    waa
+  - woo`},
+
+		{"wrapper + keys",
+			&werrFmt{domains.WithDomain(baseErr, domains.NoDomain), "waa"},
+			waawoo, `
+waa:
+    -- verbose wrapper:
+    waa
+  - error domain: <none>
+  - woo`},
+	}
+
+	for _, test := range testCases {
+		tt.Run(test.name, func(tt testutils.T) {
+			err := test.err
+
+			// %s is simple formatting
+			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+
+			// %v is simple formatting too, for compatibility with the past.
+			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+
+			// %q is always like %s but quotes the result.
+			ref := fmt.Sprintf("%q", test.expFmtSimple)
+			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+
+			// %+v is the verbose mode.
+			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
+			spv := fmt.Sprintf("%+v", err)
+			tt.CheckEqual(spv, refV)
+		})
+	}
+}
+
+type werrFmt struct {
+	cause error
+	msg   string
+}
+
+var _ errbase.Formatter = (*werrFmt)(nil)
+
+func (e *werrFmt) Error() string                 { return fmt.Sprintf("%s: %v", e.msg, e.cause) }
+func (e *werrFmt) Unwrap() error                 { return e.cause }
+func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+func (e *werrFmt) FormatError(p errbase.Printer) error {
+	p.Print(e.msg)
+	if p.Detail() {
+		p.Printf("-- verbose wrapper:\n%s", e.msg)
+	}
+	return e.cause
 }

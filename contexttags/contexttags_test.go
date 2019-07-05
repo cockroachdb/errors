@@ -16,6 +16,9 @@ package contexttags_test
 
 import (
 	"context"
+	goErr "errors"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/cockroachdb/errors"
@@ -104,8 +107,8 @@ func TestTagRedaction(t *testing.T) {
 
 	// This will be our reference expected value.
 	refStrings := [][]string{
-		[]string{"planet1=string", "planet2=universe"},
-		[]string{"foo1=int", "xint", "bar1", "foo2=123", "y456", "bar2"},
+		[]string{"planet1=<string>", "planet2=universe"},
+		[]string{"foo1=<int>", "x<int>", "bar1", "foo2=123", "y456", "bar2"},
 	}
 
 	// Construct the error object.
@@ -134,4 +137,82 @@ func TestTagRedaction(t *testing.T) {
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 
+}
+
+func TestFormat(t *testing.T) {
+	tt := testutils.T{t}
+
+	ctx := logtags.AddTag(context.Background(), "thetag", nil)
+	baseErr := goErr.New("woo")
+	const woo = `woo`
+	const waawoo = `waa: woo`
+	testCases := []struct {
+		name          string
+		err           error
+		expFmtSimple  string
+		expFmtVerbose string
+	}{
+		{"tags",
+			contexttags.WithContextTags(baseErr, ctx),
+			woo, `
+error with context tags: thetag
+  - woo`},
+
+		{"tags + wrapper",
+			contexttags.WithContextTags(&werrFmt{baseErr, "waa"}, ctx),
+			waawoo, `
+error with context tags: thetag
+  - waa:
+    -- verbose wrapper:
+    waa
+  - woo`},
+
+		{"wrapper + tags",
+			&werrFmt{contexttags.WithContextTags(baseErr, ctx), "waa"},
+			waawoo, `
+waa:
+    -- verbose wrapper:
+    waa
+  - error with context tags: thetag
+  - woo`},
+	}
+
+	for _, test := range testCases {
+		tt.Run(test.name, func(tt testutils.T) {
+			err := test.err
+
+			// %s is simple formatting
+			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+
+			// %v is simple formatting too, for compatibility with the past.
+			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+
+			// %q is always like %s but quotes the result.
+			ref := fmt.Sprintf("%q", test.expFmtSimple)
+			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+
+			// %+v is the verbose mode.
+			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
+			spv := fmt.Sprintf("%+v", err)
+			tt.CheckEqual(spv, refV)
+		})
+	}
+}
+
+type werrFmt struct {
+	cause error
+	msg   string
+}
+
+var _ errbase.Formatter = (*werrFmt)(nil)
+
+func (e *werrFmt) Error() string                 { return fmt.Sprintf("%s: %v", e.msg, e.cause) }
+func (e *werrFmt) Unwrap() error                 { return e.cause }
+func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+func (e *werrFmt) FormatError(p errbase.Printer) error {
+	p.Print(e.msg)
+	if p.Detail() {
+		p.Printf("-- verbose wrapper:\n%s", e.msg)
+	}
+	return e.cause
 }

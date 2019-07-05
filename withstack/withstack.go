@@ -56,23 +56,22 @@ type withStack struct {
 	*stack
 }
 
+var _ error = (*withStack)(nil)
+var _ fmt.Formatter = (*withStack)(nil)
+var _ errbase.Formatter = (*withStack)(nil)
+var _ errbase.SafeDetailer = (*withStack)(nil)
+
 func (w *withStack) Error() string { return w.cause.Error() }
 func (w *withStack) Cause() error  { return w.cause }
 func (w *withStack) Unwrap() error { return w.cause }
 
-func (w *withStack) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%+v", w.Cause())
-			fmt.Fprintf(s, "\n-- stack trace:\n")
-			w.stack.Format(s, verb)
-			return
-		}
-		fallthrough
-	case 's', 'q':
-		errbase.FormatError(s, verb, w.cause)
+func (w *withStack) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+func (w *withStack) FormatError(p errbase.Printer) error {
+	if p.Detail() {
+		p.Printf("error with attached stack trace:%+v", w.stack)
 	}
+	return w.cause
 }
 
 func (w *withStack) SafeDetails() []string {

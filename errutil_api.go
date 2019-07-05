@@ -15,6 +15,8 @@
 package errors
 
 import (
+	"fmt"
+
 	"github.com/cockroachdb/errors/barriers"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errutil"
@@ -49,6 +51,15 @@ func Unwrap(err error) error { return errbase.UnwrapOnce(err) }
 type Wrapper interface {
 	Unwrap() error
 }
+
+// Formatter is provided for compatibility with xerrors.
+type Formatter = errbase.Formatter
+
+// Printer is provided for compatibility with xerrors.
+type Printer = errbase.Printer
+
+// FormatError can be used to implement the fmt.Formatter interface.
+func FormatError(err Formatter, s fmt.State, verb rune) { errbase.FormatError(err, s, verb) }
 
 // Opaque is provided for compatibility with xerrors.
 func Opaque(err error) error { return barriers.Handled(err) }

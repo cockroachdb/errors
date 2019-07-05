@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -66,4 +67,105 @@ func TestDetailCapture(t *testing.T) {
 	t.Run("remote", func(t *testing.T) {
 		subTest(t, newErr)
 	})
+}
+
+func TestFormat(t *testing.T) {
+	tt := testutils.T{t}
+
+	baseErr := errors.New("woo")
+	const woo = `woo`
+	const waawoo = `waa: woo`
+	testCases := []struct {
+		name          string
+		err           error
+		expFmtSimple  string
+		expFmtVerbose string
+	}{
+		{"safe onearg",
+			safedetails.WithSafeDetails(baseErr, "a"),
+			woo, `
+error with embedded safe details: a
+  - woo`},
+
+		{"safe err",
+			safedetails.WithSafeDetails(baseErr, "a %v",
+				&os.PathError{
+					Op:   "open",
+					Path: "/hidden",
+					Err:  os.ErrNotExist,
+				}),
+			woo, `
+error with embedded safe details: a %v
+    -- arg 1: *os.PathError: open <redacted>: file does not exist
+  - woo`},
+
+		{"safe",
+			safedetails.WithSafeDetails(baseErr, "a %s %s", "b", safedetails.Safe("c")),
+			woo, `
+error with embedded safe details: a %s %s
+    -- arg 1: <string>
+    -- arg 2: c
+  - woo`},
+
+		{"safe + wrapper",
+			safedetails.WithSafeDetails(&werrFmt{baseErr, "waa"}, "a %s %s", "b", safedetails.Safe("c")),
+			waawoo, `
+error with embedded safe details: a %s %s
+    -- arg 1: <string>
+    -- arg 2: c
+  - waa:
+    -- verbose wrapper:
+    waa
+  - woo`},
+
+		{"wrapper + safe",
+			&werrFmt{safedetails.WithSafeDetails(baseErr, "a %s %s", "b", safedetails.Safe("c")), "waa"},
+			waawoo, `
+waa:
+    -- verbose wrapper:
+    waa
+  - error with embedded safe details: a %s %s
+    -- arg 1: <string>
+    -- arg 2: c
+  - woo`},
+	}
+
+	for _, test := range testCases {
+		tt.Run(test.name, func(tt testutils.T) {
+			err := test.err
+
+			// %s is simple formatting
+			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+
+			// %v is simple formatting too, for compatibility with the past.
+			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+
+			// %q is always like %s but quotes the result.
+			ref := fmt.Sprintf("%q", test.expFmtSimple)
+			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+
+			// %+v is the verbose mode.
+			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
+			spv := fmt.Sprintf("%+v", err)
+			tt.CheckEqual(spv, refV)
+		})
+	}
+}
+
+type werrFmt struct {
+	cause error
+	msg   string
+}
+
+var _ errbase.Formatter = (*werrFmt)(nil)
+
+func (e *werrFmt) Error() string                 { return fmt.Sprintf("%s: %v", e.msg, e.cause) }
+func (e *werrFmt) Unwrap() error                 { return e.cause }
+func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+func (e *werrFmt) FormatError(p errbase.Printer) error {
+	p.Print(e.msg)
+	if p.Detail() {
+		p.Printf("-- verbose wrapper:\n%s", e.msg)
+	}
+	return e.cause
 }

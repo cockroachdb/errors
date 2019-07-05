@@ -83,7 +83,7 @@ github.com/cockroachdb/errors/report_test/*report_test.myWrapper (some/previous/
 		types := fmt.Sprintf("%s", p.Extra["error types"])
 		tt.CheckEqual(types, expectedTypes)
 
-		expectedDetail := "universe %d\n-- arg 0: 123"
+		expectedDetail := "universe %d\n-- arg 1: 123"
 		detail := fmt.Sprintf("%s", p.Extra["1: details"])
 		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)
 

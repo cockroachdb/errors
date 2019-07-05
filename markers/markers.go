@@ -16,6 +16,7 @@ package markers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errorspb"
@@ -156,9 +157,26 @@ type withMark struct {
 	mark  errorMark
 }
 
+var _ error = (*withMark)(nil)
+var _ fmt.Formatter = (*withMark)(nil)
+var _ errbase.Formatter = (*withMark)(nil)
+
 func (m *withMark) Error() string { return m.cause.Error() }
 func (m *withMark) Cause() error  { return m.cause }
 func (m *withMark) Unwrap() error { return m.cause }
+
+func (m *withMark) Format(s fmt.State, verb rune) { errbase.FormatError(m, s, verb) }
+
+func (m *withMark) FormatError(p errbase.Printer) error {
+	if p.Detail() {
+		p.Printf("error with mark override:\n%q\n%s::%s",
+			m.mark.msg,
+			m.mark.types[0].FamilyName,
+			m.mark.types[0].Extension,
+		)
+	}
+	return m.cause
+}
 
 func encodeMark(_ context.Context, err error) (msg string, _ []string, payload proto.Message) {
 	m := err.(*withMark)

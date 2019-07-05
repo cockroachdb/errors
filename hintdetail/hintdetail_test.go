@@ -16,6 +16,7 @@ package hintdetail_test
 
 import (
 	"context"
+	goErr "errors"
 	"fmt"
 	"strings"
 	"testing"
@@ -52,8 +53,8 @@ func TestDetail(t *testing.T) {
 		tt.CheckDeepEqual(details, []string{"foo", "bar"})
 
 		errV := fmt.Sprintf("%+v", err)
-		tt.Check(strings.Contains(errV, "\nfoo"))
-		tt.Check(strings.Contains(errV, "\nbar"))
+		tt.Check(strings.Contains(errV, "detail: foo"))
+		tt.Check(strings.Contains(errV, "detail: bar"))
 	}
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
@@ -89,8 +90,8 @@ func TestHint(t *testing.T) {
 		tt.CheckDeepEqual(hints, []string{"foo", "bar"})
 
 		errV := fmt.Sprintf("%+v", err)
-		tt.Check(strings.Contains(errV, "\nfoo"))
-		tt.Check(strings.Contains(errV, "\nbar"))
+		tt.Check(strings.Contains(errV, "hint: foo"))
+		tt.Check(strings.Contains(errV, "hint: bar"))
 	}
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
@@ -208,4 +209,103 @@ func TestMultiHintDetail(t *testing.T) {
 	err = hintdetail.WithDetail(err, "foo")
 	err = hintdetail.WithDetail(err, "bar")
 	tt.CheckEqual(hintdetail.FlattenDetails(err), "foo\n--\nbar")
+}
+
+func TestFormat(t *testing.T) {
+	tt := testutils.T{t}
+
+	baseErr := goErr.New("woo")
+	const woo = `woo`
+	const waawoo = `waa: woo`
+	testCases := []struct {
+		name          string
+		err           error
+		expFmtSimple  string
+		expFmtVerbose string
+	}{
+		{"hint",
+			hintdetail.WithHint(baseErr, "a"),
+			woo, `
+error with user hint: a
+  - woo`},
+		{"detail",
+			hintdetail.WithDetail(baseErr, "a"),
+			woo, `
+error with user detail: a
+  - woo`},
+
+		{"hint + wrapper",
+			hintdetail.WithHint(&werrFmt{baseErr, "waa"}, "a"),
+			waawoo, `
+error with user hint: a
+  - waa:
+    -- verbose wrapper:
+    waa
+  - woo`},
+
+		{"detail + wrapper",
+			hintdetail.WithDetail(&werrFmt{baseErr, "waa"}, "a"),
+			waawoo, `
+error with user detail: a
+  - waa:
+    -- verbose wrapper:
+    waa
+  - woo`},
+
+		{"wrapper + hint",
+			&werrFmt{hintdetail.WithHint(baseErr, "a"), "waa"},
+			waawoo, `
+waa:
+    -- verbose wrapper:
+    waa
+  - error with user hint: a
+  - woo`},
+		{"wrapper + detail",
+			&werrFmt{hintdetail.WithDetail(baseErr, "a"), "waa"},
+			waawoo, `
+waa:
+    -- verbose wrapper:
+    waa
+  - error with user detail: a
+  - woo`},
+	}
+
+	for _, test := range testCases {
+		tt.Run(test.name, func(tt testutils.T) {
+			err := test.err
+
+			// %s is simple formatting
+			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+
+			// %v is simple formatting too, for compatibility with the past.
+			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+
+			// %q is always like %s but quotes the result.
+			ref := fmt.Sprintf("%q", test.expFmtSimple)
+			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+
+			// %+v is the verbose mode.
+			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
+			spv := fmt.Sprintf("%+v", err)
+			tt.CheckEqual(spv, refV)
+		})
+	}
+}
+
+type werrFmt struct {
+	cause error
+	msg   string
+}
+
+var _ errbase.Formatter = (*werrFmt)(nil)
+
+func (e *werrFmt) Error() string                 { return fmt.Sprintf("%s: %v", e.msg, e.cause) }
+func (e *werrFmt) Unwrap() error                 { return e.cause }
+func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+func (e *werrFmt) FormatError(p errbase.Printer) error {
+	p.Print(e.msg)
+	if p.Detail() {
+		p.Printf("-- verbose wrapper:\n%s", e.msg)
+	}
+	return e.cause
 }

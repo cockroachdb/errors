@@ -16,6 +16,7 @@ package barriers_test
 
 import (
 	"context"
+	goErr "errors"
 	"fmt"
 	"strings"
 	"testing"
@@ -97,4 +98,90 @@ func TestHandledWithMessagef(t *testing.T) {
 	b2 := barriers.HandledWithMessagef(origErr, "woo %s", "woo")
 
 	tt.CheckEqual(b1.Error(), b2.Error())
+}
+
+func TestFormat(t *testing.T) {
+	tt := testutils.T{t}
+
+	const woo = `woo`
+	const waawoo = `waa: woo`
+	testCases := []struct {
+		name          string
+		err           error
+		expFmtSimple  string
+		expFmtVerbose string
+	}{
+		{"handled", barriers.Handled(goErr.New("woo")), woo, `
+woo:
+    original cause behind barrier:
+    woo`},
+
+		{"handled + handled", barriers.Handled(barriers.Handled(goErr.New("woo"))), woo, `
+woo:
+    original cause behind barrier:
+    woo:
+        original cause behind barrier:
+        woo`},
+
+		{"handledmsg", barriers.HandledWithMessage(goErr.New("woo"), "waa"), "waa", `
+waa:
+    original cause behind barrier:
+    woo`},
+
+		{"handledmsg + handledmsg", barriers.HandledWithMessage(
+			barriers.HandledWithMessage(
+				goErr.New("woo"), "waa"), "wuu"), `wuu`, `
+wuu:
+    original cause behind barrier:
+    waa:
+        original cause behind barrier:
+        woo`},
+
+		{"handled + wrapper", barriers.Handled(&werrFmt{goErr.New("woo"), "waa"}), waawoo, `
+waa: woo:
+    original cause behind barrier:
+    waa:
+        -- verbose wrapper:
+        waa
+      - woo`},
+	}
+
+	for _, test := range testCases {
+		tt.Run(test.name, func(tt testutils.T) {
+			err := test.err
+
+			// %s is simple formatting
+			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+
+			// %v is simple formatting too, for compatibility with the past.
+			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+
+			// %q is always like %s but quotes the result.
+			ref := fmt.Sprintf("%q", test.expFmtSimple)
+			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+
+			// %+v is the verbose mode.
+			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
+			spv := fmt.Sprintf("%+v", err)
+			tt.CheckEqual(spv, refV)
+		})
+	}
+}
+
+type werrFmt struct {
+	cause error
+	msg   string
+}
+
+var _ errbase.Formatter = (*werrFmt)(nil)
+
+func (e *werrFmt) Error() string                 { return fmt.Sprintf("%s: %v", e.msg, e.cause) }
+func (e *werrFmt) Unwrap() error                 { return e.cause }
+func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+func (e *werrFmt) FormatError(p errbase.Printer) error {
+	p.Print(e.msg)
+	if p.Detail() {
+		p.Printf("-- verbose wrapper:\n%s", e.msg)
+	}
+	return e.cause
 }

@@ -28,23 +28,23 @@ type withDetail struct {
 	detail string
 }
 
+var _ error = (*withDetail)(nil)
+var _ ErrorDetailer = (*withDetail)(nil)
+var _ fmt.Formatter = (*withDetail)(nil)
+var _ errbase.Formatter = (*withDetail)(nil)
+
 func (w *withDetail) ErrorDetail() string { return w.detail }
 func (w *withDetail) Error() string       { return w.cause.Error() }
 func (w *withDetail) Cause() error        { return w.cause }
 func (w *withDetail) Unwrap() error       { return w.cause }
 
-func (w *withDetail) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%+v", w.cause)
-			fmt.Fprintf(s, "\n-- detail:\n%s", w.detail)
-			return
-		}
-		fallthrough
-	case 's', 'q':
-		errbase.FormatError(s, verb, w.cause)
+func (w *withDetail) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+func (w *withDetail) FormatError(p errbase.Printer) error {
+	if p.Detail() {
+		p.Printf("error with user detail: %s", w.detail)
 	}
+	return w.cause
 }
 
 func encodeWithDetail(_ context.Context, err error) (string, []string, proto.Message) {

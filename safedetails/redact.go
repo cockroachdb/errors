@@ -145,7 +145,7 @@ func (a *unresolvedAddr) String() string {
 func typAnd(r interface{}, msg string) string {
 	typ := fmt.Sprintf("%T", r)
 	if msg == "" {
-		return typ
+		return fmt.Sprintf("<%s>", typ)
 	}
 	return typ + ": " + msg
 }

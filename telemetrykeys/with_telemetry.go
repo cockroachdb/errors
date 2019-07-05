@@ -27,23 +27,24 @@ type withTelemetry struct {
 	keys  []string
 }
 
-func (w *withTelemetry) Error() string         { return w.cause.Error() }
-func (w *withTelemetry) Cause() error          { return w.cause }
-func (w *withTelemetry) Unwrap() error         { return w.cause }
+var _ error = (*withTelemetry)(nil)
+var _ errbase.SafeDetailer = (*withTelemetry)(nil)
+var _ fmt.Formatter = (*withTelemetry)(nil)
+var _ errbase.Formatter = (*withTelemetry)(nil)
+
+func (w *withTelemetry) Error() string { return w.cause.Error() }
+func (w *withTelemetry) Cause() error  { return w.cause }
+func (w *withTelemetry) Unwrap() error { return w.cause }
+
 func (w *withTelemetry) SafeDetails() []string { return w.keys }
 
-func (w *withTelemetry) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%+v", w.cause)
-			fmt.Fprintf(s, "\n-- telemetry keys: %+v", w.keys)
-			return
-		}
-		fallthrough
-	case 's', 'q':
-		errbase.FormatError(s, verb, w.cause)
+func (w *withTelemetry) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+func (w *withTelemetry) FormatError(p errbase.Printer) (next error) {
+	if p.Detail() {
+		p.Printf("error with telemetry keys: %+v", w.keys)
 	}
+	return w.cause
 }
 
 func decodeWithTelemetry(

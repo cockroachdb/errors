@@ -39,6 +39,8 @@ type withContext struct {
 
 var _ error = (*withContext)(nil)
 var _ errbase.SafeDetailer = (*withContext)(nil)
+var _ fmt.Formatter = (*withContext)(nil)
+var _ errbase.Formatter = (*withContext)(nil)
 
 // withContext is an error. The original error message is preserved.
 func (w *withContext) Error() string { return w.cause.Error() }
@@ -48,20 +50,13 @@ func (w *withContext) Cause() error  { return w.cause }
 func (w *withContext) Unwrap() error { return w.cause }
 
 // Printing a withContext reveals the tags.
-func (w *withContext) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%+v", w.cause)
-			if w.tags != nil {
-				fmt.Fprintf(s, "\n-- context: %s", w.tags.String())
-			}
-			return
-		}
-		fallthrough
-	case 's', 'q':
-		errbase.FormatError(s, verb, w.cause)
+func (w *withContext) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+func (w *withContext) FormatError(p errbase.Printer) error {
+	if p.Detail() && w.tags != nil {
+		p.Printf("error with context tags: %s", w.tags.String())
 	}
+	return w.cause
 }
 
 // SafeDetails implements the errbase.SafeDetailer interface.

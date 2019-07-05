@@ -65,6 +65,7 @@ older version of the package.
 - implement your own error leaf types and wrapper types:
   - implement the `error` and `errors.Wrapper` interfaces as usual.
   - register encode/decode functions: call `errors.Register{Leaf,Wrapper}{Encoder,Decoder}()` in a `init()` function in your package.
+  - implement `Format()` that redirects to `errors.FormatError()`.
   - see the section [Building your own error types](#Building-your-own-error-types) below.
 
 ## What comes out of an error?
@@ -277,7 +278,14 @@ interface (an `Unwrap()` method). You may also want to implement the
 `Cause()` method for backward compatibility with
 `github.com/pkg/errors`, if your project also uses that.
 
-Additionally, you may want your new error type to be portable across
+If your error type is a wrapper, you should implement a `Format()`
+method that redirects to `errors.FormatError()`, otherwise `%+v` will
+not work. Additionally, if your type has a payload not otherwise
+visible via `Error()`, you may want to implement
+`errors.Formatter`. See [making `%+v` work with your
+type](#Making-v-work-with-your-type) below for details.
+
+Finally, you may want your new error type to be portable across
 the network.
 
 If your error type is a leaf, and already implements `proto.Message`
@@ -409,6 +417,67 @@ library that need a custom encoder:
 - Hints/details in [`hintdetail/with_hint.go`](hintdetail/with_hint.go) and [`hintdetail/with_detail.go`](hintdetail/with_detail.go).
 - Secondary error wrappers in [`secondary/with_secondary.go`](secondary/with_secondary.go).
 - Marker error wrappers at the end of [`markers/markers.go`](markers/markers.go).
+
+### Making `%+v` work with your type
+
+In short:
+
+- When in doubt, you should always implement the `fmt.Formatter`
+  interface (`Format(fmt.State, rune)`) on your custom error types,
+  exactly as follows:
+
+  ```go
+  func (e *yourType) Format(s *fmt.State, verb rune) { errors.FormatError(e, s, verb) }
+  ```
+
+  (If you do not provide this redirection for your own custom wrapper
+  type, this will disable the recursive application of the `%+v` flag
+  to the causes chained from your wrapper.)
+
+- You may optionally implement the `errors.Formatter` interface:
+  `FormatError(p errors.Printer) (next error)`.  This is optional, but
+  should be done when some details are not included by `Error()` and
+  should be emitted upon `%+v`.
+
+The example `withHTTPCode` wrapper [included in the source tree](exthttp/ext_http.go)
+achieves this as follows:
+
+```go
+// Format() implements fmt.Formatter, is required until Go knows about FormatError.
+func (w *withHTTPCode) Format(s fmt.State, verb rune) { errors.FormatError(w, s, verb) }
+
+// FormatError() formats the error.
+func (w *withHTTPCode) FormatError(p errors.Printer) (next error) {
+	// Note: no need to print out the cause here!
+	// FormatError() knows how to do this automatically.
+	if p.Detail() {
+		p.Printf("http code: %d", w.code)
+	}
+	return w.cause
+}
+
+```
+
+Technical details follow:
+
+- The errors library follows [the Go 2
+proposal](https://go.googlesource.com/proposal/+/master/design/29934-error-values.md).
+
+- At some point in the future, Go's standard `fmt` library will learn
+  [how to recognize error wrappers, and how to use the `errors.Formatter`
+  interface automatically](https://github.com/golang/go/issues/29934).  Until
+  then, you must ensure that you also implement a `Format()` method
+  (from `fmt.Formatter`) that redirects to `errors.FormatError`.
+
+  Note: you may implement `fmt.Formatter` (`Format()` method) in this
+  way without implementing `errors.Formatter` (a `FormatError()`
+  method). In that case, `errors.FormatError` will use a separate code
+  path that does "the right thing", even for wrappers.
+
+- The library provides an implementation of `errors.FormatError()`,
+  modeled after the same function in Go 2. This is responsible for
+  printing out error details, and knows how to present a chain of
+  causes in a semi-structured format upon formatting with `%+v`.
 
 ## Error composition (summary)
 

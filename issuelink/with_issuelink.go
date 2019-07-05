@@ -29,9 +29,15 @@ type withIssueLink struct {
 	IssueLink
 }
 
+var _ error = (*withIssueLink)(nil)
+var _ errbase.SafeDetailer = (*withIssueLink)(nil)
+var _ fmt.Formatter = (*withIssueLink)(nil)
+var _ errbase.Formatter = (*withIssueLink)(nil)
+
 func (w *withIssueLink) Error() string { return w.cause.Error() }
 func (w *withIssueLink) Cause() error  { return w.cause }
 func (w *withIssueLink) Unwrap() error { return w.cause }
+
 func (w *withIssueLink) SafeDetails() []string {
 	return []string{w.IssueURL, w.Detail}
 }
@@ -56,23 +62,19 @@ func maybeAppendReferral(buf *bytes.Buffer, link IssueLink) {
 	}
 }
 
-func (w *withIssueLink) Format(s fmt.State, verb rune) {
-	switch verb {
-	case 'v':
-		if s.Flag('+') {
-			fmt.Fprintf(s, "%+v", w.cause)
-			if w.IssueURL != "" {
-				fmt.Fprintf(s, "\n-- issue: %s", w.IssueURL)
-			}
-			if w.Detail != "" {
-				fmt.Fprintf(s, "\n-- detail: %s", w.Detail)
-			}
-			return
+func (w *withIssueLink) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+func (w *withIssueLink) FormatError(p errbase.Printer) error {
+	if p.Detail() {
+		p.Print("error with linked issue")
+		if w.IssueURL != "" {
+			p.Printf("\nissue: %s", w.IssueURL)
 		}
-		fallthrough
-	case 's', 'q':
-		errbase.FormatError(s, verb, w.cause)
+		if w.Detail != "" {
+			p.Printf("\ndetail: %s", w.Detail)
+		}
 	}
+	return w.cause
 }
 
 func decodeWithIssueLink(
