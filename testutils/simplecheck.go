@@ -121,7 +121,7 @@ func (t *T) Check(cond bool) {
 func (t *T) CheckEqual(val, ref interface{}) {
 	t.Helper()
 	if val != ref {
-		t.failWithf(false, "values not equal\ngot: %# v\nexpected: %# v",
+		t.failWithf(false, "values not equal\n     got: %# v\nexpected: %# v",
 			pretty.Formatter(val), pretty.Formatter(ref))
 	}
 }
