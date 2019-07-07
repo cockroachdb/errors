@@ -16,6 +16,12 @@ package errors
 
 import "github.com/cockroachdb/errors/hintdetail"
 
+// ErrorHinter forwards a definition.
+type ErrorHinter = hintdetail.ErrorHinter
+
+// ErrorDetailer forwards a definition.
+type ErrorDetailer = hintdetail.ErrorDetailer
+
 // WithHint forwards a definition.
 func WithHint(err error, msg string) error { return hintdetail.WithHint(err, msg) }
 
