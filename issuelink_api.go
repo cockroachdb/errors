@@ -46,3 +46,6 @@ func HasUnimplementedError(err error) bool { return issuelink.HasUnimplementedEr
 
 // IsUnimplementedError forwards a definition.
 func IsUnimplementedError(err error) bool { return issuelink.IsUnimplementedError(err) }
+
+// UnimplementedErrorHint forwards a definition.
+const UnimplementedErrorHint = issuelink.UnimplementedErrorHint
