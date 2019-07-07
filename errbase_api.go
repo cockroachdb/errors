@@ -55,6 +55,9 @@ func RegisterLeafDecoder(typeName TypeKey, decoder LeafDecoder) {
 // TypeKey forwards a definition.
 type TypeKey = errbase.TypeKey
 
+// GetTypeKey forwards a definition.
+func GetTypeKey(err error) TypeKey { return errbase.GetTypeKey(err) }
+
 // LeafDecoder forwards a definition.
 type LeafDecoder = errbase.LeafDecoder
 
