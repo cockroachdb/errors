@@ -39,7 +39,7 @@ func decodeLeaf(ctx context.Context, enc *errorspb.EncodedErrorLeaf) error {
 		if err != nil {
 			// It's OK if we can't decode. We'll use
 			// the opaque type below.
-			WarningFn(ctx, "error while unmarshalling error: %+v", err)
+			warningFn(ctx, "error while unmarshalling error: %+v", err)
 		} else {
 			payload = d.Message
 		}
@@ -85,7 +85,7 @@ func decodeWrapper(ctx context.Context, enc *errorspb.EncodedWrapper) error {
 		if err != nil {
 			// It's OK if we can't decode. We'll use
 			// the opaque type below.
-			WarningFn(ctx, "error while unmarshalling wrapper error: %+v", err)
+			warningFn(ctx, "error while unmarshalling wrapper error: %+v", err)
 		} else {
 			payload = d.Message
 		}

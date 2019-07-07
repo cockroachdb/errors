@@ -81,3 +81,6 @@ func RegisterWrapperEncoder(typeName TypeKey, encoder WrapperEncoder) {
 
 // WrapperEncoder forwards a definition.
 type WrapperEncoder = errbase.WrapperEncoder
+
+// SetWarningFn forwards a definition.
+func SetWarningFn(fn func(context.Context, string, ...interface{})) { errbase.SetWarningFn(fn) }

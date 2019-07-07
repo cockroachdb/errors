@@ -84,9 +84,15 @@ func encodeLeaf(ctx context.Context, err error) EncodedError {
 	}
 }
 
-// WarningFn can be overridden with a suitable logging function.
-var WarningFn = func(ctx context.Context, format string, args ...interface{}) {
+// warningFn can be overridden with a suitable logging function using
+// SetWarningFn() below.
+var warningFn = func(_ context.Context, format string, args ...interface{}) {
 	log.Printf(format, args...)
+}
+
+// SetWarningFn enables configuration of the warning function.
+func SetWarningFn(fn func(context.Context, string, ...interface{})) {
+	warningFn = fn
 }
 
 func encodeAsAny(ctx context.Context, err error, payload proto.Message) *types.Any {
@@ -96,7 +102,7 @@ func encodeAsAny(ctx context.Context, err error, payload proto.Message) *types.A
 
 	any, marshalErr := types.MarshalAny(payload)
 	if marshalErr != nil {
-		WarningFn(ctx,
+		warningFn(ctx,
 			"error %+v (%T) announces proto message, but marshaling fails: %+v",
 			err, err, marshalErr)
 		return nil
