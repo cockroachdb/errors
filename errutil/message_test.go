@@ -122,6 +122,26 @@ error with attached stack trace:
   - woo`,
 		},
 
+		{"handled assert",
+			errutil.HandleAsAssertionFailure(&werrFmt{goErr.New("woo"), "wuu"}),
+			`wuu: woo`,
+			`
+assertion failure
+  - error with attached stack trace:
+    github.com/cockroachdb/errors/errutil_test.TestFormat
+    <tab><path>
+    testing.tRunner
+    <tab><path>
+    runtime.goexit
+    <tab><path>
+  - wuu: woo:
+    original cause behind barrier:
+    wuu:
+        -- verbose wrapper:
+        wuu
+      - woo`,
+		},
+
 		{"assert + wrap",
 			errutil.NewAssertionErrorWithWrappedErrf(&werrFmt{goErr.New("woo"), "wuu"}, "waa: %s", "hello"),
 			`waa: hello: wuu: woo`, `
