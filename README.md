@@ -11,6 +11,8 @@ automatically formats error details and strips them of PII.
 
 See also [the design RFC](https://github.com/cockroachdb/cockroach/blob/master/docs/RFCS/20190318_error_handling.md).
 
+[![Build Status](https://travis-ci.org/cockroachdb/errors.svg?branch=master)](https://travis-ci.org/cockroachdb/errors)
+
 Table of contents:
 
 - [Features](#Features)
