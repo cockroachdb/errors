@@ -97,7 +97,7 @@ func (e *barrierError) Format(s fmt.State, verb rune) { errbase.FormatError(e, s
 func (e *barrierError) FormatError(p errbase.Printer) (next error) {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("\noriginal cause behind barrier:\n%+v", e.maskedErr)
+		p.Printf("\noriginal cause behind barrier: %+v", e.maskedErr)
 	}
 	return nil
 }

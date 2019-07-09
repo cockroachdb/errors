@@ -113,34 +113,27 @@ func TestFormat(t *testing.T) {
 	}{
 		{"handled", barriers.Handled(goErr.New("woo")), woo, `
 woo:
-    original cause behind barrier:
-    woo`},
+    original cause behind barrier: woo`},
 
 		{"handled + handled", barriers.Handled(barriers.Handled(goErr.New("woo"))), woo, `
 woo:
-    original cause behind barrier:
-    woo:
-        original cause behind barrier:
-        woo`},
+    original cause behind barrier: woo:
+        original cause behind barrier: woo`},
 
 		{"handledmsg", barriers.HandledWithMessage(goErr.New("woo"), "waa"), "waa", `
 waa:
-    original cause behind barrier:
-    woo`},
+    original cause behind barrier: woo`},
 
 		{"handledmsg + handledmsg", barriers.HandledWithMessage(
 			barriers.HandledWithMessage(
 				goErr.New("woo"), "waa"), "wuu"), `wuu`, `
 wuu:
-    original cause behind barrier:
-    waa:
-        original cause behind barrier:
-        woo`},
+    original cause behind barrier: waa:
+        original cause behind barrier: woo`},
 
 		{"handled + wrapper", barriers.Handled(&werrFmt{goErr.New("woo"), "waa"}), waawoo, `
 waa: woo:
-    original cause behind barrier:
-    waa:
+    original cause behind barrier: waa:
         -- verbose wrapper:
         waa
       - woo`},

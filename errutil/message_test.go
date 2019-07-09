@@ -135,8 +135,7 @@ assertion failure
     runtime.goexit
     <tab><path>
   - wuu: woo:
-    original cause behind barrier:
-    wuu:
+    original cause behind barrier: wuu:
         -- verbose wrapper:
         wuu
       - woo`,
@@ -157,8 +156,7 @@ assertion failure
     -- arg 1: <string>
   - waa: hello:
   - wuu: woo:
-    original cause behind barrier:
-    wuu:
+    original cause behind barrier: wuu:
         -- verbose wrapper:
         wuu
       - woo`,
@@ -176,8 +174,7 @@ assertion failure
     runtime.goexit
     <tab><path>
   - wuu: woo:
-    original cause behind barrier:
-    wuu:
+    original cause behind barrier: wuu:
         -- verbose wrapper:
         wuu
       - woo`,
@@ -198,8 +195,7 @@ assertion failure
     -- arg 1: <int>
   - %!(EXTRA int=123):
   - wuu: woo:
-    original cause behind barrier:
-    wuu:
+    original cause behind barrier: wuu:
         -- verbose wrapper:
         wuu
       - woo`,
