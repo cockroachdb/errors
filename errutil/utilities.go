@@ -55,7 +55,9 @@ func Newf(format string, args ...interface{}) error {
 // See the doc of `New()` for more details.
 func NewWithDepthf(depth int, format string, args ...interface{}) error {
 	err := fmt.Errorf(format, args...)
-	err = safedetails.WithSafeDetails(err, format, args...)
+	if format != "" || len(args) > 0 {
+		err = safedetails.WithSafeDetails(err, format, args...)
+	}
 	err = withstack.WithStackDepth(err, 1+depth)
 	return err
 }
@@ -100,10 +102,10 @@ func Wrapf(err error, format string, args ...interface{}) error {
 // trace is configurable.
 // The the doc of `Wrapf()` for more details.
 func WrapWithDepthf(depth int, err error, format string, args ...interface{}) error {
-	if format != "" {
+	if format != "" || len(args) > 0 {
 		err = WithMessagef(err, format, args...)
+		err = safedetails.WithSafeDetails(err, format, args...)
 	}
-	err = safedetails.WithSafeDetails(err, format, args...)
 	err = withstack.WithStackDepth(err, depth+1)
 	return err
 }

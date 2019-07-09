@@ -17,6 +17,7 @@ package errutil
 import (
 	"github.com/cockroachdb/errors/assert"
 	"github.com/cockroachdb/errors/barriers"
+	"github.com/cockroachdb/errors/withstack"
 )
 
 // AssertionFailedf creates an internal error.
@@ -34,6 +35,24 @@ func AssertionFailedf(format string, args ...interface{}) error {
 // See the doc of `AssertionFailedf()` for more details.
 func AssertionFailedWithDepthf(depth int, format string, args ...interface{}) error {
 	err := NewWithDepthf(1+depth, format, args...)
+	err = assert.WithAssertionFailure(err)
+	return err
+}
+
+// HandleAsAssertionFailure hides an error and turns it into
+// an assertion failure. Both details from the original error and the
+// context of the caller are preserved. The original error is not
+// visible as cause any more. The original error message is preserved.
+// See the doc of `AssertionFailedf()` for more details.
+func HandleAsAssertionFailure(origErr error) error {
+	return HandleAsAssertionFailureDepth(1, origErr)
+}
+
+// HandleAsAssertionFailureDepth is like HandleAsAssertionFailure but
+// the depth at which the call stack is captured can be specified.
+func HandleAsAssertionFailureDepth(depth int, origErr error) error {
+	err := barriers.Handled(origErr)
+	err = withstack.WithStackDepth(err, 1+depth)
 	err = assert.WithAssertionFailure(err)
 	return err
 }

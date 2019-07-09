@@ -105,5 +105,15 @@ func NewAssertionErrorWithWrappedErrf(origErr error, format string, args ...inte
 	return errutil.NewAssertionErrorWithWrappedErrDepthf(1, origErr, format, args...)
 }
 
+// HandleAsAssertionFailure forwards a definition.
+func HandleAsAssertionFailure(origErr error) error {
+	return errutil.HandleAsAssertionFailureDepth(1, origErr)
+}
+
+// HandleAsAssertionFailureDepth forwards a definition.
+func HandleAsAssertionFailureDepth(depth int, origErr error) error {
+	return errutil.HandleAsAssertionFailureDepth(1+depth, origErr)
+}
+
 // As forwards a definition
 func As(err error, target interface{}) bool { return errutil.As(err, target) }

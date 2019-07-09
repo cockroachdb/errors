@@ -49,6 +49,34 @@ error with attached stack trace:
   - waa: hello`,
 		},
 
+		{"newf-empty",
+			errutil.Newf(emptyString),
+			``, `
+error with attached stack trace:
+    github.com/cockroachdb/errors/errutil_test.TestFormat
+    <tab><path>
+    testing.tRunner
+    <tab><path>
+    runtime.goexit
+    <tab><path>
+  - `,
+		},
+
+		{"newf-empty-arg",
+			errutil.Newf(emptyString, 123),
+			`%!(EXTRA int=123)`, `
+error with attached stack trace:
+    github.com/cockroachdb/errors/errutil_test.TestFormat
+    <tab><path>
+    testing.tRunner
+    <tab><path>
+    runtime.goexit
+    <tab><path>
+  - error with embedded safe details:
+    -- arg 1: <int>
+  - %!(EXTRA int=123)`,
+		},
+
 		{"wrapf",
 			errutil.Wrapf(goErr.New("woo"), "waa: %s", "hello"),
 			`waa: hello: woo`, `
@@ -63,6 +91,54 @@ error with attached stack trace:
     -- arg 1: <string>
   - waa: hello:
   - woo`,
+		},
+
+		{"wrapf-empty",
+			errutil.Wrapf(goErr.New("woo"), emptyString),
+			`woo`, `
+error with attached stack trace:
+    github.com/cockroachdb/errors/errutil_test.TestFormat
+    <tab><path>
+    testing.tRunner
+    <tab><path>
+    runtime.goexit
+    <tab><path>
+  - woo`,
+		},
+
+		{"wrapf-empty-arg",
+			errutil.Wrapf(goErr.New("woo"), emptyString, 123),
+			`%!(EXTRA int=123): woo`, `
+error with attached stack trace:
+    github.com/cockroachdb/errors/errutil_test.TestFormat
+    <tab><path>
+    testing.tRunner
+    <tab><path>
+    runtime.goexit
+    <tab><path>
+  - error with embedded safe details:
+    -- arg 1: <int>
+  - %!(EXTRA int=123):
+  - woo`,
+		},
+
+		{"handled assert",
+			errutil.HandleAsAssertionFailure(&werrFmt{goErr.New("woo"), "wuu"}),
+			`wuu: woo`,
+			`
+assertion failure
+  - error with attached stack trace:
+    github.com/cockroachdb/errors/errutil_test.TestFormat
+    <tab><path>
+    testing.tRunner
+    <tab><path>
+    runtime.goexit
+    <tab><path>
+  - wuu: woo:
+    original cause behind barrier: wuu:
+        -- verbose wrapper:
+        wuu
+      - woo`,
 		},
 
 		{"assert + wrap",
@@ -80,8 +156,46 @@ assertion failure
     -- arg 1: <string>
   - waa: hello:
   - wuu: woo:
-    original cause behind barrier:
-    wuu:
+    original cause behind barrier: wuu:
+        -- verbose wrapper:
+        wuu
+      - woo`,
+		},
+
+		{"assert + wrap empty",
+			errutil.NewAssertionErrorWithWrappedErrf(&werrFmt{goErr.New("woo"), "wuu"}, emptyString),
+			`wuu: woo`, `
+assertion failure
+  - error with attached stack trace:
+    github.com/cockroachdb/errors/errutil_test.TestFormat
+    <tab><path>
+    testing.tRunner
+    <tab><path>
+    runtime.goexit
+    <tab><path>
+  - wuu: woo:
+    original cause behind barrier: wuu:
+        -- verbose wrapper:
+        wuu
+      - woo`,
+		},
+
+		{"assert + wrap empty+arg",
+			errutil.NewAssertionErrorWithWrappedErrf(&werrFmt{goErr.New("woo"), "wuu"}, emptyString, 123),
+			`%!(EXTRA int=123): wuu: woo`, `
+assertion failure
+  - error with attached stack trace:
+    github.com/cockroachdb/errors/errutil_test.TestFormat
+    <tab><path>
+    testing.tRunner
+    <tab><path>
+    runtime.goexit
+    <tab><path>
+  - error with embedded safe details:
+    -- arg 1: <int>
+  - %!(EXTRA int=123):
+  - wuu: woo:
+    original cause behind barrier: wuu:
         -- verbose wrapper:
         wuu
       - woo`,
@@ -131,3 +245,5 @@ func (e *werrFmt) FormatError(p errbase.Printer) error {
 	}
 	return e.cause
 }
+
+var emptyString = ""
