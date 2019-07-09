@@ -87,6 +87,19 @@ func TestFormat(t *testing.T) {
 error with embedded safe details: a
   - woo`},
 
+		{"safe empty",
+			safedetails.WithSafeDetails(baseErr, ""),
+			woo, `
+safe detail wrapper with no details
+  - woo`},
+
+		{"safe nofmt+onearg",
+			safedetails.WithSafeDetails(baseErr, "", 123),
+			woo, `
+error with embedded safe details:
+    -- arg 1: <int>
+  - woo`},
+
 		{"safe err",
 			safedetails.WithSafeDetails(baseErr, "a %v",
 				&os.PathError{

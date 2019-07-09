@@ -39,10 +39,17 @@ var _ errbase.Formatter = (*withSafeDetails)(nil)
 func (e *withSafeDetails) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
 
 func (e *withSafeDetails) FormatError(p errbase.Printer) error {
-	if p.Detail() && len(e.safeDetails) > 0 {
-		p.Printf("error with embedded safe details: %s", e.safeDetails[0])
-		for _, d := range e.safeDetails[1:] {
-			p.Printf("\n%s", d)
+	if p.Detail() {
+		if len(e.safeDetails) == 0 || (len(e.safeDetails) == 1 && e.safeDetails[0] == "") {
+			p.Print("safe detail wrapper with no details")
+		} else {
+			p.Print("error with embedded safe details:")
+			if e.safeDetails[0] != "" {
+				p.Printf(" %s", e.safeDetails[0])
+			}
+			for _, d := range e.safeDetails[1:] {
+				p.Printf("\n%s", d)
+			}
 		}
 	}
 	return e.cause
