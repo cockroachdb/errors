@@ -22,7 +22,7 @@ import (
 	"github.com/gogo/protobuf/proto"
 )
 
-// Handled swallows the provided error and hides is from the
+// Handled swallows the provided error and hides it from the
 // Cause()/Unwrap() interface, and thus the Is() facility that
 // identifies causes. However, it retains it for the purpose of
 // printing the error out (e.g. for troubleshooting). The error
