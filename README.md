@@ -126,7 +126,7 @@ they behave as no-ops in this case:
 // return nil
 //
 // is not needed. Instead, you can use this:
-return errors.Wrap(foo())
+return errors.Wrap(foo(), "foo")
 ```
 
 - `Wrap(error, string) error`, `Wrapf(error, string, ...interface{}) error`:
