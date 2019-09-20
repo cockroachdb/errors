@@ -109,7 +109,8 @@ error with embedded safe details:
 				}),
 			woo, `
 error with embedded safe details: a %v
-    -- arg 1: *os.PathError: open <redacted>: file does not exist
+    -- arg 1: *errors.errorString: file does not exist
+    wrapper: *os.PathError: open
   - woo`},
 
 		{"safe",
@@ -140,6 +141,28 @@ waa:
   - error with embedded safe details: a %s %s
     -- arg 1: <string>
     -- arg 2: c
+  - woo`},
+
+		{"safe with wrapped error",
+			safedetails.WithSafeDetails(baseErr, "a %v",
+				&werrFmt{errors.New("wuu"), "waa"}),
+			woo,
+			`error with embedded safe details: a %v
+    -- arg 1: <*errors.errorString>
+    wrapper: <*safedetails_test.werrFmt>
+  - woo`},
+
+		{"safe in safe",
+			safedetails.WithSafeDetails(baseErr, "a %v",
+				safedetails.WithSafeDetails(errors.New("wuu"),
+					"b %v", safedetails.Safe("waa"))),
+			woo,
+			`error with embedded safe details: a %v
+    -- arg 1: <*errors.errorString>
+    wrapper: <*safedetails.withSafeDetails>
+    (more details:)
+    b %v
+    -- arg 1: waa
   - woo`},
 	}
 

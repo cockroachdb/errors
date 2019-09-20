@@ -15,13 +15,12 @@
 package safedetails
 
 import (
-	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"net"
 	"os"
 	"runtime"
+	"strings"
 	"syscall"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -32,83 +31,72 @@ import (
 // Redact returns a redacted version of the supplied item that is safe to use in
 // anonymized reporting.
 func Redact(r interface{}) string {
-	var err error
+	var buf strings.Builder
+
 	switch t := r.(type) {
 	case SafeMessager:
-		return t.SafeMessage()
+		buf.WriteString(t.SafeMessage())
 	case error:
-		err = t
-		// continues below
+		redactErr(&buf, t)
 	default:
-		return typAnd(r, "")
+		typAnd(&buf, r, "")
 	}
 
-	// Not a sentinel. Take the common path.
-	return redactErr(err)
+	return buf.String()
 }
 
-func redactErr(err error) string {
-	errMsg := ""
-	if c := errbase.UnwrapOnce(err); c != nil {
-		// Print the inner error before the outer error.
-		errMsg = redactErr(c)
-	} else {
-		errMsg = redactLeafErr(err)
+func redactErr(buf *strings.Builder, err error) {
+	if c := errbase.UnwrapOnce(err); c == nil {
+		// This is a leaf error. Decode the leaf and return.
 		if file, line, _, ok := withstack.GetOneLineSource(err); ok {
-			errMsg = fmt.Sprintf("%s:%d: %s", file, line, errMsg)
+			fmt.Fprintf(buf, "%s:%d: ", file, line)
 		}
+		redactLeafErr(buf, err)
+	} else /* c != nil */ {
+		// Print the inner error before the outer error.
+		redactErr(buf, c)
+		redactWrapper(buf, err)
 	}
 
 	// Add any additional safe strings from the wrapper, if present.
 	if payload := errbase.GetSafeDetails(err); len(payload.SafeDetails) > 0 {
-		var buf bytes.Buffer
-		fmt.Fprintln(&buf, errMsg)
-		fmt.Fprintln(&buf, "(more details:)")
+		buf.WriteString("\n(more details:)")
 		for _, sd := range payload.SafeDetails {
-			fmt.Fprintln(&buf, sd)
+			buf.WriteByte('\n')
+			buf.WriteString(strings.TrimSpace(sd))
 		}
-		errMsg = buf.String()
 	}
-
-	return errMsg
 }
 
-func redactLeafErr(err error) string {
-	// Now that we're looking at an error, see if it's one we can
-	// deconstruct for maximum (safe) clarity. Separating this from the
-	// block above ensures that the types below actually implement `error`.
+func redactWrapper(buf *strings.Builder, err error) {
+	buf.WriteString("\nwrapper: ")
 	switch t := err.(type) {
-	case runtime.Error:
-		return typAnd(t, t.Error())
-	case syscall.Errno:
-		return typAnd(t, t.Error())
 	case *os.SyscallError:
-		s := Redact(t.Err)
-		return typAnd(t, fmt.Sprintf("%s: %s", t.Syscall, s))
+		typAnd(buf, t, t.Syscall)
 	case *os.PathError:
-		// It hardly matters, but avoid mutating the original.
-		cpy := *t
-		t = &cpy
-		t.Path = "<redacted>"
-		return typAnd(t, t.Error())
+		typAnd(buf, t, t.Op)
 	case *os.LinkError:
-		// It hardly matters, but avoid mutating the original.
-		cpy := *t
-		t = &cpy
-
-		t.Old, t.New = "<redacted>", "<redacted>"
-		return typAnd(t, t.Error())
+		fmt.Fprintf(buf, "%T: %s %s %s", t, t.Op, t.Old, t.New)
 	case *net.OpError:
-		// It hardly matters, but avoid mutating the original.
-		cpy := *t
-		t = &cpy
-		t.Source = &unresolvedAddr{net: "tcp", addr: "redacted"}
-		t.Addr = &unresolvedAddr{net: "tcp", addr: "redacted"}
-		t.Err = errors.New(Redact(t.Err))
-		return typAnd(t, t.Error())
+		typAnd(buf, t, t.Op)
+		if t.Net != "" {
+			fmt.Fprintf(buf, " %s", t.Net)
+		}
+		if t.Source != nil {
+			buf.WriteString("<redacted>")
+		}
+		if t.Addr != nil {
+			if t.Source != nil {
+				buf.WriteString("->")
+			}
+			buf.WriteString("<redacted>")
+		}
 	default:
+		typAnd(buf, err, "")
 	}
+}
 
+func redactLeafErr(buf *strings.Builder, err error) {
 	// Is it a sentinel error? These are safe.
 	if markers.IsAny(err,
 		context.DeadlineExceeded,
@@ -120,32 +108,30 @@ func redactLeafErr(err error) string {
 		os.ErrClosed,
 		os.ErrNoDeadline,
 	) {
-		return typAnd(err, err.Error())
+		typAnd(buf, err, err.Error())
+		return
 	}
 
-	// No further information about this error, simply report its type.
-	return typAnd(err, "")
+	if redactPre113Wrappers(buf, err) {
+		return
+	}
+
+	// The following two types are safe too.
+	switch t := err.(type) {
+	case runtime.Error:
+		typAnd(buf, t, t.Error())
+	case syscall.Errno:
+		typAnd(buf, t, t.Error())
+	default:
+		// No further information about this error, simply report its type.
+		typAnd(buf, err, "")
+	}
 }
 
-type unresolvedAddr struct {
-	net  string
-	addr string
-}
-
-// Network implements the net.Addr interface.
-func (a *unresolvedAddr) Network() string {
-	return a.net
-}
-
-// String implements the net.Addr interface.
-func (a *unresolvedAddr) String() string {
-	return a.addr
-}
-
-func typAnd(r interface{}, msg string) string {
-	typ := fmt.Sprintf("%T", r)
+func typAnd(buf *strings.Builder, r interface{}, msg string) {
 	if msg == "" {
-		return fmt.Sprintf("<%s>", typ)
+		fmt.Fprintf(buf, "<%T>", r)
+	} else {
+		fmt.Fprintf(buf, "%T: %s", r, msg)
 	}
-	return typ + ": " + msg
 }
