@@ -33,6 +33,7 @@ Table of contents:
 | error causes (`Cause` / `Unwrap`)                                                                     |                     | ✔                       | ✔                          | ✔                    |
 | cause barriers (`Opaque` / `Handled`)                                                                 |                     |                         | ✔                          | ✔                    |
 | `errors.As()`, `errors.Is()`                                                                          |                     |                         | ✔                          | ✔                    |
+| automatic error wrap when format ends with `: %w`                                                     |                     |                         | ✔                          | ✔                    |
 | standard wrappers with efficient stack trace capture                                                  |                     | ✔                       |                            | ✔                    |
 | **transparent protobuf encode/decode with forward compatibility**                                     |                     |                         |                            | ✔                    |
 | **`errors.Is()` recognizes errors across the network**                                                |                     |                         |                            | ✔                    |
@@ -44,7 +45,7 @@ Table of contents:
 | wrappers for user-facing hints and details                                                            |                     |                         |                            | ✔                    |
 | wrappers to attach secondary causes                                                                   |                     |                         |                            | ✔                    |
 | wrappers to attach [`logtags`](https://github.com/cockroachdb/logtags) details from `context.Context` |                     |                         |                            | ✔                    |
-| `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | ✔                          | (under construction) |
+| `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | (under construction)       | (under construction) |
 
 "Forward compatibility" above refers to the ability of this library to
 recognize and properly handle network communication of error types it
