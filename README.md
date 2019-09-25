@@ -1,5 +1,5 @@
 # cockroachdb/errors: Go errors with network portability
-
+asdfsadfa
 This library aims to be used as a drop-in replacement to
 `github.com/pkg/errors` and Go's standard `errors` package.  It also
 provides *network portability* of error objects, in ways suitable for
