@@ -111,7 +111,7 @@ func checkStackTrace(t *testing.T, err error, expectedDepth int) {
 
 	for i := expectedDepth; i < expectedDepth+2; i++ {
 		f := r.Frames[i]
-		tt.Check(strings.HasPrefix(f.Filename, "github.com/cockroachdb/errors"))
+		tt.Check(strings.Contains(f.Filename, "/errors/"))
 
 		tt.Check(strings.HasSuffix(f.AbsolutePath, f.Filename))
 
