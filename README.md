@@ -91,6 +91,10 @@ older version of the package.
 
 ## Available error leaves
 
+An error *leaf* is an object that implements the `error` interface,
+but does not refer to another error via a `Unwrap()` or `Cause()`
+method.
+
 - `New(string) error`, `Newf(string, ...interface{}) error`, `Errorf(string, ...interface{}) error`: leaf errors with message
   - **when to use: common error cases.**
   - what it does: also captures the stack trace at point of call and redacts the provided message for safe reporting.
@@ -115,6 +119,10 @@ older version of the package.
   - see also: `errors.WithIssueLink()` below for errors that are not specifically about unimplemented features.
 
 ## Available wrapper constructors
+
+An error *wrapper* is an object that implements the `error` interface,
+and also refers to another error via an `Unwrap()` (preferred) and/or
+`Cause()` method.
 
 All wrapper constructors can be applied safely to a `nil` `error`:
 they behave as no-ops in this case:
