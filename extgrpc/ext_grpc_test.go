@@ -49,7 +49,7 @@ func TestGrpc(t *testing.T) {
 	// The code is hidden when the error is printed with %v.
 	tt.CheckEqual(fmt.Sprintf("%v", err), `hello`)
 	// The code appears when the error is printed verbosely.
-	tt.CheckEqual(fmt.Sprintf("%+v", err), `grpc code: Unavailable
+	tt.CheckEqual(fmt.Sprintf("%+v", err), `gRPC code: Unavailable
   - hello`)
 
 	// Checking the code of a nil error should be codes.OK

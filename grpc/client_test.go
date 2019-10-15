@@ -50,5 +50,5 @@ func TestGrpc(t *testing.T) {
 	tt.Assert(err.Error() == "there was a problem: internal error!")
 	tt.Assert(status.Code(err) == codes.Internal)
 	tt.Assert(errors.Is(err, ErrInternal))
-	tt.Assert(strings.HasPrefix(fmt.Sprintf("%+v", err), "grpc code: Internal"))
+	tt.Assert(strings.HasPrefix(fmt.Sprintf("%+v", err), "gRPC code: Internal"))
 }
