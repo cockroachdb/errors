@@ -72,7 +72,7 @@ func (w *withGrpcCode) Unwrap() error { return w.cause }
 func (w *withGrpcCode) Format(s fmt.State, verb rune) { errors.FormatError(w, s, verb) }
 func (w *withGrpcCode) FormatError(p errors.Printer) (next error) {
 	if p.Detail() {
-		p.Printf("grpc code: %s", w.code.String())
+		p.Printf("gRPC code: %s", w.code.String())
 	}
 	return w.cause
 }
@@ -80,7 +80,7 @@ func (w *withGrpcCode) FormatError(p errors.Printer) (next error) {
 // it's an encodable error.
 func encodeWithGrpcCode(_ context.Context, err error) (string, []string, proto.Message) {
 	w := err.(*withGrpcCode)
-	details := []string{fmt.Sprintf("Grpc %d", w.code)}
+	details := []string{fmt.Sprintf("gRPC %d", w.code)}
 	payload := &EncodedGrpcCode{Code: uint32(w.code)}
 	return "", details, payload
 }
