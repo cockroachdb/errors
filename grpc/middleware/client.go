@@ -18,7 +18,6 @@ func UnaryClientInterceptor(
 	invoker grpc.UnaryInvoker,
 	opts ...grpc.CallOption,
 ) error {
-
 	err := invoker(ctx, method, req, reply, cc, opts...)
 
 	st := status.Convert(err)

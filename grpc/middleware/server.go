@@ -16,7 +16,6 @@ func UnaryServerInterceptor(
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
 ) (interface{}, error) {
-
 	resp, err := handler(ctx, req)
 	if err == nil {
 		return resp, err
