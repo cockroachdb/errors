@@ -18,7 +18,7 @@ import (
 	"bytes"
 	"fmt"
 
-	raven "github.com/getsentry/raven-go"
+	raven "github.com/tooolbox/raven-go"
 )
 
 // ReportableObject is an interface suitable for the extra detail

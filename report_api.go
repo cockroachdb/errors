@@ -16,7 +16,7 @@ package errors
 
 import (
 	"github.com/cockroachdb/errors/report"
-	raven "github.com/getsentry/raven-go"
+	raven "github.com/tooolbox/raven-go"
 )
 
 // BuildSentryReport forwards a definition.

@@ -22,7 +22,7 @@ import (
 	"github.com/cockroachdb/errors/domains"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/withstack"
-	raven "github.com/getsentry/raven-go"
+	raven "github.com/tooolbox/raven-go"
 )
 
 // BuildSentryReport builds the components of a sentry report.  This

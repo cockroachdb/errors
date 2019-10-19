@@ -26,8 +26,8 @@ import (
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/testutils"
 	"github.com/cockroachdb/errors/withstack"
-	raven "github.com/getsentry/raven-go"
 	"github.com/kr/pretty"
+	raven "github.com/tooolbox/raven-go"
 )
 
 func TestReport(t *testing.T) {

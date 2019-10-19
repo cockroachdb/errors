@@ -23,8 +23,8 @@ import (
 	"strings"
 
 	"github.com/cockroachdb/errors/errbase"
-	raven "github.com/getsentry/raven-go"
 	pkgErr "github.com/pkg/errors"
+	raven "github.com/tooolbox/raven-go"
 )
 
 // ReportableStackTrace aliases the type of the same name in the raven
@@ -46,7 +46,9 @@ type ReportableStackTrace = raven.Stacktrace
 func GetReportableStackTrace(err error) *ReportableStackTrace {
 	// If we have a stack trace in the style of github.com/pkg/errors
 	// (either from there or our own withStack), use it.
-	if st, ok := err.(interface{ StackTrace() pkgErr.StackTrace }); ok {
+	if st, ok := err.(interface {
+		StackTrace() pkgErr.StackTrace
+	}); ok {
 		return convertPkgStack(st.StackTrace())
 	}
 
