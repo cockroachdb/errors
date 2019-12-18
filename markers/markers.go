@@ -17,6 +17,7 @@ package markers
 import (
 	"context"
 	"fmt"
+	"reflect"
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errorspb"
@@ -56,6 +57,17 @@ func Is(err, reference error) bool {
 		}
 	}
 	return false
+}
+
+// IsType returns true if err contains an error which has the concrete type
+// matching that of referenceType.
+func IsType(err error, referenceType error) bool {
+	typ := reflect.TypeOf(referenceType)
+	_, isType := If(err, func(err error) (interface{}, bool) {
+		return nil, reflect.TypeOf(err) == typ
+	})
+
+	return isType
 }
 
 // If returns a predicate's return value the first time the predicate returns true.

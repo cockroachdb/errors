@@ -237,6 +237,29 @@ func TestRemoteMarkerEquivalence(t *testing.T) {
 	tt.Check(markers.Is(newErr1w, err2w))
 }
 
+type testError struct {
+	msg string
+}
+
+func (e *testError) Error() string {
+	return e.msg
+}
+
+func TestIsType(t *testing.T) {
+	tt := testutils.T{T: t}
+	base := &testError{msg: "hmm"}
+	wrapped := pkgErr.Wrap(base, "boom")
+
+	tt.Check(!markers.IsType(base, nil))
+	tt.Check(!markers.IsType(wrapped, nil))
+
+	tt.Check(markers.IsType(base, (*testError)(nil)))
+	tt.Check(markers.IsType(wrapped, (*testError)(nil)))
+
+	// nil errors don't contain any types, not even nil.
+	tt.Check(!markers.IsType(nil, nil))
+}
+
 // This test is used in the RFC.
 func TestLocalLocalEquivalence(t *testing.T) {
 	tt := testutils.T{T: t}
