@@ -66,7 +66,23 @@ func IsType(err error, referenceType error) bool {
 	_, isType := If(err, func(err error) (interface{}, bool) {
 		return nil, reflect.TypeOf(err) == typ
 	})
+	return isType
+}
 
+// IsInterface returns true if err contains an error which implements the
+// interface pointed to by referenceInterface. The type of referenceInterface
+// must be a pointer to an interface type. If referenceInterface is not a
+// pointer to an interface, this function will panic.
+func IsInterface(err error, referenceInterface interface{}) bool {
+	typ := reflect.TypeOf(referenceInterface)
+	if typ == nil || typ.Kind() != reflect.Ptr || typ.Elem().Kind() != reflect.Interface {
+		panic(fmt.Errorf("errors.IsInterface: referenceInterface must be a pointer to an interface, "+
+			"found %T", referenceInterface))
+	}
+	iface := typ.Elem()
+	_, isType := If(err, func(err error) (interface{}, bool) {
+		return nil, reflect.TypeOf(err).Implements(iface)
+	})
 	return isType
 }
 
