@@ -39,3 +39,25 @@ func ExampleIsType() {
 	// false
 	// false
 }
+
+func ExampleIsInterface() {
+	base := &net.AddrError{
+		Addr: "ndn",
+		Err:  "ndn doesn't really exists :(",
+	}
+	err := errors.Wrap(base, "bummer")
+	fmt.Println(markers.IsInterface(err, (*net.Error)(nil)))
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				fmt.Println("*net.AddrError is not a pointer to an interface type so the call panics")
+			}
+		}()
+		fmt.Println(markers.IsInterface(err, (*net.AddrError)(nil)))
+	}()
+
+	// Output:
+	//
+	// true
+	// *net.AddrError is not a pointer to an interface type so the call panics
+}
