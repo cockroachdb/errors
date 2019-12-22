@@ -28,7 +28,7 @@ import (
 )
 
 // This file provides assertions and checks for Go tests, two
-// facilities which also provide somes lines of source code around the
+// facilities which also provide some lines of source code around the
 // location of a failing check when an error occurs.
 //
 // It makes the test code more concise and also makes the
@@ -173,7 +173,7 @@ func (t *T) failWithf(failTest bool, format string, args ...interface{}) {
 	}
 }
 
-// The following code is copied from raven-go.
+// The following code is copied from github.com/getsentry/raven-go.
 
 var fileCacheLock sync.Mutex
 var fileCache = make(map[string][][]byte)
