@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/cockroachdb/errors/domains"
 	"github.com/cockroachdb/errors/errbase"
@@ -26,31 +27,32 @@ import (
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/testutils"
 	"github.com/cockroachdb/errors/withstack"
-	raven "github.com/getsentry/raven-go"
+	"github.com/getsentry/sentry-go"
 	"github.com/kr/pretty"
 )
 
 func TestReport(t *testing.T) {
-	var packets []*raven.Packet
+	var events []*sentry.Event
 
-	origClient := raven.DefaultClient
-	defer func() { raven.DefaultClient = origClient }()
-	raven.DefaultClient, _ = raven.New("https://ignored:ignored@ignored/ignored")
-
-	// Install a Transport that locally records packets rather than sending them
-	// to Sentry over HTTP.
-	defer func(transport raven.Transport) {
-		raven.DefaultClient.Transport = transport
-	}(raven.DefaultClient.Transport)
-	raven.DefaultClient.Transport = interceptingTransport{
-		SendFunc: func(_, _ string, packet *raven.Packet) {
-			packets = append(packets, packet)
+	client, err := sentry.NewClient(
+		sentry.ClientOptions{
+			// Install a Transport that locally records events rather than
+			// sending them to Sentry over HTTP.
+			Transport: interceptingTransport{
+				SendFunc: func(event *sentry.Event) {
+					events = append(events, event)
+				},
+			},
 		},
+	)
+	if err != nil {
+		t.Fatal(err)
 	}
+	sentry.CurrentHub().BindClient(client)
 
 	thisDomain := domains.NamedDomain("thisdomain")
 
-	err := goErr.New("hello")
+	err = goErr.New("hello")
 	err = safedetails.WithSafeDetails(err, "universe %d", safedetails.Safe(123))
 	err = withstack.WithStack(err)
 	err = domains.WithDomain(err, thisDomain)
@@ -58,19 +60,19 @@ func TestReport(t *testing.T) {
 
 	err = wrapWithMigratedType(err)
 
-	if _, rErr := report.ReportError(err); rErr != nil {
-		t.Fatal(rErr)
+	if eventID := report.ReportError(err); eventID == "" {
+		t.Fatal("eventID is empty")
 	}
 
-	t.Logf("received packets: %# v", pretty.Formatter(packets))
+	t.Logf("received events: %# v", pretty.Formatter(events))
 
 	tt := testutils.T{T: t}
 
-	tt.Assert(len(packets) == 1)
-	p := packets[0]
+	tt.Assert(len(events) == 1)
+	e := events[0]
 
 	tt.Run("valid short message", func(tt testutils.T) {
-		tt.CheckRegexpEqual(p.Message, `report_test.go:\d+: TestReport: universe %d`)
+		tt.CheckRegexpEqual(e.Message, `report_test.go:\d+: TestReport: universe %d`)
 	})
 
 	tt.Run("valid extra details", func(tt testutils.T) {
@@ -80,62 +82,52 @@ github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/domains/*domains.withDomain (*::error domain: "thisdomain")
 github.com/cockroachdb/errors/report_test/*report_test.myWrapper (some/previous/path/prevpkg.prevType::)
 `
-		types := fmt.Sprintf("%s", p.Extra["error types"])
+		types := fmt.Sprintf("%s", e.Extra["error types"])
 		tt.CheckEqual(types, expectedTypes)
 
 		expectedDetail := "universe %d\n-- arg 1: 123"
-		detail := fmt.Sprintf("%s", p.Extra["1: details"])
+		detail := fmt.Sprintf("%s", e.Extra["1: details"])
 		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)
 
 		expectedDetail = string(thisDomain)
-		detail = fmt.Sprintf("%s", p.Extra["3: details"])
+		detail = fmt.Sprintf("%s", e.Extra["3: details"])
 		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)
 	})
 
-	hasMessage := false
 	hasStack := false
-	for _, im := range p.Interfaces {
-		switch m := im.(type) {
-		case *raven.Message:
-			tt.Check(!hasMessage) // more than one message payload is invalid
 
-			tt.Run("message payload", func(tt testutils.T) {
-				expectedMessage := `^\*errors.errorString
+	tt.Run("long message payload", func(tt testutils.T) {
+		expectedLongMessage := `^\*errors.errorString
 \*safedetails.withSafeDetails: universe %d \(1\)
 report_test.go:\d+: \*withstack.withStack \(2\)
 \*domains\.withDomain: error domain: "thisdomain" \(3\)
 \*report_test\.myWrapper
 \(check the extra data payloads\)$`
-				tt.CheckRegexpEqual(m.Message, expectedMessage)
-			})
+		tt.CheckRegexpEqual(e.Extra["long message"].(string), expectedLongMessage)
+	})
 
-			hasMessage = true
+	for _, exc := range e.Exception {
+		tt.Check(!hasStack)
 
-		case *raven.Exception:
-			tt.Check(!hasStack)
+		tt.Run("stack trace payload", func(tt testutils.T) {
+			tt.CheckEqual(exc.Module, string(thisDomain))
 
-			tt.Run("stack trace payload", func(tt testutils.T) {
-				tt.CheckRegexpEqual(m.Value, `report_test.go:\d+: TestReport: universe %d`)
-
-				tt.CheckEqual(m.Module, string(thisDomain))
-
-				st := m.Stacktrace
-				if st == nil || len(st.Frames) < 1 {
-					t.Error("stack trace too short")
-				} else {
-					f := st.Frames[len(st.Frames)-1]
-					tt.Check(strings.HasSuffix(f.Filename, "report_test.go"))
-					tt.Check(strings.HasSuffix(f.AbsolutePath, "report_test.go"))
-					tt.Check(strings.HasSuffix(f.Module, "/report_test"))
-					tt.CheckEqual(f.Function, "TestReport")
-					tt.Check(f.Lineno != 0)
-				}
-			})
-			hasStack = true
-		}
+			st := exc.Stacktrace
+			if st == nil || len(st.Frames) < 1 {
+				t.Error("stack trace too short")
+			} else {
+				f := st.Frames[len(st.Frames)-1]
+				tt.Check(strings.HasSuffix(f.Filename, "report_test.go"))
+				tt.Check(strings.HasSuffix(f.AbsPath, "report_test.go"))
+				tt.Check(strings.HasSuffix(f.Module, "/report_test"))
+				tt.CheckEqual(f.Function, "TestReport")
+				tt.Check(f.Lineno != 0)
+			}
+		})
+		hasStack = true
 	}
 
-	tt.Check(hasStack && hasMessage)
+	tt.Check(hasStack)
 }
 
 func wrapWithMigratedType(err error) error {
@@ -150,15 +142,26 @@ type myWrapper struct {
 func (w *myWrapper) Error() string { return w.cause.Error() }
 func (w *myWrapper) Cause() error  { return w.cause }
 
-// interceptingTransport is an implementation of raven.Transport that delegates
-// calls to the Send method to the send function contained within.
+// interceptingTransport is an implementation of sentry.Transport that
+// delegates calls to the SendEvent method to the send function contained
+// within.
 type interceptingTransport struct {
 	// SendFunc is the send callback.
-	SendFunc func(url, authHeader string, packet *raven.Packet)
+	SendFunc func(event *sentry.Event)
 }
 
-// Send implements the raven.Transport interface.
-func (it interceptingTransport) Send(url, authHeader string, packet *raven.Packet) error {
-	it.SendFunc(url, authHeader, packet)
-	return nil
+var _ sentry.Transport = &interceptingTransport{}
+
+// Flush implements the sentry.Transport interface.
+func (it interceptingTransport) Flush(time.Duration) bool {
+	return true
+}
+
+// Configure implements the sentry.Transport interface.
+func (it interceptingTransport) Configure(sentry.ClientOptions) {
+}
+
+// SendEvent implements the sentry.Transport interface.
+func (it interceptingTransport) SendEvent(event *sentry.Event) {
+	it.SendFunc(event)
 }
