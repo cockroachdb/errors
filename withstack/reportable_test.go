@@ -96,7 +96,7 @@ func checkStackTrace(t *testing.T, err error, expectedDepth int) {
 
 	for i, f := range r.Frames {
 		t.Logf("frame %d:", i)
-		t.Logf("absolute path: %s", f.AbsolutePath)
+		t.Logf("absolute path: %s", f.AbsPath)
 		t.Logf("file: %s", f.Filename)
 		t.Logf("line: %d", f.Lineno)
 		t.Logf("module: %s", f.Module)
@@ -113,7 +113,7 @@ func checkStackTrace(t *testing.T, err error, expectedDepth int) {
 		f := r.Frames[i]
 		tt.Check(strings.Contains(f.Filename, "/errors/") || strings.Contains(f.Filename, "/errors@"))
 
-		tt.Check(strings.HasSuffix(f.AbsolutePath, f.Filename))
+		tt.Check(strings.HasSuffix(f.AbsPath, f.Filename))
 
 		switch i {
 		case expectedDepth:

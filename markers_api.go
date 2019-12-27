@@ -19,6 +19,14 @@ import "github.com/cockroachdb/errors/markers"
 // Is forwards a definition.
 func Is(err, reference error) bool { return markers.Is(err, reference) }
 
+// IsType forwards a definition.
+func IsType(err, referenceType error) bool { return markers.IsType(err, referenceType) }
+
+// IsInterface forwards a definition.
+func IsInterface(err error, referenceInterface interface{}) bool {
+	return markers.IsInterface(err, referenceInterface)
+}
+
 // If forwards a definition.
 func If(err error, pred func(err error) (interface{}, bool)) (interface{}, bool) {
 	return markers.If(err, pred)

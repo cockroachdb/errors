@@ -42,7 +42,7 @@ func Errorf(format string, args ...interface{}) error {
 }
 
 // Cause is provided for compatibility with github.com/pkg/errors.
-func Cause(err error) error { return errbase.UnwrapOnce(err) }
+func Cause(err error) error { return errbase.UnwrapAll(err) }
 
 // Unwrap is provided for compatibility with xerrors.
 func Unwrap(err error) error { return errbase.UnwrapOnce(err) }

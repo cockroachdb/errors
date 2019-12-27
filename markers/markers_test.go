@@ -20,6 +20,7 @@ import (
 	goErr "errors"
 	"fmt"
 	"io"
+	"net"
 	"strings"
 	"testing"
 
@@ -235,6 +236,47 @@ func TestRemoteMarkerEquivalence(t *testing.T) {
 	err2w := markers.Mark(err2, mark)
 
 	tt.Check(markers.Is(newErr1w, err2w))
+}
+
+type testError struct {
+	msg string
+}
+
+func (e *testError) Error() string {
+	return e.msg
+}
+
+func TestIsType(t *testing.T) {
+	tt := testutils.T{T: t}
+	base := &testError{msg: "hmm"}
+	wrapped := pkgErr.Wrap(base, "boom")
+
+	tt.Check(!markers.IsType(base, nil))
+	tt.Check(!markers.IsType(wrapped, nil))
+
+	tt.Check(markers.IsType(base, (*testError)(nil)))
+	tt.Check(markers.IsType(wrapped, (*testError)(nil)))
+
+	// nil errors don't contain any types, not even nil.
+	tt.Check(!markers.IsType(nil, nil))
+}
+
+type testErrorInterface interface {
+	foo()
+}
+
+func (e *testError) foo() {}
+
+func TestIsInterface(t *testing.T) {
+	tt := testutils.T{T: t}
+	base := &testError{msg: "hmm"}
+	wrapped := pkgErr.Wrap(base, "boom")
+
+	tt.Check(markers.IsInterface(base, (*testErrorInterface)(nil)))
+	tt.Check(markers.IsInterface(wrapped, (*testErrorInterface)(nil)))
+
+	tt.Check(!markers.IsInterface(base, (*net.Error)(nil)))
+	tt.Check(!markers.IsInterface(wrapped, (*net.Error)(nil)))
 }
 
 // This test is used in the RFC.

@@ -16,13 +16,13 @@ package errors
 
 import (
 	"github.com/cockroachdb/errors/report"
-	raven "github.com/tooolbox/raven-go"
+	"github.com/getsentry/sentry-go"
 )
 
 // BuildSentryReport forwards a definition.
-func BuildSentryReport(err error) (string, []raven.Interface, map[string]interface{}) {
+func BuildSentryReport(err error) (*sentry.Event, map[string]interface{}) {
 	return report.BuildSentryReport(err)
 }
 
 // ReportError forwards a definition.
-func ReportError(err error) (string, error) { return report.ReportError(err) }
+func ReportError(err error) string { return report.ReportError(err) }

@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f
+	github.com/getsentry/sentry-go v0.3.1
 	github.com/gogo/protobuf v1.3.0
 	github.com/gogo/status v1.1.0
 	github.com/golang/protobuf v1.3.2
