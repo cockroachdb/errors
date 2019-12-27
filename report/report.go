@@ -22,15 +22,13 @@ import (
 	"github.com/cockroachdb/errors/domains"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/withstack"
-	raven "github.com/getsentry/raven-go"
+	"github.com/getsentry/sentry-go"
 )
 
 // BuildSentryReport builds the components of a sentry report.  This
 // can be used instead of ReportError() below to use additional custom
 // conditions in the reporting or add additional reporting tags.
-func BuildSentryReport(
-	err error,
-) (errMsg string, packetDetails []raven.Interface, extraDetails map[string]interface{}) {
+func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]interface{}) {
 	if err == nil {
 		// No error: do nothing.
 		return
@@ -47,29 +45,26 @@ func BuildSentryReport(
 		details = append(details, sd)
 	}
 
-	// A report can contain at most one "message", at most one
-	// "exception", but then it can contain arbitrarily many "extra"
-	// fields.
+	// A report can contain at most one "message", any number of
+	// "exceptions", and arbitrarily many "extra" fields.
 	//
-	// So we populate the packet as follow:
-	// - the "exception" will contain the first detail with
-	//   a populated encoded exception field.
-	// - the "message" will contain the concatenation of all
-	//   error types, and the first safe detail string,
-	//   with links to the extra fields.
+	// So we populate the event as follow:
+	// - the "message" will contain the type of the first error
+	// - the "exceptions" will contain the details with
+	//   populated encoded exceptions field.
 	// - the "extra" will contain all the encoded stack traces
 	//   or safe detail arrays.
 
 	var firstError *string
-	var exc *withstack.ReportableStackTrace
+	var exceptions []*withstack.ReportableStackTrace
 	extras := make(map[string]interface{})
-	var msgBuf bytes.Buffer
+	var longMsgBuf bytes.Buffer
 	var typesBuf bytes.Buffer
 
 	extraNum := 1
 	sep := ""
 	for i := len(details) - 1; i >= 0; i-- {
-		msgBuf.WriteString(sep)
+		longMsgBuf.WriteString(sep)
 		sep = "\n"
 
 		// Collect the type name.
@@ -92,10 +87,10 @@ func BuildSentryReport(
 			if j := strings.LastIndexByte(fn, '/'); j >= 0 {
 				fn = fn[j+1:]
 			}
-			fmt.Fprintf(&msgBuf, "%s:%d: ", fn, f.Lineno)
+			fmt.Fprintf(&longMsgBuf, "%s:%d: ", fn, f.Lineno)
 		}
 
-		msgBuf.WriteString(simpleErrType(tn))
+		longMsgBuf.WriteString(simpleErrType(tn))
 
 		var genExtra bool
 
@@ -104,13 +99,10 @@ func BuildSentryReport(
 			// Yes: generate the extra and list it on the line.
 			stKey := fmt.Sprintf("%d: stacktrace", extraNum)
 			extras[stKey] = PrintStackTrace(st)
-			fmt.Fprintf(&msgBuf, " (%d)", extraNum)
+			fmt.Fprintf(&longMsgBuf, " (%d)", extraNum)
 			extraNum++
 
-			if exc == nil {
-				// Keep the stack trace to generate an exception object below.
-				exc = st
-			}
+			exceptions = append(exceptions, st)
 		} else {
 			// No: are there details? If so, print them.
 			// Note: we only print the details if no stack trace
@@ -127,8 +119,8 @@ func BuildSentryReport(
 					d = d[:j]
 				}
 				if d != "" {
-					msgBuf.WriteString(": ")
-					msgBuf.WriteString(d)
+					longMsgBuf.WriteString(": ")
+					longMsgBuf.WriteString(d)
 					if firstError == nil {
 						// Keep the string for later.
 						firstError = &d
@@ -145,7 +137,7 @@ func BuildSentryReport(
 				fmt.Fprintln(&extraStr, d)
 			}
 			extras[stKey] = extraStr.String()
-			fmt.Fprintf(&msgBuf, " (%d)", extraNum)
+			fmt.Fprintf(&longMsgBuf, " (%d)", extraNum)
 			extraNum++
 		}
 	}
@@ -163,49 +155,55 @@ func BuildSentryReport(
 	extras["error types"] = typesBuf.String()
 
 	// Make the message part more informational.
-	msgBuf.WriteString("\n(check the extra data payloads)")
+	longMsgBuf.WriteString("\n(check the extra data payloads)")
+	extras["long message"] = longMsgBuf.String()
 
-	var reportDetails ReportableObject
-	if exc != nil {
-		module := domains.GetDomain(err)
-		reportDetails = &raven.Exception{
-			Value:      headMsg,
-			Type:       "<reported error>",
-			Module:     string(module),
-			Stacktrace: exc,
-		}
+	event = sentry.NewEvent()
+	event.Message = headMsg
+
+	module := domains.GetDomain(err)
+	for _, exception := range exceptions {
+		event.Exception = append(event.Exception,
+			sentry.Exception{
+				Type:       "<reported error>",
+				Module:     string(module),
+				Stacktrace: exception,
+			})
 	}
 
-	// Finally, send the report.
-	reportMsg := NewReportMessage(msgBuf.String())
-	if reportDetails != nil {
-		return headMsg, []raven.Interface{reportMsg, reportDetails}, extras
-	}
-	return headMsg, []raven.Interface{reportMsg}, extras
+	return event, extras
 }
 
-// ReportError reports the given error to Sentry.
-// The caller is responsible for checking whether
-// telemetry is enabled.
-func ReportError(err error) (eventID string, retErr error) {
-	errMsg, details, extraDetails := BuildSentryReport(err)
-	packet := raven.NewPacket(errMsg, details...)
+// ReportError reports the given error to Sentry. The caller is responsible for
+// checking whether telemetry is enabled.
+// Note: an empty 'eventID' can be returned which signifies that the error was
+// not reported. This can occur when Sentry client hasn't been properly
+// configured or Sentry client decided to not report the error (due to
+// configured sampling rate, callbacks, Sentry's event processors, etc).
+func ReportError(err error) (eventID string) {
+	event, extraDetails := BuildSentryReport(err)
 
 	for extraKey, extraValue := range extraDetails {
-		packet.Extra[extraKey] = extraValue
+		event.Extra[extraKey] = extraValue
 	}
 
 	// Avoid leaking the machine's hostname by injecting the literal "<redacted>".
-	// Otherwise, raven.Client.Capture will see an empty ServerName field and
+	// Otherwise, sentry.Client.Capture will see an empty ServerName field and
 	// automatically fill in the machine's hostname.
-	packet.ServerName = "<redacted>"
+	event.ServerName = "<redacted>"
 
 	tags := map[string]string{
 		"report_type": "error",
 	}
+	for key, value := range tags {
+		event.Tags[key] = tags[value]
+	}
 
-	eventID, ch := raven.DefaultClient.Capture(packet, tags)
-	return eventID, <-ch
+	res := sentry.CaptureEvent(event)
+	if res != nil {
+		eventID = string(*res)
+	}
+	return
 }
 
 func simpleErrType(tn string) string {

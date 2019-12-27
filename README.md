@@ -541,12 +541,12 @@ type WrapperEncoder = func(ctx context.Context, err error) (msgPrefix string, sa
 type WrapperDecoder = func(ctx context.Context, cause error, msgPrefix string, safeDetails []string, payload proto.Message) error
 
 // Sentry reports.
-func BuildSentryReport(err error) (string, []raven.Interface, map[string]interface{})
-func ReportError(err error) (string, error)
+func BuildSentryReport(err error) (*sentry.Event, map[string]interface{})
+func ReportError(err error) (string)
 
 // Stack trace captures.
 func GetOneLineSource(err error) (file string, line int, fn string, ok bool)
-type ReportableStackTrace = raven.StackTrace
+type ReportableStackTrace = sentry.StackTrace
 func GetReportableStackTrace(err error) *ReportableStackTrace
 
 // Safe (PII-free) details.
