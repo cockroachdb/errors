@@ -11,6 +11,5 @@ require (
 	github.com/hydrogen18/memlistener v0.0.0-20141126152155-54553eb933fb
 	github.com/kr/pretty v0.1.0
 	github.com/pkg/errors v0.8.1
-	github.com/tooolbox/raven-go v0.2.1-0.20191209222533-c2ee831e8d3d
 	google.golang.org/grpc v1.24.0
 )
