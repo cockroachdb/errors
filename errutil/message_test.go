@@ -240,7 +240,7 @@ assertion failure
 	}
 }
 
-var fileref = regexp.MustCompile(`([a-zA-Z0-9\._/-]*\.(?:go|s):\d+)`)
+var fileref = regexp.MustCompile(`([a-zA-Z0-9\._/@-]*\.(?:go|s):\d+)`)
 
 type werrFmt struct {
 	cause error

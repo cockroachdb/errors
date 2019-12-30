@@ -393,7 +393,7 @@ waa:
 	}
 }
 
-var fileref = regexp.MustCompile(`([a-zA-Z0-9\._/-]*\.(?:go|s):\d+)`)
+var fileref = regexp.MustCompile(`([a-zA-Z0-9\._/@-]*\.(?:go|s):\d+)`)
 
 // errNoFmt does neither implement Format() nor FormatError().
 type errNoFmt struct{ msg string }
