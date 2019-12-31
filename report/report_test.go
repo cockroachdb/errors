@@ -27,7 +27,7 @@ import (
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/testutils"
 	"github.com/cockroachdb/errors/withstack"
-	"github.com/getsentry/sentry-go"
+	"github.com/cockroachdb/sentry-go"
 	"github.com/kr/pretty"
 )
 

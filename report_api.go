@@ -16,7 +16,7 @@ package errors
 
 import (
 	"github.com/cockroachdb/errors/report"
-	"github.com/getsentry/sentry-go"
+	"github.com/cockroachdb/sentry-go"
 )
 
 // BuildSentryReport forwards a definition.
