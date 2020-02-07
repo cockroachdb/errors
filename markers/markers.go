@@ -197,7 +197,7 @@ func (m *withMark) Format(s fmt.State, verb rune) { errbase.FormatError(m, s, ve
 
 func (m *withMark) FormatError(p errbase.Printer) error {
 	if p.Detail() {
-		p.Printf("error with mark override:\n%q\n%s::%s",
+		p.Printf("%q\n%s::%s",
 			m.mark.msg,
 			m.mark.types[0].FamilyName,
 			m.mark.types[0].Extension,

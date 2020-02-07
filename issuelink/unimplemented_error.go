@@ -54,7 +54,6 @@ func (w *unimplementedError) Format(s fmt.State, verb rune) { errbase.FormatErro
 func (w *unimplementedError) FormatError(p errbase.Printer) error {
 	p.Print(w.msg)
 	if p.Detail() {
-		p.Print("\n(unimplemented error)")
 		if w.IssueURL != "" {
 			p.Printf("\nissue: %s", w.IssueURL)
 		}

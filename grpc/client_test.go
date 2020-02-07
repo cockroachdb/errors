@@ -9,7 +9,6 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/cockroachdb/errors/grpc/status"
 	"github.com/cockroachdb/errors/testutils"
-
 	"google.golang.org/grpc/codes"
 )
 
@@ -50,5 +49,7 @@ func TestGrpc(t *testing.T) {
 	tt.Assert(err.Error() == "there was a problem: internal error!")
 	tt.Assert(status.Code(err) == codes.Internal)
 	tt.Assert(errors.Is(err, ErrInternal))
-	tt.Assert(strings.HasPrefix(fmt.Sprintf("%+v", err), "gRPC code: Internal"))
+	spv := fmt.Sprintf("%+v", err)
+	t.Logf("spv:\n%s", spv)
+	tt.Assert(strings.HasSuffix(spv, "gRPC code: Internal"))
 }

@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"regexp"
 	"runtime"
+	"strings"
 	"sync"
 	"testing"
 
@@ -123,6 +124,16 @@ func (t *T) CheckEqual(val, ref interface{}) {
 	if val != ref {
 		t.failWithf(false, "values not equal\n     got: %# v\nexpected: %# v",
 			pretty.Formatter(val), pretty.Formatter(ref))
+	}
+}
+
+// CheckEqual checks that the string value is equal to some reference.
+func (t *T) CheckStringEqual(val, ref string) {
+	t.Helper()
+	if val != ref {
+		t.failWithf(false, "values not equal; got:\n  %s\nexpected:\n  %s",
+			strings.ReplaceAll(val, "\n", "\n  "),
+			strings.ReplaceAll(ref, "\n", "\n  "))
 	}
 }
 

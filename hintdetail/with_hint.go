@@ -42,7 +42,7 @@ func (w *withHint) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, ve
 
 func (w *withHint) FormatError(p errbase.Printer) error {
 	if p.Detail() {
-		p.Printf("error with user hint: %s", w.hint)
+		p.Print(w.hint)
 	}
 	return w.cause
 }

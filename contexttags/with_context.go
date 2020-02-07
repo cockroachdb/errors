@@ -54,7 +54,7 @@ func (w *withContext) Format(s fmt.State, verb rune) { errbase.FormatError(w, s,
 
 func (w *withContext) FormatError(p errbase.Printer) error {
 	if p.Detail() && w.tags != nil {
-		p.Printf("error with context tags: %s", w.tags.String())
+		p.Printf("tags: [%s]", w.tags.String())
 	}
 	return w.cause
 }

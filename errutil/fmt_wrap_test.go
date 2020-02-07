@@ -47,53 +47,40 @@ func TestErrorWrap(t *testing.T) {
 			errutil.Wrap(fmt.Errorf("hello: %w", baseErr), "woo"),
 			`woo: hello: world`,
 			// However, ours do.
-			`error with attached stack trace:
+			`woo: hello: world
+- (*errors.errorString:) world
+- (*withstack.withStack:)
     github.com/cockroachdb/errors/errutil_test.TestErrorWrap
     <tab><path>
     testing.tRunner
     <tab><path>
     runtime.goexit
     <tab><path>
-  - woo:
-  - hello
-  - error with attached stack trace:
+- (*fmt.wrapError:) hello
+- (*errutil.withMessage:) woo
+- (*withstack.withStack:)
     github.com/cockroachdb/errors/errutil_test.TestErrorWrap
     <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - world`},
+    [...same entries as above...]`},
 
 		{"new wrap err",
 			errutil.Newf("hello: %w", baseErr),
 			`hello: world`,
-			`error with attached stack trace:
+			`hello: world
+- (*errors.errorString:) world
+- (*withstack.withStack:)
     github.com/cockroachdb/errors/errutil_test.TestErrorWrap
     <tab><path>
     testing.tRunner
     <tab><path>
     runtime.goexit
     <tab><path>
-  - error with embedded safe details: hello: %w
-    -- arg 1: <*errors.errorString>
-    wrapper: <*withstack.withStack>
-    (more details:)
+- (*fmt.wrapError:) hello
+- (*safedetails.withSafeDetails:) 2 details enclosed
+- (*withstack.withStack:)
     github.com/cockroachdb/errors/errutil_test.TestErrorWrap
     <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - hello
-  - error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestErrorWrap
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - world`},
+    [...same entries as above...]`},
 	}
 
 	for _, test := range testCases {
@@ -101,21 +88,21 @@ func TestErrorWrap(t *testing.T) {
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
 			spv = fileref.ReplaceAllString(spv, "<path>")
 			spv = strings.ReplaceAll(spv, "\t", "<tab>")
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }

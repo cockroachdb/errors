@@ -42,7 +42,7 @@ func TestTelemetry(t *testing.T) {
 		"hello")
 
 	tt.Check(markers.Is(err, baseErr))
-	tt.CheckEqual(err.Error(), "hello: world")
+	tt.CheckStringEqual(err.Error(), "hello: world")
 
 	keys := telemetrykeys.GetTelemetryKeys(err)
 	sort.Strings(keys)
@@ -56,7 +56,7 @@ func TestTelemetry(t *testing.T) {
 	newErr := errbase.DecodeError(context.Background(), enc)
 
 	tt.Check(markers.Is(newErr, baseErr))
-	tt.CheckEqual(newErr.Error(), "hello: world")
+	tt.CheckStringEqual(newErr.Error(), "hello: world")
 
 	keys = telemetrykeys.GetTelemetryKeys(newErr)
 	sort.Strings(keys)
@@ -82,26 +82,32 @@ func TestFormat(t *testing.T) {
 		{"keys",
 			telemetrykeys.WithTelemetry(baseErr, "a", "b"),
 			woo, `
-error with telemetry keys: [a b]
-  - woo`},
+woo
+- (*errors.errorString:) woo
+- (*telemetrykeys.withTelemetry:)
+    keys: [a b]`},
 
 		{"keys + wrapper",
 			telemetrykeys.WithTelemetry(&werrFmt{baseErr, "waa"}, "a", "b"),
 			waawoo, `
-error with telemetry keys: [a b]
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo`},
+waa: woo
+- (*errors.errorString:) woo
+- (*telemetrykeys_test.werrFmt:) waa
+    -- this is waa's
+    multi-line payload
+- (*telemetrykeys.withTelemetry:)
+    keys: [a b]`},
 
 		{"wrapper + keys",
 			&werrFmt{telemetrykeys.WithTelemetry(baseErr, "a", "b"), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - error with telemetry keys: [a b]
-  - woo`},
+waa: woo
+- (*errors.errorString:) woo
+- (*telemetrykeys.withTelemetry:)
+    keys: [a b]
+- (*telemetrykeys_test.werrFmt:) waa
+    -- this is waa's
+    multi-line payload`},
 	}
 
 	for _, test := range testCases {
@@ -109,19 +115,19 @@ waa:
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
@@ -139,7 +145,7 @@ func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, ver
 func (e *werrFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose wrapper:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line payload", e.msg)
 	}
 	return e.cause
 }

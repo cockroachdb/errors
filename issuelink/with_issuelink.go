@@ -66,7 +66,6 @@ func (w *withIssueLink) Format(s fmt.State, verb rune) { errbase.FormatError(w, 
 
 func (w *withIssueLink) FormatError(p errbase.Printer) error {
 	if p.Detail() {
-		p.Print("error with linked issue")
 		if w.IssueURL != "" {
 			p.Printf("\nissue: %s", w.IssueURL)
 		}
