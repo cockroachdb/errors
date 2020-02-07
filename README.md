@@ -77,12 +77,12 @@ older version of the package.
 |-----------------------------------------------------------------|-------------------------------------|--------------|-------------------------------|-----------------------------------|
 | main message, eg `New()`                                        | visible                             | visible      | redacted                      | redacted                          |
 | wrap prefix, eg `WithMessage()`                                 | visible (as prefix)                 | visible      | redacted                      | redacted                          |
-| stack trace, eg `WithStack()`                                   | not visible                         | visible      | yes                           | full                              |
+| stack trace, eg `WithStack()`                                   | not visible                         | simplified   | yes                           | full                              |
 | hint , eg `WithHint()`                                          | not visible                         | visible      | no                            | type only                         |
 | detail, eg `WithDetail()`                                       | not visible                         | visible      | no                            | type only                         |
 | assertion failure annotation, eg `WithAssertionFailure()`       | not visible                         | visible      | no                            | type only                         |
 | issue links, eg `WithIssueLink()`, `UnimplementedError()`       | not visible                         | visible      | yes                           | full                              |
-| safe details, eg `WithSafeDetails()`                            | not visible                         | visible      | yes                           | full                              |
+| safe details, eg `WithSafeDetails()`                            | not visible                         | not visible  | yes                           | full                              |
 | telemetry keys, eg. `WithTelemetryKey()`                        | not visible                         | visible      | yes                           | full                              |
 | secondary errors, eg. `WithSecondaryError()`, `CombineErrors()` | not visible                         | visible      | redacted, recursively         | redacted, recursively             |
 | barrier origins, eg. `Handled()`                                | not visible                         | visible      | redacted, recursively         | redacted, recursively             |

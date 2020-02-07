@@ -22,7 +22,6 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/cockroachdb/errors/extgrpc"
 	"github.com/cockroachdb/errors/testutils"
-
 	"google.golang.org/grpc/codes"
 )
 
@@ -47,10 +46,13 @@ func TestGrpc(t *testing.T) {
 	tt.CheckEqual(extgrpc.GetGrpcCode(otherErr), codes.NotFound)
 
 	// The code is hidden when the error is printed with %v.
-	tt.CheckEqual(fmt.Sprintf("%v", err), `hello`)
+	tt.CheckStringEqual(fmt.Sprintf("%v", err), `hello`)
 	// The code appears when the error is printed verbosely.
-	tt.CheckEqual(fmt.Sprintf("%+v", err), `gRPC code: Unavailable
-  - hello`)
+	tt.CheckStringEqual(fmt.Sprintf("%+v", err), `hello
+(1)
+  | gRPC code: Unavailable
+Wraps: (2) hello
+Error types: (1) *extgrpc.withGrpcCode (2) *errors.errorString`)
 
 	// Checking the code of a nil error should be codes.OK
 	var noErr error

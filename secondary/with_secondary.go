@@ -49,9 +49,9 @@ func (e *withSecondaryError) SafeDetails() []string {
 func (e *withSecondaryError) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
 
 func (e *withSecondaryError) FormatError(p errbase.Printer) (next error) {
+	p.Print("secondary error attachment")
 	if p.Detail() {
-		p.Printf("combined error\nancillary error: %+v", e.secondaryError)
-		p.Print("\n(main error follows)")
+		p.Printf("%+v", e.secondaryError)
 	}
 	return e.cause
 }

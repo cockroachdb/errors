@@ -44,7 +44,7 @@ func TestIssueLink(t *testing.T) {
 
 	theTest := func(tt testutils.T, err error) {
 		tt.Check(markers.Is(err, origErr))
-		tt.CheckEqual(err.Error(), "hello: world")
+		tt.CheckStringEqual(err.Error(), "hello: world")
 
 		tt.Check(issuelink.HasIssueLink(err))
 		if _, ok := markers.If(err, func(err error) (interface{}, bool) { return nil, issuelink.IsIssueLink(err) }); !ok {
@@ -89,36 +89,40 @@ func TestFormat(t *testing.T) {
 		{"link",
 			issuelink.WithIssueLink(baseErr, link),
 			woo, `
-error with linked issue
-    issue: http://mysite
-  - woo`},
+woo
+(1) issue: http://mysite
+Wraps: (2) woo
+Error types: (1) *issuelink.withIssueLink (2) *errors.errorString`},
 		{"link-details",
 			issuelink.WithIssueLink(baseErr, issuelink.IssueLink{IssueURL: "http://mysite", Detail: "see more"}),
 			woo, `
-error with linked issue
-    issue: http://mysite
-    detail: see more
-  - woo`},
+woo
+(1) issue: http://mysite
+  | detail: see more
+Wraps: (2) woo
+Error types: (1) *issuelink.withIssueLink (2) *errors.errorString`},
 
 		{"link + wrapper",
 			issuelink.WithIssueLink(&werrFmt{baseErr, "waa"}, link),
 			waawoo, `
-error with linked issue
-    issue: http://mysite
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo`},
+waa: woo
+(1) issue: http://mysite
+Wraps: (2) waa
+  | -- this is waa's
+  | multi-line payload
+Wraps: (3) woo
+Error types: (1) *issuelink.withIssueLink (2) *issuelink_test.werrFmt (3) *errors.errorString`},
 
 		{"wrapper + link",
 			&werrFmt{issuelink.WithIssueLink(baseErr, link), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - error with linked issue
-    issue: http://mysite
-  - woo`},
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line payload
+Wraps: (2) issue: http://mysite
+Wraps: (3) woo
+Error types: (1) *issuelink_test.werrFmt (2) *issuelink.withIssueLink (3) *errors.errorString`},
 	}
 
 	for _, test := range testCases {
@@ -126,19 +130,19 @@ waa:
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
@@ -156,7 +160,7 @@ func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, ver
 func (e *werrFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose wrapper:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line payload", e.msg)
 	}
 	return e.cause
 }

@@ -47,14 +47,14 @@ func TestDetail(t *testing.T) {
 
 	theTest := func(tt testutils.T, err error) {
 		tt.Check(markers.Is(err, origErr))
-		tt.CheckEqual(err.Error(), "hello: world")
+		tt.CheckStringEqual(err.Error(), "hello: world")
 
 		details := hintdetail.GetAllDetails(err)
 		tt.CheckDeepEqual(details, []string{"foo", "bar"})
 
 		errV := fmt.Sprintf("%+v", err)
-		tt.Check(strings.Contains(errV, "detail: foo"))
-		tt.Check(strings.Contains(errV, "detail: bar"))
+		tt.Check(strings.Contains(errV, "foo"))
+		tt.Check(strings.Contains(errV, "bar"))
 	}
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
@@ -84,14 +84,14 @@ func TestHint(t *testing.T) {
 
 	theTest := func(tt testutils.T, err error) {
 		tt.Check(markers.Is(err, origErr))
-		tt.CheckEqual(err.Error(), "hello: world")
+		tt.CheckStringEqual(err.Error(), "hello: world")
 
 		hints := hintdetail.GetAllHints(err)
 		tt.CheckDeepEqual(hints, []string{"foo", "bar"})
 
 		errV := fmt.Sprintf("%+v", err)
-		tt.Check(strings.Contains(errV, "hint: foo"))
-		tt.Check(strings.Contains(errV, "hint: bar"))
+		tt.Check(strings.Contains(errV, "foo"))
+		tt.Check(strings.Contains(errV, "bar"))
 	}
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
@@ -114,13 +114,13 @@ func TestIssueLinkHint(t *testing.T) {
 	)
 
 	theTest := func(tt testutils.T, err error) {
-		tt.CheckEqual(err.Error(), "hello world")
+		tt.CheckStringEqual(err.Error(), "hello world")
 
 		hints := hintdetail.GetAllHints(err)
 		tt.Assert(len(hints) == 2)
 
-		tt.CheckEqual(hints[0], "See: foo")
-		tt.CheckEqual(hints[1], "See: bar")
+		tt.CheckStringEqual(hints[0], "See: foo")
+		tt.CheckStringEqual(hints[1], "See: bar")
 	}
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
@@ -137,12 +137,12 @@ func TestUnimplementedHint(t *testing.T) {
 	err := issuelink.UnimplementedError(issuelink.IssueLink{IssueURL: "woo"}, "hello world")
 
 	theTest := func(tt testutils.T, err error) {
-		tt.CheckEqual(err.Error(), "hello world")
+		tt.CheckStringEqual(err.Error(), "hello world")
 
 		hints := hintdetail.GetAllHints(err)
 		tt.Assert(len(hints) > 0)
 
-		tt.CheckEqual(hints[0], issuelink.UnimplementedErrorHint+"\nSee: woo")
+		tt.CheckStringEqual(hints[0], issuelink.UnimplementedErrorHint+"\nSee: woo")
 	}
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
@@ -159,12 +159,12 @@ func TestUnimplementedNoIssueHint(t *testing.T) {
 	err := issuelink.UnimplementedError(issuelink.IssueLink{}, "hello world")
 
 	theTest := func(tt testutils.T, err error) {
-		tt.CheckEqual(err.Error(), "hello world")
+		tt.CheckStringEqual(err.Error(), "hello world")
 
 		hints := hintdetail.GetAllHints(err)
 		tt.Assert(len(hints) > 0)
 
-		tt.CheckEqual(hints[0], issuelink.UnimplementedErrorHint+stdstrings.IssueReferral)
+		tt.CheckStringEqual(hints[0], issuelink.UnimplementedErrorHint+stdstrings.IssueReferral)
 	}
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
@@ -181,12 +181,12 @@ func TestAssertionHints(t *testing.T) {
 	err := assert.WithAssertionFailure(errors.New("hello world"))
 
 	theTest := func(tt testutils.T, err error) {
-		tt.CheckEqual(err.Error(), "hello world")
+		tt.CheckStringEqual(err.Error(), "hello world")
 
 		hints := hintdetail.GetAllHints(err)
 		tt.Assert(len(hints) > 0)
 
-		tt.CheckEqual(hints[0], assert.AssertionErrorHint+stdstrings.IssueReferral)
+		tt.CheckStringEqual(hints[0], assert.AssertionErrorHint+stdstrings.IssueReferral)
 	}
 
 	tt.Run("local", func(tt testutils.T) { theTest(tt, err) })
@@ -204,11 +204,11 @@ func TestMultiHintDetail(t *testing.T) {
 	err = hintdetail.WithHint(err, "woo")
 	err = hintdetail.WithHint(err, "waa")
 
-	tt.CheckEqual(hintdetail.FlattenHints(err), "woo\n--\nwaa")
+	tt.CheckStringEqual(hintdetail.FlattenHints(err), "woo\n--\nwaa")
 
 	err = hintdetail.WithDetail(err, "foo")
 	err = hintdetail.WithDetail(err, "bar")
-	tt.CheckEqual(hintdetail.FlattenDetails(err), "foo\n--\nbar")
+	tt.CheckStringEqual(hintdetail.FlattenDetails(err), "foo\n--\nbar")
 }
 
 func TestFormat(t *testing.T) {
@@ -226,48 +226,60 @@ func TestFormat(t *testing.T) {
 		{"hint",
 			hintdetail.WithHint(baseErr, "a"),
 			woo, `
-error with user hint: a
-  - woo`},
+woo
+(1) a
+Wraps: (2) woo
+Error types: (1) *hintdetail.withHint (2) *errors.errorString`},
 		{"detail",
 			hintdetail.WithDetail(baseErr, "a"),
 			woo, `
-error with user detail: a
-  - woo`},
+woo
+(1) a
+Wraps: (2) woo
+Error types: (1) *hintdetail.withDetail (2) *errors.errorString`},
 
 		{"hint + wrapper",
 			hintdetail.WithHint(&werrFmt{baseErr, "waa"}, "a"),
 			waawoo, `
-error with user hint: a
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo`},
+waa: woo
+(1) a
+Wraps: (2) waa
+  | -- this is waa's
+  | multi-line wrapper
+Wraps: (3) woo
+Error types: (1) *hintdetail.withHint (2) *hintdetail_test.werrFmt (3) *errors.errorString`},
 
 		{"detail + wrapper",
 			hintdetail.WithDetail(&werrFmt{baseErr, "waa"}, "a"),
 			waawoo, `
-error with user detail: a
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo`},
+waa: woo
+(1) a
+Wraps: (2) waa
+  | -- this is waa's
+  | multi-line wrapper
+Wraps: (3) woo
+Error types: (1) *hintdetail.withDetail (2) *hintdetail_test.werrFmt (3) *errors.errorString`},
 
 		{"wrapper + hint",
 			&werrFmt{hintdetail.WithHint(baseErr, "a"), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - error with user hint: a
-  - woo`},
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line wrapper
+Wraps: (2) a
+Wraps: (3) woo
+Error types: (1) *hintdetail_test.werrFmt (2) *hintdetail.withHint (3) *errors.errorString`},
 		{"wrapper + detail",
 			&werrFmt{hintdetail.WithDetail(baseErr, "a"), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - error with user detail: a
-  - woo`},
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line wrapper
+Wraps: (2) a
+Wraps: (3) woo
+Error types: (1) *hintdetail_test.werrFmt (2) *hintdetail.withDetail (3) *errors.errorString`},
 	}
 
 	for _, test := range testCases {
@@ -275,19 +287,19 @@ waa:
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
@@ -305,7 +317,7 @@ func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, ver
 func (e *werrFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose wrapper:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line wrapper", e.msg)
 	}
 	return e.cause
 }

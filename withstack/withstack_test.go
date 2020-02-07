@@ -49,7 +49,7 @@ func TestWithStack(t *testing.T) {
 	newErr := errbase.DecodeError(context.Background(), enc)
 
 	// In any case, the library preserves the error message.
-	tt.CheckEqual(newErr.Error(), origErr.Error())
+	tt.CheckStringEqual(newErr.Error(), origErr.Error())
 
 	// The decoded error is marker-equal with the original one.
 	tt.Check(markers.Is(newErr, origErr))
@@ -79,44 +79,69 @@ func TestFormat(t *testing.T) {
 		{"withstack",
 			withstack.WithStack(baseErr),
 			woo, `
-error with attached stack trace:
-    github.com/cockroachdb/errors/withstack_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - woo`},
+woo
+(1) attached stack trace
+  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) woo
+Error types: (1) *withstack.withStack (2) *errors.errorString`},
 
 		{"withstack + wrapper",
 			withstack.WithStack(&werrFmt{baseErr, "waa"}),
 			waawoo, `
-error with attached stack trace:
-    github.com/cockroachdb/errors/withstack_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo`},
+waa: woo
+(1) attached stack trace
+  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) waa
+  | -- verbose wrapper:
+  | waa
+Wraps: (3) woo
+Error types: (1) *withstack.withStack (2) *withstack_test.werrFmt (3) *errors.errorString`},
 
 		{"wrapper + withstack",
 			&werrFmt{withstack.WithStack(baseErr), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - error with attached stack trace:
-    github.com/cockroachdb/errors/withstack_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - woo`},
+waa: woo
+(1) waa
+  | -- verbose wrapper:
+  | waa
+Wraps: (2) attached stack trace
+  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (3) woo
+Error types: (1) *withstack_test.werrFmt (2) *withstack.withStack (3) *errors.errorString`},
+
+		{"withstack + withstack",
+			withstack.WithStack(
+				withstack.WithStack(baseErr)),
+			woo, `
+woo
+(1) attached stack trace
+  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | <tab><path>
+  | [...repeated from below...]
+Wraps: (2) attached stack trace
+  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (3) woo
+Error types: (1) *withstack.withStack (2) *withstack.withStack (3) *errors.errorString`},
 	}
 
 	for _, test := range testCases {
@@ -124,14 +149,14 @@ waa:
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
@@ -139,7 +164,7 @@ waa:
 			spv = fileref.ReplaceAllString(spv, "<path>")
 			// spv = funref.ReplaceAllString(spv, "<path>/${fun}")
 			spv = strings.ReplaceAll(spv, "\t", "<tab>")
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }

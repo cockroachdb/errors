@@ -33,25 +33,16 @@ func (e *withSafeDetails) SafeDetails() []string {
 }
 
 var _ fmt.Formatter = (*withSafeDetails)(nil)
-var _ errbase.Formatter = (*withSafeDetails)(nil)
 
 // Printing a withSecondary reveals the details.
 func (e *withSafeDetails) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
 
 func (e *withSafeDetails) FormatError(p errbase.Printer) error {
-	if p.Detail() {
-		if len(e.safeDetails) == 0 || (len(e.safeDetails) == 1 && e.safeDetails[0] == "") {
-			p.Print("safe detail wrapper with no details")
-		} else {
-			p.Print("error with embedded safe details:")
-			if e.safeDetails[0] != "" {
-				p.Printf(" %s", e.safeDetails[0])
-			}
-			for _, d := range e.safeDetails[1:] {
-				p.Printf("\n%s", d)
-			}
-		}
+	plural := "s"
+	if len(e.safeDetails) == 1 {
+		plural = ""
 	}
+	p.Printf("%d safe detail%s enclosed", len(e.safeDetails), plural)
 	return e.cause
 }
 

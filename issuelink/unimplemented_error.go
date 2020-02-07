@@ -52,15 +52,12 @@ const UnimplementedErrorHint = `You have attempted to use a feature that is not 
 func (w *unimplementedError) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 
 func (w *unimplementedError) FormatError(p errbase.Printer) error {
-	p.Print(w.msg)
-	if p.Detail() {
-		p.Print("\n(unimplemented error)")
-		if w.IssueURL != "" {
-			p.Printf("\nissue: %s", w.IssueURL)
-		}
-		if w.Detail != "" {
-			p.Printf("\ndetail: %s", w.Detail)
-		}
+	p.Printf("unimplemented: %s", w.msg)
+	if w.IssueURL != "" {
+		p.Printf("\nissue: %s", w.IssueURL)
+	}
+	if w.Detail != "" {
+		p.Printf("\ndetail: %s", w.Detail)
 	}
 	return nil
 }
