@@ -75,26 +75,29 @@ func TestFormatUnimp(t *testing.T) {
 		{"unimp",
 			issuelink.UnimplementedError(link, "woo"),
 			woo, `
-woo:
-    (unimplemented error)
-    issue: http://mysite`},
+woo
+(1) unimplemented: woo
+  | issue: http://mysite
+Error types: (1) *issuelink.unimplementedError`},
 		{"unimp-details",
 			issuelink.UnimplementedError(issuelink.IssueLink{IssueURL: "http://mysite", Detail: "see more"}, "woo"),
 			woo, `
-woo:
-    (unimplemented error)
-    issue: http://mysite
-    detail: see more`},
+woo
+(1) unimplemented: woo
+  | issue: http://mysite
+  | detail: see more
+Error types: (1) *issuelink.unimplementedError`},
 
 		{"wrapper + unimp",
 			&werrFmt{issuelink.UnimplementedError(link, "woo"), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - woo:
-    (unimplemented error)
-    issue: http://mysite`},
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line payload
+Wraps: (2) unimplemented: woo
+  | issue: http://mysite
+Error types: (1) *issuelink_test.werrFmt (2) *issuelink.unimplementedError`},
 	}
 
 	for _, test := range testCases {
@@ -102,19 +105,19 @@ waa:
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }

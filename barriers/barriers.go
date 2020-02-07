@@ -95,9 +95,9 @@ func (e *barrierError) SafeDetails() []string {
 func (e *barrierError) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
 
 func (e *barrierError) FormatError(p errbase.Printer) (next error) {
-	p.Print(e.msg)
+	p.Printf(e.msg)
 	if p.Detail() {
-		p.Printf("\noriginal cause behind barrier: %+v", e.maskedErr)
+		p.Printf("-- cause hidden behind barrier\n%+v", e.maskedErr)
 	}
 	return nil
 }

@@ -117,10 +117,13 @@ func TestFormat(t *testing.T) {
 		{"sec",
 			secondary.WithSecondaryError(baseErr, goErr.New("wuu")),
 			woo, `
-combined error
-    ancillary error: wuu
-    (main error follows)
-  - woo`},
+woo
+(1) secondary error attachment
+  | wuu
+  | (1) wuu
+  | Error types: (1) *errors.errorString
+Wraps: (2) woo
+Error types: (1) *secondary.withSecondaryError (2) *errors.errorString`},
 
 		{"sec+sec chain",
 			secondary.WithSecondaryError(
@@ -128,50 +131,64 @@ combined error
 					goErr.New("payload1")),
 				goErr.New("payload2")),
 			woo, `
-combined error
-    ancillary error: payload2
-    (main error follows)
-  - combined error
-    ancillary error: payload1
-    (main error follows)
-  - woo`},
+woo
+(1) secondary error attachment
+  | payload2
+  | (1) payload2
+  | Error types: (1) *errors.errorString
+Wraps: (2) secondary error attachment
+  | payload1
+  | (1) payload1
+  | Error types: (1) *errors.errorString
+Wraps: (3) woo
+Error types: (1) *secondary.withSecondaryError (2) *secondary.withSecondaryError (3) *errors.errorString`},
 
 		{"sec+sec nested",
 			secondary.WithSecondaryError(baseErr,
 				secondary.WithSecondaryError(
 					goErr.New("payload1"), goErr.New("payload2"))),
 			woo, `
-combined error
-    ancillary error: combined error
-        ancillary error: payload2
-        (main error follows)
-      - payload1
-    (main error follows)
-  - woo`},
+woo
+(1) secondary error attachment
+  | payload1
+  | (1) secondary error attachment
+  |   | payload2
+  |   | (1) payload2
+  |   | Error types: (1) *errors.errorString
+  | Wraps: (2) payload1
+  | Error types: (1) *secondary.withSecondaryError (2) *errors.errorString
+Wraps: (2) woo
+Error types: (1) *secondary.withSecondaryError (2) *errors.errorString`},
 
 		{"sec + wrapper chain",
 			secondary.WithSecondaryError(&werrFmt{baseErr, "waa"},
 				goErr.New("wuu")),
 			waawoo, `
-combined error
-    ancillary error: wuu
-    (main error follows)
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo`},
+waa: woo
+(1) secondary error attachment
+  | wuu
+  | (1) wuu
+  | Error types: (1) *errors.errorString
+Wraps: (2) waa
+  | -- this is waa's
+  | multi-line payload
+Wraps: (3) woo
+Error types: (1) *secondary.withSecondaryError (2) *secondary_test.werrFmt (3) *errors.errorString`},
 
 		{"sec + wrapper nested",
 			secondary.WithSecondaryError(baseErr,
 				&werrFmt{goErr.New("wuu"), "waa"}),
 			woo, `
-combined error
-    ancillary error: waa:
-        -- verbose wrapper:
-        waa
-      - wuu
-    (main error follows)
-  - woo`},
+woo
+(1) secondary error attachment
+  | waa: wuu
+  | (1) waa
+  |   | -- this is waa's
+  |   | multi-line payload
+  | Wraps: (2) wuu
+  | Error types: (1) *secondary_test.werrFmt (2) *errors.errorString
+Wraps: (2) woo
+Error types: (1) *secondary.withSecondaryError (2) *errors.errorString`},
 	}
 
 	for _, test := range testCases {
@@ -179,19 +196,19 @@ combined error
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
@@ -209,7 +226,7 @@ func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, ver
 func (e *werrFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose wrapper:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line payload", e.msg)
 	}
 	return e.cause
 }

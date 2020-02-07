@@ -46,7 +46,7 @@ type ReportableStackTrace = sentry.Stacktrace
 func GetReportableStackTrace(err error) *ReportableStackTrace {
 	// If we have a stack trace in the style of github.com/pkg/errors
 	// (either from there or our own withStack), use it.
-	if st, ok := err.(interface{ StackTrace() pkgErr.StackTrace }); ok {
+	if st, ok := err.(errbase.StackTraceProvider); ok {
 		return convertPkgStack(st.StackTrace())
 	}
 
@@ -71,7 +71,7 @@ type frame = sentry.Frame
 
 // convertPkgStack converts a StackTrace from github.com/pkg/errors
 // to a Stacktrace in github.com/getsentry/sentry-go.
-func convertPkgStack(st pkgErr.StackTrace) *ReportableStackTrace {
+func convertPkgStack(st errbase.StackTrace) *ReportableStackTrace {
 	// If there are no frames, the entire stacktrace is nil.
 	if len(st) == 0 {
 		return nil
