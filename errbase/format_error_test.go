@@ -27,6 +27,83 @@ import (
 	pkgErr "github.com/pkg/errors"
 )
 
+func TestSimplifyStacks(t *testing.T) {
+	leaf := func() error {
+		return pkgErr.New("hello world")
+	}
+	wrapper := func() error {
+		err := leaf()
+		return pkgErr.WithStack(err)
+	}
+	errWrapper := wrapper()
+	t.Logf("error: %+v", errWrapper)
+
+	t.Run("low level API", func(t *testing.T) {
+		tt := testutils.T{t}
+		// Extract the stack trace from the leaf.
+		errLeaf := errbase.UnwrapOnce(errWrapper)
+		leafP, ok := errLeaf.(errbase.StackTraceProvider)
+		if !ok {
+			t.Fatal("leaf error does not provide stack trace")
+		}
+		leafT := leafP.StackTrace()
+		spv := fmtClean(leafT)
+		t.Logf("-- leaf trace --%+v", spv)
+		if !strings.Contains(spv, "TestSimplifyStacks") {
+			t.Fatalf("expected test function in trace, got:%v", spv)
+		}
+		leafLines := strings.Split(spv, "\n")
+
+		// Extract the stack trace from the wrapper.
+		wrapperP, ok := errWrapper.(errbase.StackTraceProvider)
+		if !ok {
+			t.Fatal("wrapper error does not provide stack trace")
+		}
+		wrapperT := wrapperP.StackTrace()
+		spv = fmtClean(wrapperT)
+		t.Logf("-- wrapper trace --%+v", spv)
+		wrapperLines := strings.Split(spv, "\n")
+
+		// Sanity check before we verify the result.
+		tt.Check(len(wrapperLines) > 0)
+		tt.CheckDeepEqual(wrapperLines[3:], leafLines[5:])
+
+		// Elide the suffix and verify that we arrive to the same result.
+		simplified, hasElided := errbase.ElideSharedStackTraceSuffix(leafT, wrapperT)
+		spv = fmtClean(simplified)
+		t.Logf("-- simplified (%v) --%+v", hasElided, spv)
+		simplifiedLines := strings.Split(spv, "\n")
+		tt.CheckDeepEqual(simplifiedLines, wrapperLines[0:3])
+	})
+
+	t.Run("high level API", func(t *testing.T) {
+		tt := testutils.T{t}
+
+		spv := fmtClean(&errFormatter{errWrapper})
+		tt.CheckStringEqual(spv, `hello world
+(1)
+  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func2
+  | <tab><path>:<lineno>
+  | [...repeated from below...]
+Wraps: (2) hello world
+  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Error types: (1) *errors.withStack (2) *errors.fundamental`)
+	})
+}
+
+type errFormatter struct{ err error }
+
+func (f *errFormatter) Format(s fmt.State, verb rune) { errbase.FormatError(f.err, s, verb) }
+
 func TestFormat(t *testing.T) {
 	tt := testutils.T{t}
 
@@ -52,21 +129,26 @@ func TestFormat(t *testing.T) {
 			&errFmto{"woo"},
 			woo, `
 woo
--- verbose leaf (fmt):
-woo`, ``,
+-- this is woo's
+multi-line payload`, ``,
 		},
 
 		{"fmt-partial leaf",
 			&errFmtp{"woo"},
-			woo, woo, ``,
+			woo, `
+woo
+(1) woo
+Error types: (1) *errbase_test.errFmtp`, ``,
 		},
 
 		{"fmt leaf",
 			&errFmt{"woo"},
 			woo, `
-woo:
-    -- verbose leaf:
-    woo`, ``,
+woo
+(1) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.errFmt`, ``,
 		},
 
 		{"nofmt leaf + nofmt wrap",
@@ -77,24 +159,28 @@ woo:
 			&werrFmto{&errNoFmt{"woo"}, "waa"},
 			waawoo, `
 woo
--- verbose wrapper (fmt):
-waa`, ``,
+-- this is waa's
+multi-line payload (fmt)`, ``,
 		},
 
 		{"nofmt leaf + fmt-partial wrap",
 			&werrFmtp{&errNoFmt{"woo"}, "waa"},
 			waawoo, `
-waa:
-  - woo`, ``,
+waa: woo
+(1) waa
+Wraps: (2) woo
+Error types: (1) *errbase_test.werrFmtp (2) *errbase_test.errNoFmt`, ``,
 		},
 
 		{"nofmt leaf + fmt wrap",
 			&werrFmt{&errNoFmt{"woo"}, "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - woo`, ``,
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line wrapper payload
+Wraps: (2) woo
+Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errNoFmt`, ``,
 		},
 
 		{"fmt-old leaf + nofmt wrap",
@@ -105,30 +191,34 @@ waa:
 			&werrFmto{&errFmto{"woo"}, "waa"},
 			waawoo, `
 woo
--- verbose leaf (fmt):
-woo
--- verbose wrapper (fmt):
-waa`, ``,
+-- this is woo's
+multi-line payload
+-- this is waa's
+multi-line payload (fmt)`, ``,
 		},
 
 		{"fmt-old leaf + fmt-partial wrap",
 			&werrFmtp{&errFmto{"woo"}, "waa"},
 			waawoo, `
-waa:
-  - woo
-    -- verbose leaf (fmt):
-    woo`, ``,
+waa: woo
+(1) waa
+Wraps: (2) woo
+  | -- this is woo's
+  | multi-line payload
+Error types: (1) *errbase_test.werrFmtp (2) *errbase_test.errFmto`, ``,
 		},
 
 		{"fmt-old leaf + fmt wrap",
 			&werrFmt{&errFmto{"woo"}, "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - woo
-    -- verbose leaf (fmt):
-    woo`, ``,
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line wrapper payload
+Wraps: (2) woo
+  | -- this is woo's
+  | multi-line payload
+Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errFmto`, ``,
 		},
 
 		{"fmt-partial leaf + nofmt wrap",
@@ -139,24 +229,34 @@ waa:
 			&werrFmto{&errFmtp{"woo"}, "waa"},
 			waawoo, `
 woo
--- verbose wrapper (fmt):
-waa`, ``,
+(1) woo
+Error types: (1) *errbase_test.errFmtp
+-- this is waa's
+multi-line payload (fmt)`, ``,
 		},
 
 		{"fmt-partial leaf + fmt-partial wrap",
 			&werrFmtp{&errFmtp{"woo"}, "waa"},
 			waawoo, `
-waa:
-  - woo`, ``,
+waa: woo
+(1) waa
+Wraps: (2) woo
+  | (1) woo
+  | Error types: (1) *errbase_test.errFmtp
+Error types: (1) *errbase_test.werrFmtp (2) *errbase_test.errFmtp`, ``,
 		},
 
 		{"fmt-partial leaf + fmt wrap",
 			&werrFmt{&errFmtp{"woo"}, "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - woo`, ``,
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line wrapper payload
+Wraps: (2) woo
+  | (1) woo
+  | Error types: (1) *errbase_test.errFmtp
+Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errFmtp`, ``,
 		},
 
 		{"fmt leaf + nofmt wrap",
@@ -166,31 +266,37 @@ waa:
 		{"fmt leaf + fmt-old wrap",
 			&werrFmto{&errFmt{"woo"}, "waa"},
 			waawoo, `
-woo:
-    -- verbose leaf:
-    woo
--- verbose wrapper (fmt):
-waa`, ``,
+woo
+(1) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.errFmt
+-- this is waa's
+multi-line payload (fmt)`, ``,
 		},
 
 		{"fmt leaf + fmt-partial wrap",
 			&werrFmtp{&errFmt{"woo"}, "waa"},
 			waawoo, `
-waa:
-  - woo:
-    -- verbose leaf:
-    woo`, ``,
+waa: woo
+(1) waa
+Wraps: (2) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmtp (2) *errbase_test.errFmt`, ``,
 		},
 
 		{"fmt leaf + fmt wrap",
 			&werrFmt{&errFmt{"woo"}, "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - woo:
-    -- verbose leaf:
-    woo`, ``,
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line wrapper payload
+Wraps: (2) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errFmt`, ``,
 		},
 
 		{"nofmt wrap in + nofmt wrap out",
@@ -201,20 +307,22 @@ waa:
 			&werrFmto{&werrNoFmt{&errFmt{"woo"}, "waa"}, "wuu"},
 			wuuwaawoo, `
 waa: woo
--- verbose wrapper (fmt):
-wuu`, ``,
+-- this is wuu's
+multi-line payload (fmt)`, ``,
 		},
 
 		{"nofmt wrap in + fmt wrap out",
 			&werrFmt{&werrNoFmt{&errFmt{"woo"}, "waa"}, "wuu"},
 			wuuwaawoo, `
-wuu:
-    -- verbose wrapper:
-    wuu
-  - waa
-  - woo:
-    -- verbose leaf:
-    woo`, ``,
+wuu: waa: woo
+(1) wuu
+  | -- this is wuu's
+  | multi-line wrapper payload
+Wraps: (2) waa
+Wraps: (3) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmt (2) *errbase_test.werrNoFmt (3) *errbase_test.errFmt`, ``,
 		},
 
 		{"fmt-old wrap in + nofmt wrap out",
@@ -224,26 +332,29 @@ wuu:
 		{"fmt-old wrap in + fmd-old wrap out",
 			&werrFmto{&werrFmto{&errFmt{"woo"}, "waa"}, "wuu"},
 			wuuwaawoo, `
-woo:
-    -- verbose leaf:
-    woo
--- verbose wrapper (fmt):
-waa
--- verbose wrapper (fmt):
-wuu`, ``,
+woo
+(1) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.errFmt
+-- this is waa's
+multi-line payload (fmt)
+-- this is wuu's
+multi-line payload (fmt)`, ``,
 		},
 
 		{"fmt-old wrap in + fmt wrap out",
 			&werrFmt{&werrFmto{&errFmt{"woo"}, "waa"}, "wuu"},
 			wuuwaawoo, `
-wuu:
-    -- verbose wrapper:
-    wuu
-  - woo:
-        -- verbose leaf:
-        woo
-    -- verbose wrapper (fmt):
-    waa`, ``,
+wuu: waa: woo
+(1) wuu
+  | -- this is wuu's
+  | multi-line wrapper payload
+Wraps: (2) waa
+Wraps: (3) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmt (2) *errbase_test.werrFmto (3) *errbase_test.errFmt`, ``,
 		},
 
 		{"fmt wrap in + nofmt wrap out",
@@ -253,66 +364,82 @@ wuu:
 		{"fmt wrap in + fmd-old wrap out",
 			&werrFmto{&werrFmt{&errFmt{"woo"}, "waa"}, "wuu"},
 			wuuwaawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - woo:
-    -- verbose leaf:
-    woo
--- verbose wrapper (fmt):
-wuu`, ``,
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line wrapper payload
+Wraps: (2) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errFmt
+-- this is wuu's
+multi-line payload (fmt)`, ``,
 		},
 
 		{"fmt wrap in + fmt wrap out",
 			&werrFmt{&werrFmt{&errFmt{"woo"}, "waa"}, "wuu"},
 			wuuwaawoo, `
-wuu:
-    -- verbose wrapper:
-    wuu
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo:
-    -- verbose leaf:
-    woo`, ``,
+wuu: waa: woo
+(1) wuu
+  | -- this is wuu's
+  | multi-line wrapper payload
+Wraps: (2) waa
+  | -- this is waa's
+  | multi-line wrapper payload
+Wraps: (3) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmt (2) *errbase_test.werrFmt (3) *errbase_test.errFmt`, ``,
 		},
 
 		// Opaque leaf.
 		{"opaque leaf",
 			errbase.DecodeError(ctx, errbase.EncodeError(ctx, &errNoFmt{"woo"})),
 			woo, `
-woo:
-    (opaque error leaf)
-    type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.errNoFmt`, ``},
+woo
+(1) woo
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.errNoFmt
+Error types: (1) *errbase.opaqueLeaf`, ``},
 
 		// Opaque wrapper.
 		{"opaque wrapper",
 			errbase.DecodeError(ctx, errbase.EncodeError(ctx, &werrNoFmt{goErr.New("woo"), "waa"})),
 			waawoo, `
-waa:
-    (opaque error wrapper)
-    type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
-  - woo`, ``},
+waa: woo
+(1) waa
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
+Wraps: (2) woo
+Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString`, ``},
 
 		{"opaque wrapper+wrapper",
 			errbase.DecodeError(ctx, errbase.EncodeError(ctx, &werrNoFmt{&werrNoFmt{goErr.New("woo"), "waa"}, "wuu"})),
 			wuuwaawoo, `
-wuu:
-    (opaque error wrapper)
-    type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
-  - waa:
-    (opaque error wrapper)
-    type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
-  - woo`, ``},
+wuu: waa: woo
+(1) wuu
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
+Wraps: (2) waa
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
+Wraps: (3) woo
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errors.errorString`, ``},
 
 		// Compatibility with github.com/pkg/errors.
 
 		{"pkg msg + fmt leaf",
 			pkgErr.WithMessage(&errFmt{"woo"}, "waa"),
 			waawoo, `
-woo:
-    -- verbose leaf:
-    woo
+woo
+(1) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.errFmt
 waa`,
 			// The implementation of (*pkgErr.withMessage).Format() is wrong for %q. Oh well...
 			`waa: woo`,
@@ -321,13 +448,15 @@ waa`,
 		{"fmt wrap + pkg msg + fmt leaf",
 			&werrFmt{pkgErr.WithMessage(&errFmt{"woo"}, "waa"), "wuu"},
 			wuuwaawoo, `
-wuu:
-    -- verbose wrapper:
-    wuu
-  - woo:
-        -- verbose leaf:
-        woo
-    waa`, ``,
+wuu: waa: woo
+(1) wuu
+  | -- this is wuu's
+  | multi-line wrapper payload
+Wraps: (2) waa
+Wraps: (3) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmt (2) *errors.withMessage (3) *errbase_test.errFmt`, ``,
 		},
 
 		{"fmt wrap + pkg msg1 + pkg.msg2 + fmt leaf",
@@ -338,31 +467,36 @@ wuu:
 					"waa1"),
 				"wuu"},
 			`wuu: waa1: waa2: woo`, `
-wuu:
-    -- verbose wrapper:
-    wuu
-  - woo:
-        -- verbose leaf:
-        woo
-    waa2
-    waa1`, ``,
+wuu: waa1: waa2: woo
+(1) wuu
+  | -- this is wuu's
+  | multi-line wrapper payload
+Wraps: (2) waa1
+Wraps: (3) waa2
+Wraps: (4) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmt (2) *errors.withMessage (3) *errors.withMessage (4) *errbase_test.errFmt`, ``,
 		},
 
 		{"fmt wrap + pkg stack + fmt leaf",
 			&werrFmt{pkgErr.WithStack(&errFmt{"woo"}), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - woo:
-        -- verbose leaf:
-        woo
-    github.com/cockroachdb/errors/errbase_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>`, ``,
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line wrapper payload
+Wraps: (2)
+  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (3) woo
+  | -- this is woo's
+  | multi-line leaf payload
+Error types: (1) *errbase_test.werrFmt (2) *errors.withStack (3) *errbase_test.errFmt`, ``,
 		},
 	}
 
@@ -371,29 +505,34 @@ waa:
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := test.expFmtQuote
 			if ref == "" {
 				ref = fmt.Sprintf("%q", test.expFmtSimple)
 			}
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
-			spv := fmt.Sprintf("%+v", err)
-			spv = fileref.ReplaceAllString(spv, "<path>")
-			spv = strings.ReplaceAll(spv, "\t", "<tab>")
-			tt.CheckEqual(spv, refV)
+			spv := fmtClean(err)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
 
-var fileref = regexp.MustCompile(`([a-zA-Z0-9\._/-]*\.(?:go|s):\d+)`)
+func fmtClean(x interface{}) string {
+	spv := fmt.Sprintf("%+v", x)
+	spv = fileref.ReplaceAllString(spv, "<path>:<lineno>")
+	spv = strings.ReplaceAll(spv, "\t", "<tab>")
+	return spv
+}
+
+var fileref = regexp.MustCompile(`([a-zA-Z0-9\._/@-]*\.(?:go|s):\d+)`)
 
 // errNoFmt does neither implement Format() nor FormatError().
 type errNoFmt struct{ msg string }
@@ -422,7 +561,7 @@ func (e *errFmto) Format(s fmt.State, verb rune) {
 	case 'v':
 		if s.Flag('+') {
 			fmt.Fprint(s, e.msg)
-			fmt.Fprintf(s, "\n-- verbose leaf (fmt):\n%s", e.msg)
+			fmt.Fprintf(s, "\n-- this is %s's\nmulti-line payload", e.msg)
 			return
 		}
 		fallthrough
@@ -444,7 +583,7 @@ func (e *werrFmto) Format(s fmt.State, verb rune) {
 	case 'v':
 		if s.Flag('+') {
 			fmt.Fprintf(s, "%+v", e.cause)
-			fmt.Fprintf(s, "\n-- verbose wrapper (fmt):\n%s", e.msg)
+			fmt.Fprintf(s, "\n-- this is %s's\nmulti-line payload (fmt)", e.msg)
 			return
 		}
 		fallthrough
@@ -482,7 +621,7 @@ func (e *errFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb
 func (e *errFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose leaf:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line leaf payload", e.msg)
 	}
 	return nil
 }
@@ -499,7 +638,7 @@ func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, ver
 func (e *werrFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose wrapper:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line wrapper payload", e.msg)
 	}
 	return e.cause
 }
