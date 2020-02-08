@@ -59,14 +59,20 @@ func Is(err, reference error) bool {
 	return false
 }
 
-// IsType returns true if err contains an error which has the concrete type
-// matching that of referenceType.
-func IsType(err error, referenceType error) bool {
+// HasType returns true iff err contains an error whose concrete type
+// matches that of referenceType.
+func HasType(err error, referenceType error) bool {
 	typ := reflect.TypeOf(referenceType)
 	_, isType := If(err, func(err error) (interface{}, bool) {
 		return nil, reflect.TypeOf(err) == typ
 	})
 	return isType
+}
+
+// IsType returns true if the outermost err object has a concrete type
+// matching that of referenceType.
+func IsType(err error, referenceType error) bool {
+	return reflect.TypeOf(err) == reflect.TypeOf(referenceType)
 }
 
 // IsInterface returns true if err contains an error which implements the
