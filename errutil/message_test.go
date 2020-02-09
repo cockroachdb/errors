@@ -41,178 +41,206 @@ func TestFormat(t *testing.T) {
 					goErr.New("woo"), "waa"),
 				"wuu"},
 			`wuu: waa: woo`, `
-wuu:
-    -- verbose wrapper:
-    wuu
-  - waa:
-  - woo`,
+wuu: waa: woo
+(1) wuu
+  | -- this is wuu's
+  | multi-line payload
+Wraps: (2) waa
+Wraps: (3) woo
+Error types: (1) *errutil_test.werrFmt (2) *errutil.withMessage (3) *errors.errorString`,
 		},
 
 		{"newf",
 			errutil.Newf("waa: %s", "hello"),
 			`waa: hello`, `
-error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - error with embedded safe details: waa: %s
-    -- arg 1: <string>
-  - waa: hello`,
+waa: hello
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) 2 safe details enclosed
+Wraps: (3) waa: hello
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errors.errorString`,
 		},
 
 		{"newf-empty",
 			errutil.Newf(emptyString),
 			``, `
-error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - `,
+
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2)
+Error types: (1) *withstack.withStack (2) *errors.errorString`,
 		},
 
 		{"newf-empty-arg",
 			errutil.Newf(emptyString, 123),
 			`%!(EXTRA int=123)`, `
-error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - error with embedded safe details:
-    -- arg 1: <int>
-  - %!(EXTRA int=123)`,
+%!(EXTRA int=123)
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) 2 safe details enclosed
+Wraps: (3) %!(EXTRA int=123)
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errors.errorString`,
 		},
 
 		{"wrapf",
 			errutil.Wrapf(goErr.New("woo"), "waa: %s", "hello"),
 			`waa: hello: woo`, `
-error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - error with embedded safe details: waa: %s
-    -- arg 1: <string>
-  - waa: hello:
-  - woo`,
+waa: hello: woo
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) 2 safe details enclosed
+Wraps: (3) waa: hello
+Wraps: (4) woo
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *errors.errorString`,
 		},
 
 		{"wrapf-empty",
 			errutil.Wrapf(goErr.New("woo"), emptyString),
 			`woo`, `
-error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - woo`,
+woo
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) woo
+Error types: (1) *withstack.withStack (2) *errors.errorString`,
 		},
 
 		{"wrapf-empty-arg",
 			errutil.Wrapf(goErr.New("woo"), emptyString, 123),
 			`%!(EXTRA int=123): woo`, `
-error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - error with embedded safe details:
-    -- arg 1: <int>
-  - %!(EXTRA int=123):
-  - woo`,
+%!(EXTRA int=123): woo
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) 2 safe details enclosed
+Wraps: (3) %!(EXTRA int=123)
+Wraps: (4) woo
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *errors.errorString`,
 		},
 
 		{"handled assert",
 			errutil.HandleAsAssertionFailure(&werrFmt{goErr.New("woo"), "wuu"}),
 			`wuu: woo`,
 			`
-assertion failure
-  - error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - wuu: woo:
-    original cause behind barrier: wuu:
-        -- verbose wrapper:
-        wuu
-      - woo`,
+wuu: woo
+(1) assertion failure
+Wraps: (2) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (3) wuu: woo
+  | -- cause hidden behind barrier
+  | wuu: woo
+  | (1) wuu
+  |   | -- this is wuu's
+  |   | multi-line payload
+  | Wraps: (2) woo
+  | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError`,
 		},
 
 		{"assert + wrap",
 			errutil.NewAssertionErrorWithWrappedErrf(&werrFmt{goErr.New("woo"), "wuu"}, "waa: %s", "hello"),
 			`waa: hello: wuu: woo`, `
-assertion failure
-  - error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - error with embedded safe details: waa: %s
-    -- arg 1: <string>
-  - waa: hello:
-  - wuu: woo:
-    original cause behind barrier: wuu:
-        -- verbose wrapper:
-        wuu
-      - woo`,
+waa: hello: wuu: woo
+(1) assertion failure
+Wraps: (2) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (3) 2 safe details enclosed
+Wraps: (4) waa: hello
+Wraps: (5) wuu: woo
+  | -- cause hidden behind barrier
+  | wuu: woo
+  | (1) wuu
+  |   | -- this is wuu's
+  |   | multi-line payload
+  | Wraps: (2) woo
+  | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safedetails.withSafeDetails (4) *errutil.withMessage (5) *barriers.barrierError`,
 		},
 
 		{"assert + wrap empty",
 			errutil.NewAssertionErrorWithWrappedErrf(&werrFmt{goErr.New("woo"), "wuu"}, emptyString),
 			`wuu: woo`, `
-assertion failure
-  - error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - wuu: woo:
-    original cause behind barrier: wuu:
-        -- verbose wrapper:
-        wuu
-      - woo`,
+wuu: woo
+(1) assertion failure
+Wraps: (2) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (3) wuu: woo
+  | -- cause hidden behind barrier
+  | wuu: woo
+  | (1) wuu
+  |   | -- this is wuu's
+  |   | multi-line payload
+  | Wraps: (2) woo
+  | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError`,
 		},
 
 		{"assert + wrap empty+arg",
 			errutil.NewAssertionErrorWithWrappedErrf(&werrFmt{goErr.New("woo"), "wuu"}, emptyString, 123),
 			`%!(EXTRA int=123): wuu: woo`, `
-assertion failure
-  - error with attached stack trace:
-    github.com/cockroachdb/errors/errutil_test.TestFormat
-    <tab><path>
-    testing.tRunner
-    <tab><path>
-    runtime.goexit
-    <tab><path>
-  - error with embedded safe details:
-    -- arg 1: <int>
-  - %!(EXTRA int=123):
-  - wuu: woo:
-    original cause behind barrier: wuu:
-        -- verbose wrapper:
-        wuu
-      - woo`,
+%!(EXTRA int=123): wuu: woo
+(1) assertion failure
+Wraps: (2) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (3) 2 safe details enclosed
+Wraps: (4) %!(EXTRA int=123)
+Wraps: (5) wuu: woo
+  | -- cause hidden behind barrier
+  | wuu: woo
+  | (1) wuu
+  |   | -- this is wuu's
+  |   | multi-line payload
+  | Wraps: (2) woo
+  | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safedetails.withSafeDetails (4) *errutil.withMessage (5) *barriers.barrierError`,
 		},
 	}
 
@@ -221,21 +249,21 @@ assertion failure
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
 			spv = fileref.ReplaceAllString(spv, "<path>")
 			spv = strings.ReplaceAll(spv, "\t", "<tab>")
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
@@ -255,7 +283,7 @@ func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, ver
 func (e *werrFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose wrapper:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line payload", e.msg)
 	}
 	return e.cause
 }

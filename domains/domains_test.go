@@ -191,26 +191,32 @@ func TestFormat(t *testing.T) {
 		{"keys",
 			domains.WithDomain(baseErr, domains.NoDomain),
 			woo, `
-error domain: <none>
-  - woo`},
+woo
+(1) error domain: <none>
+Wraps: (2) woo
+Error types: (1) *domains.withDomain (2) *errors.errorString`},
 
 		{"keys + wrapper",
 			domains.WithDomain(&werrFmt{baseErr, "waa"}, domains.NoDomain),
 			waawoo, `
-error domain: <none>
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo`},
+waa: woo
+(1) error domain: <none>
+Wraps: (2) waa
+  | -- this is waa's
+  | multi-line payload
+Wraps: (3) woo
+Error types: (1) *domains.withDomain (2) *domains_test.werrFmt (3) *errors.errorString`},
 
 		{"wrapper + keys",
 			&werrFmt{domains.WithDomain(baseErr, domains.NoDomain), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - error domain: <none>
-  - woo`},
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line payload
+Wraps: (2) error domain: <none>
+Wraps: (3) woo
+Error types: (1) *domains_test.werrFmt (2) *domains.withDomain (3) *errors.errorString`},
 	}
 
 	for _, test := range testCases {
@@ -218,19 +224,19 @@ waa:
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
@@ -248,7 +254,7 @@ func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, ver
 func (e *werrFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose wrapper:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line payload", e.msg)
 	}
 	return e.cause
 }

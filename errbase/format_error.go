@@ -29,6 +29,8 @@ import (
 	"io"
 	"reflect"
 	"strconv"
+
+	pkgErr "github.com/pkg/errors"
 )
 
 // FormatError formats an error according to s and verb.
@@ -48,37 +50,48 @@ func FormatError(err error, s fmt.State, verb rune) {
 	// disregard that State may be a specific printer implementation and use one
 	// of our choice instead.
 
-	// limitations: does not support printing error as Go struct.
+	p := state{State: s}
 
-	var (
-		sep    = " " // separator before next error
-		p      = &state{State: s}
-		direct = true
-	)
+	switch {
+	case verb == 'v' && s.Flag('+'):
+		// Here we are going to format as per %+v, into p.buf.
+		//
+		// We need to start with the innermost (root cause) error first,
+		// then the layers of wrapping from innermost to outermost, so as
+		// to enable stack trace de-duplication. This requires a
+		// post-order traversal. Since we have a linked list, the best we
+		// can do is a recursion.
+		p.formatRecursive(err, true /* isOutermost */)
 
-	switch verb {
-	// Note that this switch must match the preference order
-	// for ordinary string printing (%#v before %+v, and so on).
+		// We now have all the data, we can render the result.
+		p.formatEntries(err)
 
-	case 'v':
-		if s.Flag('#') {
-			if stringer, ok := err.(fmt.GoStringer); ok {
-				io.WriteString(&p.buf, stringer.GoString())
-				goto exit
-			}
-			// proceed as if it were %v
-		} else if s.Flag('+') {
-			p.printDetail = true
-			sep = "\n  - "
+		// We're done formatting. Apply width/precision parameters.
+		p.finishDisplay(verb)
+
+	case verb == 'v' && s.Flag('#'):
+		if stringer, ok := err.(fmt.GoStringer); ok {
+			io.WriteString(&p.buf, stringer.GoString())
+			p.finishDisplay(verb)
+			return
 		}
-	case 's':
-	case 'q', 'x', 'X':
-		// Use an intermediate buffer in the rare cases that precision,
-		// truncation, or one of the alternative verbs (q, x, and X) are
-		// specified.
-		direct = false
+		// Not a stringer. Proceed as if it were %v.
+		fallthrough
+
+	case verb == 's' || verb == 'q' ||
+		verb == 'x' || verb == 'X' || verb == 'v':
+		// Only the error message.
+		//
+		// Use an intermediate buffer because there may be alignment
+		// instructions to obey in the final rendering or
+		// quotes to add (for %q).
+		//
+		p.buf.WriteString(err.Error())
+		p.finishDisplay(verb)
 
 	default:
+		// Unknown verb. Do like fmt.Printf and tell the user we're
+		// confused.
 		p.buf.WriteString("%!")
 		p.buf.WriteRune(verb)
 		p.buf.WriteByte('(')
@@ -90,94 +103,149 @@ func FormatError(err error, s fmt.State, verb rune) {
 		}
 		p.buf.WriteByte(')')
 		io.Copy(s, &p.buf)
-		return
+	}
+}
+
+func needSpaceAtBeginning(buf []byte) bool {
+	return len(buf) > 0 && buf[0] != '\n'
+}
+
+func (s *state) formatEntries(err error) {
+	// The first entry at the top is special. We format it as follows:
+	//
+	//   <complete error message>
+	//   (1) <details>
+	s.buf.WriteString(err.Error())
+	s.buf.WriteString("\n(1)")
+	firstEntry := s.entries[len(s.entries)-1].buf
+	if needSpaceAtBeginning(firstEntry) {
+		s.buf.WriteByte(' ')
+	}
+	s.buf.Write(firstEntry)
+
+	// All the entries that follow are printed as follows:
+	//
+	// Wraps: (N) <details>
+	//
+	for i, j := len(s.entries)-2, 2; i >= 0; i, j = i-1, j+1 {
+		fmt.Fprintf(&s.buf, "\nWraps: (%d)", j)
+		thisEntry := s.entries[i].buf
+		if needSpaceAtBeginning(thisEntry) {
+			s.buf.WriteByte(' ')
+		}
+		s.buf.Write(thisEntry)
 	}
 
-	// CHANGE (cockroachdb/errors): FormatError() accepts `error` and
-	// not `Formatter` as first argument, and uses a separate path when
-	// the object does not implement `Formatter`. This makes it possible
-	// to start implementing a wrapper with just a `Format()` method
-	// that forwards to `FormatError()`, without implementing
-	// `errors.Formatter` just yet.
-	if _, ok := err.(Formatter); !ok {
-		// formatSimpleError prints Error() or, if a wrapper, the
-		// error prefix then recurses FormatError() on the causes.
-		err = formatSimpleError(err, p, sep)
+	// At the end, we link all the (N) references to the Go type of the
+	// error.
+	s.buf.WriteString("\nError types:")
+	for i, j := len(s.entries)-1, 1; i >= 0; i, j = i-1, j+1 {
+		fmt.Fprintf(&s.buf, " (%d) %T", j, s.entries[i].err)
 	}
-	// if formatSimpleError() has taken over, skip the loop.
-	if err == nil {
-		goto exit
+}
+
+// formatRecursive performs a post-order traversal to
+// prints errors from innermost to outermost.
+func (s *state) formatRecursive(err error, isOutermost bool) {
+	cause := UnwrapOnce(err)
+	if cause != nil {
+		// Recurse first.
+		s.formatRecursive(cause, false /*isOutermost*/)
 	}
 
-loop:
-	for {
-		// CHANGE (cockroachdb/errors): we only emit the inter-error
-		// separator if something was printed since the last error.
-		// This way, an error of the form err1 -> err2 -> err3 will
-		// properly print as "err1: err3" if err2 has no message.
-		// In the original code, this would have been (incorrectly)
-		// rendered as "err1: : err3".
-		prevLen := p.buf.Len()
+	s.needSpace = false
+	s.needNewline = 0
+	s.multiLine = false
+	s.notEmpty = false
 
-		switch v := err.(type) {
-		case Formatter:
-			err = v.FormatError((*printer)(p))
-		case fmt.Formatter:
-			v.Format(p, 'v')
-			break loop
-		default:
-			// CHANGE (cockroachdb/errors): if the error did not
-			// implement errors.Formatter nor fmt.Formatter, but it is a wrapper,
-			// still attempt best effort: print what we can at this level, then
-			// recurse to give a chance to the cause to self-format
-			// properly.
-			if cause := UnwrapOnce(err); cause != nil {
-				pref := extractPrefix(err, cause)
-				p.buf.WriteString(pref)
-				err = cause
-			} else {
-				io.WriteString(&p.buf, v.Error())
-				break loop
+	seenTrace := false
+
+	switch v := err.(type) {
+	case Formatter:
+		_ = v.FormatError((*printer)(s))
+	case fmt.Formatter:
+		// We can only use a fmt.Formatter when both the following
+		// conditions are true:
+		// - when it is the leaf error, because a fmt.Formatter
+		//   on a wrapper also recurses.
+		// - when it is not the outermost wrapper, because
+		//   the Format() method is likely to be calling FormatError()
+		//   to do its job and we want to avoid an infinite recursion.
+		if !isOutermost && cause == nil {
+			v.Format(s, 'v')
+			if st, ok := err.(StackTraceProvider); ok {
+				// This is likely a leaf error from github/pkg/errors.
+				// The thing probably printed its stack trace on its own.
+				seenTrace = true
+				// We'll subsequently simplify stack traces in wrappers.
+				s.lastStack = st.StackTrace()
+			}
+		} else {
+			s.formatSimple(err, cause)
+		}
+	default:
+		// If the error did not implement errors.Formatter nor
+		// fmt.Formatter, but it is a wrapper, still attempt best effort:
+		// print what we can at this level.
+		s.formatSimple(err, cause)
+	}
+
+	// If there's an embedded stack trace, print it.
+	// This will get either a stack from pkg/errors, or ours.
+	if !seenTrace {
+		if st, ok := err.(StackTraceProvider); ok {
+			if s.multiLine {
+				s.Write([]byte("\n-- stack trace:"))
+			}
+			newStack, elided := ElideSharedStackTraceSuffix(s.lastStack, st.StackTrace())
+			s.lastStack = newStack
+			newStack.Format(s, 'v')
+			if elided {
+				s.Write([]byte("\n[...repeated from below...]"))
 			}
 		}
-
-		if err == nil {
-			break
-		}
-
-		// CHANGE (cockroachdb/errors): if there was nothing printed
-		// for this intermediate error, skip printing the separator.
-		skipSep := p.buf.Len() == prevLen
-		if !skipSep {
-			if p.needColon || !p.printDetail {
-				p.buf.WriteByte(':')
-			}
-			p.buf.WriteString(sep)
-		}
-
-		p.inDetail = false
-		p.needNewline = false
-		p.needColon = false
 	}
 
-	///////////////////////////////////////////////////////////////////////////////
-	// cockroachdb/errors: the remainder of the file is unchanged from the
-	// original code in xerrors.
+	s.entries = append(s.entries, formatEntry{err: err, buf: s.buf.Bytes()})
+	s.buf = bytes.Buffer{}
+}
 
-exit:
-	width, okW := s.Width()
-	prec, okP := s.Precision()
+func (s *state) formatSimple(err, cause error) {
+	var pref string
+	if cause != nil {
+		pref = extractPrefix(err, cause)
+	} else {
+		pref = err.Error()
+	}
+	if len(pref) > 0 {
+		s.Write([]byte(pref))
+	}
+}
+
+// finishDisplay renders the buffer in state into the fmt.State.
+func (p *state) finishDisplay(verb rune) {
+	width, okW := p.Width()
+	prec, okP := p.Precision()
+
+	// If `direct` is set to false, then the buffer is always
+	// passed through fmt.Printf regardless of the width and alignment
+	// settings. This is important or e.g. %q where quotes must be added
+	// in any case.
+	// If `direct` is set to true, then the detour via
+	// fmt.Printf only occurs if there is a width or alignment
+	// specifier.
+	direct := verb == 'v' || verb == 's'
 
 	if !direct || (okW && width > 0) || okP {
 		// Construct format string from State s.
 		format := []byte{'%'}
-		if s.Flag('-') {
+		if p.Flag('-') {
 			format = append(format, '-')
 		}
-		if s.Flag('+') {
+		if p.Flag('+') {
 			format = append(format, '+')
 		}
-		if s.Flag(' ') {
+		if p.Flag(' ') {
 			format = append(format, ' ')
 		}
 		if okW {
@@ -188,78 +256,137 @@ exit:
 			format = strconv.AppendInt(format, int64(prec), 10)
 		}
 		format = append(format, string(verb)...)
-		fmt.Fprintf(s, string(format), p.buf.String())
+		fmt.Fprintf(p.State, string(format), p.buf.String())
 	} else {
-		io.Copy(s, &p.buf)
+		io.Copy(p.State, &p.buf)
 	}
 }
 
-var detailSep = []byte("\n    ")
+var detailSep = []byte("\n  | ")
 
 // state tracks error printing state. It implements fmt.State.
 type state struct {
 	fmt.State
-	buf bytes.Buffer
+	buf     bytes.Buffer
+	entries []formatEntry
 
-	printDetail bool
-	inDetail    bool
-	needColon   bool
-	needNewline bool
+	lastStack   StackTrace
+	notEmpty    bool
+	needSpace   bool
+	needNewline int
+	multiLine   bool
+}
+
+type formatEntry struct {
+	err error
+	buf []byte
 }
 
 func (s *state) Write(b []byte) (n int, err error) {
-	if s.printDetail {
-		if len(b) == 0 {
-			return 0, nil
-		}
-		if s.inDetail && s.needColon {
-			s.needNewline = true
-			if b[0] == '\n' {
-				b = b[1:]
-			}
-		}
-		k := 0
-		for i, c := range b {
-			if s.needNewline {
-				if s.inDetail && s.needColon {
-					s.buf.WriteByte(':')
-					s.needColon = false
+	if len(b) == 0 {
+		return 0, nil
+	}
+	k := 0
+	for i, c := range b {
+		if c == '\n' {
+			s.buf.Write(b[k:i])
+			k = i + 1
+			s.needNewline++
+			s.needSpace = false
+			s.multiLine = true
+		} else {
+			if s.needNewline > 0 && s.notEmpty {
+				for i := 0; i < s.needNewline-1; i++ {
+					s.buf.Write(detailSep[:len(detailSep)-1])
 				}
 				s.buf.Write(detailSep)
-				s.needNewline = false
+				s.needNewline = 0
+				s.needSpace = false
+			} else if s.needSpace {
+				s.buf.WriteByte(' ')
+				s.needSpace = false
 			}
-			if c == '\n' {
-				s.buf.Write(b[k:i])
-				k = i + 1
-				s.needNewline = true
-			}
+			s.notEmpty = true
 		}
-		s.buf.Write(b[k:])
-		if !s.inDetail {
-			s.needColon = true
-		}
-	} else if !s.inDetail {
-		s.buf.Write(b)
 	}
+	s.buf.Write(b[k:])
 	return len(b), nil
 }
 
 // printer wraps a state to implement an xerrors.Printer.
 type printer state
 
+func (s *printer) Detail() bool {
+	s.needNewline = 1
+	s.notEmpty = false
+	return true
+}
+
 func (s *printer) Print(args ...interface{}) {
-	if !s.inDetail || s.printDetail {
-		fmt.Fprint((*state)(s), args...)
-	}
+	s.enhanceArgs(args)
+	fmt.Fprint((*state)(s), args...)
 }
 
 func (s *printer) Printf(format string, args ...interface{}) {
-	if !s.inDetail || s.printDetail {
-		fmt.Fprintf((*state)(s), format, args...)
-	}
+	s.enhanceArgs(args)
+	fmt.Fprintf((*state)(s), format, args...)
 }
 
-func (s *printer) Detail() bool {
-	s.inDetail = true
-	return s.printDetail
+func (s *printer) enhanceArgs(args []interface{}) {
+	prevStack := s.lastStack
+	lastSeen := prevStack
+	for i := range args {
+		if st, ok := args[i].(pkgErr.StackTrace); ok {
+			args[i], _ = ElideSharedStackTraceSuffix(prevStack, st)
+			lastSeen = st
+		}
+		if err, ok := args[i].(error); ok {
+			args[i] = &errorFormatter{err}
+		}
+	}
+	s.lastStack = lastSeen
+}
+
+type errorFormatter struct{ err error }
+
+// Format implements the fmt.Formatter interface.
+func (ef *errorFormatter) Format(s fmt.State, verb rune) { FormatError(ef.err, s, verb) }
+
+// ElideSharedStackTraceSuffix removes the suffix of newStack that's already
+// present in prevStack. The function returns true if some entries
+// were elided.
+func ElideSharedStackTraceSuffix(prevStack, newStack StackTrace) (StackTrace, bool) {
+	if len(prevStack) == 0 {
+		return newStack, false
+	}
+	if len(newStack) == 0 {
+		return newStack, false
+	}
+
+	// Skip over the common suffix.
+	var i, j int
+	for i, j = len(newStack)-1, len(prevStack)-1; i > 0 && j > 0; i, j = i-1, j-1 {
+		if newStack[i] != prevStack[j] {
+			break
+		}
+	}
+	if i == 0 {
+		// Keep at least one entry.
+		i = 1
+	}
+	return newStack[:i], i < len(newStack)-1
+}
+
+// StackTrace is the type of the data for a call stack.
+// This mirrors the type of the same name in github.com/pkg/errors.
+type StackTrace = pkgErr.StackTrace
+
+// StackFrame is the type of a single call frame entry.
+// This mirrors the type of the same name in github.com/pkg/errors.
+type StackFrame = pkgErr.Frame
+
+// StackTraceProvider is a provider of StackTraces.
+// This is, intendedly, defined to be implemented by pkg/errors.stack.
+type StackTraceProvider interface {
+	StackTrace() StackTrace
 }

@@ -59,9 +59,7 @@ func (e *withDomain) SafeDetails() []string {
 func (e *withDomain) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
 
 func (e *withDomain) FormatError(p errbase.Printer) error {
-	if p.Detail() {
-		p.Print(e.domain)
-	}
+	p.Print(e.domain)
 	return e.cause
 }
 

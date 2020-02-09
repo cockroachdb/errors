@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"regexp"
 	"runtime"
+	"strings"
 	"sync"
 	"testing"
 
@@ -123,6 +124,27 @@ func (t *T) CheckEqual(val, ref interface{}) {
 	if val != ref {
 		t.failWithf(false, "values not equal\n     got: %# v\nexpected: %# v",
 			pretty.Formatter(val), pretty.Formatter(ref))
+	}
+}
+
+// CheckEqual checks that the string value is equal to some reference.
+func (t *T) CheckStringEqual(val, ref string) {
+	t.Helper()
+	if val != ref {
+		pat := regexp.QuoteMeta(ref)
+		pat = strings.ReplaceAll(pat, "\n", `\n`)
+		pat = strings.ReplaceAll(pat, "'", `'"'"'`)
+		pat = strings.ReplaceAll(pat, "\t", `\t`)
+		repl := strings.ReplaceAll(val, "\n", `\n`)
+		repl = strings.ReplaceAll(repl, "'", `'"'"'`)
+		repl = strings.ReplaceAll(repl, "\t", `\t`)
+		_, file, _, _ := runtime.Caller(1)
+		t.failWithf(false, "values not equal; got:\n  %s\nexpected:\n  %s\nTo update expected, run:\n  perl -0777 -pi -ne 's@%s@%s@ms' %s",
+			strings.ReplaceAll(val, "\n", "\n  "),
+			strings.ReplaceAll(ref, "\n", "\n  "),
+			pat, repl, file,
+		)
+
 	}
 }
 

@@ -65,7 +65,7 @@ func TestWithContext(t *testing.T) {
 		tt.Check(markers.Is(err, decoratedErr))
 
 		// Check that the message is preserved.
-		tt.CheckEqual(err.Error(), "hello")
+		tt.CheckStringEqual(err.Error(), "hello")
 
 		// Check that the tag pairs are preserved.
 		tagsets := contexttags.GetContextTags(err)
@@ -143,6 +143,7 @@ func TestFormat(t *testing.T) {
 	tt := testutils.T{t}
 
 	ctx := logtags.AddTag(context.Background(), "thetag", nil)
+	ctx = logtags.AddTag(ctx, "anothertag", nil)
 	baseErr := goErr.New("woo")
 	const woo = `woo`
 	const waawoo = `waa: woo`
@@ -155,26 +156,32 @@ func TestFormat(t *testing.T) {
 		{"tags",
 			contexttags.WithContextTags(baseErr, ctx),
 			woo, `
-error with context tags: thetag
-  - woo`},
+woo
+(1) tags: [thetag,anothertag]
+Wraps: (2) woo
+Error types: (1) *contexttags.withContext (2) *errors.errorString`},
 
 		{"tags + wrapper",
 			contexttags.WithContextTags(&werrFmt{baseErr, "waa"}, ctx),
 			waawoo, `
-error with context tags: thetag
-  - waa:
-    -- verbose wrapper:
-    waa
-  - woo`},
+waa: woo
+(1) tags: [thetag,anothertag]
+Wraps: (2) waa
+  | -- this is waa's
+  | multi-line payload
+Wraps: (3) woo
+Error types: (1) *contexttags.withContext (2) *contexttags_test.werrFmt (3) *errors.errorString`},
 
 		{"wrapper + tags",
 			&werrFmt{contexttags.WithContextTags(baseErr, ctx), "waa"},
 			waawoo, `
-waa:
-    -- verbose wrapper:
-    waa
-  - error with context tags: thetag
-  - woo`},
+waa: woo
+(1) waa
+  | -- this is waa's
+  | multi-line payload
+Wraps: (2) tags: [thetag,anothertag]
+Wraps: (3) woo
+Error types: (1) *contexttags_test.werrFmt (2) *contexttags.withContext (3) *errors.errorString`},
 	}
 
 	for _, test := range testCases {
@@ -182,19 +189,19 @@ waa:
 			err := test.err
 
 			// %s is simple formatting
-			tt.CheckEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%s", err), test.expFmtSimple)
 
 			// %v is simple formatting too, for compatibility with the past.
-			tt.CheckEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
+			tt.CheckStringEqual(fmt.Sprintf("%v", err), test.expFmtSimple)
 
 			// %q is always like %s but quotes the result.
 			ref := fmt.Sprintf("%q", test.expFmtSimple)
-			tt.CheckEqual(fmt.Sprintf("%q", err), ref)
+			tt.CheckStringEqual(fmt.Sprintf("%q", err), ref)
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
 			spv := fmt.Sprintf("%+v", err)
-			tt.CheckEqual(spv, refV)
+			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
@@ -212,7 +219,7 @@ func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, ver
 func (e *werrFmt) FormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- verbose wrapper:\n%s", e.msg)
+		p.Printf("-- this is %s's\nmulti-line payload", e.msg)
 	}
 	return e.cause
 }
