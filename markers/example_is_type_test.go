@@ -29,13 +29,19 @@ func (e *ExampleError) Error() string { return e.msg }
 func ExampleIsType() {
 	base := &ExampleError{"world"}
 	err := errors.Wrap(base, "hello")
+	fmt.Println(markers.HasType(err, (*ExampleError)(nil)))
 	fmt.Println(markers.IsType(err, (*ExampleError)(nil)))
+	fmt.Println(markers.HasType(err, nil))
 	fmt.Println(markers.IsType(err, nil))
+	fmt.Println(markers.HasType(err, (*net.AddrError)(nil)))
 	fmt.Println(markers.IsType(err, (*net.AddrError)(nil)))
 
 	// Output:
 	//
 	// true
+	// false
+	// false
+	// false
 	// false
 	// false
 }
