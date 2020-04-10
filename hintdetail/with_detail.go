@@ -41,7 +41,9 @@ func (w *withDetail) Unwrap() error       { return w.cause }
 func (w *withDetail) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 
 func (w *withDetail) FormatError(p errbase.Printer) error {
-	p.Print(w.detail)
+	if p.Detail() {
+		p.Print(w.detail)
+	}
 	return w.cause
 }
 

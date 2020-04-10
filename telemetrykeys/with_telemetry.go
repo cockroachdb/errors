@@ -41,7 +41,9 @@ func (w *withTelemetry) SafeDetails() []string { return w.keys }
 func (w *withTelemetry) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 
 func (w *withTelemetry) FormatError(p errbase.Printer) (next error) {
-	p.Printf("keys: %+v", w.keys)
+	if p.Detail() {
+		p.Printf("keys: %+v", w.keys)
+	}
 	return w.cause
 }
 

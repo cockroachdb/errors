@@ -25,8 +25,22 @@ package errbase
 type Formatter interface {
 	error
 
-	// FormatError prints the receiver's first error and returns the next error in
-	// the error chain, if any.
+	// FormatError prints the receiver's first error.
+	// The return value decides what happens in the case
+	// FormatError() is used to produce a "short" message,
+	// eg. when it is used to implementError():
+	//
+	// - if it returns nil, then the short message
+	//   contains no more than that produced for this error,
+	//   even if the error has a further causal chain.
+	//
+	// - if it returns non-nil, then the short message
+	//   contains the value printed by this error,
+	//   followed by that of its causal chain.
+	//   (e.g. thiserror: itscause: furthercause)
+	//
+	// Note that all the causal chain is reported in verbose reports in
+	// any case.
 	FormatError(p Printer) (next error)
 }
 
