@@ -41,7 +41,9 @@ func (w *withHint) Unwrap() error     { return w.cause }
 func (w *withHint) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 
 func (w *withHint) FormatError(p errbase.Printer) error {
-	p.Print(w.hint)
+	if p.Detail() {
+		p.Print(w.hint)
+	}
 	return w.cause
 }
 
