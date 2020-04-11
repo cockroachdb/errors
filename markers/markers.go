@@ -164,11 +164,22 @@ func getMark(err error) errorMark {
 	if m, ok := err.(*withMark); ok {
 		return m.mark
 	}
-	m := errorMark{msg: err.Error(), types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)}}
+	m := errorMark{msg: safeGetErrMsg(err), types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)}}
 	for c := errbase.UnwrapOnce(err); c != nil; c = errbase.UnwrapOnce(c) {
 		m.types = append(m.types, errbase.GetTypeMark(c))
 	}
 	return m
+}
+
+// safeGetErrMsg extracts an error's Error() but tolerates panics.
+func safeGetErrMsg(err error) (result string) {
+	defer func() {
+		if r := recover(); r != nil {
+			result = fmt.Sprintf("(%p).Error() panic: %v", err, r)
+		}
+	}()
+	result = err.Error()
+	return
 }
 
 // Mark creates an explicit mark for the given error, using
