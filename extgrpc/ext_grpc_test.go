@@ -49,8 +49,7 @@ func TestGrpc(t *testing.T) {
 	tt.CheckStringEqual(fmt.Sprintf("%v", err), `hello`)
 	// The code appears when the error is printed verbosely.
 	tt.CheckStringEqual(fmt.Sprintf("%+v", err), `hello
-(1)
-  | gRPC code: Unavailable
+(1) gRPC code: Unavailable
 Wraps: (2) hello
 Error types: (1) *extgrpc.withGrpcCode (2) *errors.errorString`)
 

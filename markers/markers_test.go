@@ -527,3 +527,21 @@ func (e *werrFmt) FormatError(p errbase.Printer) error {
 	}
 	return e.cause
 }
+
+func TestInvalidError(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err := &invalidError{}
+	errRef := errors.New("hello")
+	tt.Check(!markers.Is(err, errRef))
+	tt.Check(markers.Is(err, err))
+	tt.Check(markers.IsType(err, (*invalidError)(nil)))
+	tt.Check(markers.HasType(err, (*invalidError)(nil)))
+}
+
+type invalidError struct {
+	emptyRef error
+}
+
+func (e *invalidError) Error() string { return e.emptyRef.Error() }
+func (e *invalidError) Cause() error  { return e.emptyRef }

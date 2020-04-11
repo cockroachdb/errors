@@ -65,13 +65,15 @@ func maybeAppendReferral(buf *bytes.Buffer, link IssueLink) {
 func (w *withIssueLink) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 
 func (w *withIssueLink) FormatError(p errbase.Printer) error {
-	sep := ""
-	if w.IssueURL != "" {
-		p.Printf("issue: %s", w.IssueURL)
-		sep = "\n"
-	}
-	if w.Detail != "" {
-		p.Printf("%sdetail: %s", sep, w.Detail)
+	if p.Detail() {
+		sep := ""
+		if w.IssueURL != "" {
+			p.Printf("issue: %s", w.IssueURL)
+			sep = "\n"
+		}
+		if w.Detail != "" {
+			p.Printf("%sdetail: %s", sep, w.Detail)
+		}
 	}
 	return w.cause
 }

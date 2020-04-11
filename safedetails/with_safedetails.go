@@ -38,11 +38,13 @@ var _ fmt.Formatter = (*withSafeDetails)(nil)
 func (e *withSafeDetails) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
 
 func (e *withSafeDetails) FormatError(p errbase.Printer) error {
-	plural := "s"
-	if len(e.safeDetails) == 1 {
-		plural = ""
+	if p.Detail() {
+		plural := "s"
+		if len(e.safeDetails) == 1 {
+			plural = ""
+		}
+		p.Printf("%d safe detail%s enclosed", len(e.safeDetails), plural)
 	}
-	p.Printf("%d safe detail%s enclosed", len(e.safeDetails), plural)
 	return e.cause
 }
 

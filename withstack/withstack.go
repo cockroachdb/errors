@@ -69,7 +69,9 @@ func (w *withStack) Unwrap() error { return w.cause }
 func (w *withStack) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 
 func (w *withStack) FormatError(p errbase.Printer) error {
-	p.Print("attached stack trace")
+	if p.Detail() {
+		p.Print("attached stack trace")
+	}
 	// We do not print the stack trace ourselves - errbase.FormatError()
 	// does this for us.
 	return w.cause

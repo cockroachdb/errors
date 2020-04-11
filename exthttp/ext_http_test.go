@@ -48,8 +48,7 @@ func TestHTTP(t *testing.T) {
 	tt.CheckStringEqual(fmt.Sprintf("%v", err), `hello`)
 	// The code appears when the error is printed verbosely.
 	tt.CheckStringEqual(fmt.Sprintf("%+v", err), `hello
-(1)
-  | http code: 302
+(1) http code: 302
 Wraps: (2) hello
 Error types: (1) *exthttp.withHTTPCode (2) *errors.errorString`)
 }

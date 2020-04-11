@@ -76,14 +76,16 @@ func TestFormatUnimp(t *testing.T) {
 			issuelink.UnimplementedError(link, "woo"),
 			woo, `
 woo
-(1) unimplemented: woo
+(1) woo
+  | unimplemented
   | issue: http://mysite
 Error types: (1) *issuelink.unimplementedError`},
 		{"unimp-details",
 			issuelink.UnimplementedError(issuelink.IssueLink{IssueURL: "http://mysite", Detail: "see more"}, "woo"),
 			woo, `
 woo
-(1) unimplemented: woo
+(1) woo
+  | unimplemented
   | issue: http://mysite
   | detail: see more
 Error types: (1) *issuelink.unimplementedError`},
@@ -95,7 +97,8 @@ waa: woo
 (1) waa
   | -- this is waa's
   | multi-line payload
-Wraps: (2) unimplemented: woo
+Wraps: (2) woo
+  | unimplemented
   | issue: http://mysite
 Error types: (1) *issuelink_test.werrFmt (2) *issuelink.unimplementedError`},
 	}

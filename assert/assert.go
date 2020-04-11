@@ -78,7 +78,9 @@ func (w *withAssertionFailure) Unwrap() error { return w.cause }
 
 func (w *withAssertionFailure) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 func (w *withAssertionFailure) FormatError(p errbase.Printer) error {
-	p.Print("assertion failure")
+	if p.Detail() {
+		p.Print("assertion failure")
+	}
 	return w.cause
 }
 

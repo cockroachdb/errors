@@ -164,11 +164,22 @@ func getMark(err error) errorMark {
 	if m, ok := err.(*withMark); ok {
 		return m.mark
 	}
-	m := errorMark{msg: err.Error(), types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)}}
+	m := errorMark{msg: safeGetErrMsg(err), types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)}}
 	for c := errbase.UnwrapOnce(err); c != nil; c = errbase.UnwrapOnce(c) {
 		m.types = append(m.types, errbase.GetTypeMark(c))
 	}
 	return m
+}
+
+// safeGetErrMsg extracts an error's Error() but tolerates panics.
+func safeGetErrMsg(err error) (result string) {
+	defer func() {
+		if r := recover(); r != nil {
+			result = fmt.Sprintf("(%p).Error() panic: %v", err, r)
+		}
+	}()
+	result = err.Error()
+	return
 }
 
 // Mark creates an explicit mark for the given error, using
@@ -202,8 +213,8 @@ func (m *withMark) Unwrap() error { return m.cause }
 func (m *withMark) Format(s fmt.State, verb rune) { errbase.FormatError(m, s, verb) }
 
 func (m *withMark) FormatError(p errbase.Printer) error {
-	p.Print("forced error mark")
 	if p.Detail() {
+		p.Print("forced error mark\n")
 		p.Printf("%q\n%s::%s",
 			m.mark.msg,
 			m.mark.types[0].FamilyName,
