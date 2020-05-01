@@ -113,7 +113,7 @@ func IsAny(err error, references ...error) bool {
 	// First try using direct reference comparison.
 	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
 		for _, refErr := range references {
-			if err == refErr {
+			if c == refErr {
 				return true
 			}
 		}
@@ -129,7 +129,7 @@ func IsAny(err error, references ...error) bool {
 		refMarks[i] = getMark(refErr)
 	}
 	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
-		errMark := getMark(err)
+		errMark := getMark(c)
 		for _, refMark := range refMarks {
 			if equalMarks(errMark, refMark) {
 				return true

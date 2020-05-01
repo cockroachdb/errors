@@ -195,6 +195,22 @@ func TestWrappedEquivalence(t *testing.T) {
 	tt.Check(markers.Is(err2w, err1))
 }
 
+// This check verifies that IsAny() works.
+func TestIsAny(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := errors.New("hello")
+	err2 := errors.New("world")
+	err3 := pkgErr.Wrap(err1, "world")
+	err4 := pkgErr.Wrap(err2, "universe")
+
+	tt.Check(markers.IsAny(err1, err1))
+	tt.Check(!markers.IsAny(err1, err2, err3, err4))
+	tt.Check(markers.IsAny(err3, err1))
+	tt.Check(markers.IsAny(err3, err3))
+	tt.Check(markers.IsAny(err3, err2, err1))
+}
+
 // This test demonstrates that two errors that are structurally
 // equivalent can be made to become non-equivalent through markers.Is()
 // by using markers.
