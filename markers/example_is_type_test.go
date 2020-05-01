@@ -30,18 +30,12 @@ func ExampleIsType() {
 	base := &ExampleError{"world"}
 	err := errors.Wrap(base, "hello")
 	fmt.Println(markers.HasType(err, (*ExampleError)(nil)))
-	fmt.Println(markers.IsType(err, (*ExampleError)(nil)))
 	fmt.Println(markers.HasType(err, nil))
-	fmt.Println(markers.IsType(err, nil))
 	fmt.Println(markers.HasType(err, (*net.AddrError)(nil)))
-	fmt.Println(markers.IsType(err, (*net.AddrError)(nil)))
 
 	// Output:
 	//
 	// true
-	// false
-	// false
-	// false
 	// false
 	// false
 }
@@ -52,14 +46,14 @@ func ExampleIsInterface() {
 		Err:  "ndn doesn't really exists :(",
 	}
 	err := errors.Wrap(base, "bummer")
-	fmt.Println(markers.IsInterface(err, (*net.Error)(nil)))
+	fmt.Println(markers.HasInterface(err, (*net.Error)(nil)))
 	func() {
 		defer func() {
 			if r := recover(); r != nil {
 				fmt.Println("*net.AddrError is not a pointer to an interface type so the call panics")
 			}
 		}()
-		fmt.Println(markers.IsInterface(err, (*net.AddrError)(nil)))
+		fmt.Println(markers.HasInterface(err, (*net.AddrError)(nil)))
 	}()
 
 	// Output:
