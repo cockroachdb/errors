@@ -255,9 +255,7 @@ func TestHasType(t *testing.T) {
 	tt.Check(!markers.HasType(wrapped, nil))
 
 	tt.Check(markers.HasType(base, (*testError)(nil)))
-	tt.Check(markers.IsType(base, (*testError)(nil)))
 	tt.Check(markers.HasType(wrapped, (*testError)(nil)))
-	tt.Check(!markers.IsType(wrapped, (*testError)(nil)))
 
 	// nil errors don't contain any types, not even nil.
 	tt.Check(!markers.HasType(nil, nil))
@@ -274,11 +272,11 @@ func TestIsInterface(t *testing.T) {
 	base := &testError{msg: "hmm"}
 	wrapped := pkgErr.Wrap(base, "boom")
 
-	tt.Check(markers.IsInterface(base, (*testErrorInterface)(nil)))
-	tt.Check(markers.IsInterface(wrapped, (*testErrorInterface)(nil)))
+	tt.Check(markers.HasInterface(base, (*testErrorInterface)(nil)))
+	tt.Check(markers.HasInterface(wrapped, (*testErrorInterface)(nil)))
 
-	tt.Check(!markers.IsInterface(base, (*net.Error)(nil)))
-	tt.Check(!markers.IsInterface(wrapped, (*net.Error)(nil)))
+	tt.Check(!markers.HasInterface(base, (*net.Error)(nil)))
+	tt.Check(!markers.HasInterface(wrapped, (*net.Error)(nil)))
 }
 
 // This test is used in the RFC.
@@ -535,7 +533,6 @@ func TestInvalidError(t *testing.T) {
 	errRef := errors.New("hello")
 	tt.Check(!markers.Is(err, errRef))
 	tt.Check(markers.Is(err, err))
-	tt.Check(markers.IsType(err, (*invalidError)(nil)))
 	tt.Check(markers.HasType(err, (*invalidError)(nil)))
 }
 
