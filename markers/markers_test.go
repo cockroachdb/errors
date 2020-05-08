@@ -38,10 +38,14 @@ func TestLocalErrorEquivalence(t *testing.T) {
 
 	err1 := errors.New("hello")
 	err2 := errors.New("world")
+	var nilErr error
 
 	tt.Check(!markers.Is(err1, err2))
 	tt.Check(markers.Is(err1, err1))
 	tt.Check(markers.Is(err2, err2))
+	tt.Check(!markers.Is(err1, nilErr))
+	tt.Check(markers.Is(nilErr, nilErr))
+	tt.Check(!markers.Is(nilErr, err1))
 }
 
 // This test demonstrates that Is() returns true if
@@ -203,12 +207,16 @@ func TestIsAny(t *testing.T) {
 	err2 := errors.New("world")
 	err3 := pkgErr.Wrap(err1, "world")
 	err4 := pkgErr.Wrap(err2, "universe")
+	var nilErr error
 
 	tt.Check(markers.IsAny(err1, err1))
 	tt.Check(!markers.IsAny(err1, err2, err3, err4))
 	tt.Check(markers.IsAny(err3, err1))
 	tt.Check(markers.IsAny(err3, err3))
 	tt.Check(markers.IsAny(err3, err2, err1))
+	tt.Check(markers.IsAny(err3, err2, nilErr, err1))
+	tt.Check(markers.IsAny(nilErr, err2, nilErr, err1))
+	tt.Check(!markers.IsAny(nilErr, err2, err1))
 }
 
 // This test demonstrates that two errors that are structurally
@@ -293,6 +301,9 @@ func TestIsInterface(t *testing.T) {
 
 	tt.Check(!markers.HasInterface(base, (*net.Error)(nil)))
 	tt.Check(!markers.HasInterface(wrapped, (*net.Error)(nil)))
+
+	// nil errors don't contain any interfaces, not even nil.
+	tt.Check(!markers.HasInterface(nil, (*net.Error)(nil)))
 }
 
 // This test is used in the RFC.
