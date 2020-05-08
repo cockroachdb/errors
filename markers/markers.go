@@ -31,7 +31,7 @@ import (
 // package location or a different type, ensure that
 // RegisterTypeMigration() was called prior to Is().
 func Is(err, reference error) bool {
-	if err == nil {
+	if reference == nil {
 		return err == reference
 	}
 
@@ -43,9 +43,6 @@ func Is(err, reference error) bool {
 		}
 	}
 
-	if reference == nil {
-		return false
-	}
 	// Not directly equal. Try harder, using error marks. We don't this
 	// during the loop above as it may be more expensive.
 	//
