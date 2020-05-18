@@ -37,6 +37,9 @@ func Redact(r interface{}) string {
 	case SafeMessager:
 		buf.WriteString(t.SafeMessage())
 	case error:
+		if file, line, _, ok := withstack.GetOneLineSource(t); ok {
+			fmt.Fprintf(&buf, "%s:%d: ", file, line)
+		}
 		redactErr(&buf, t)
 	default:
 		typAnd(&buf, r, "")
@@ -48,9 +51,6 @@ func Redact(r interface{}) string {
 func redactErr(buf *strings.Builder, err error) {
 	if c := errbase.UnwrapOnce(err); c == nil {
 		// This is a leaf error. Decode the leaf and return.
-		if file, line, _, ok := withstack.GetOneLineSource(err); ok {
-			fmt.Fprintf(buf, "%s:%d: ", file, line)
-		}
 		redactLeafErr(buf, err)
 	} else /* c != nil */ {
 		// Print the inner error before the outer error.
@@ -76,7 +76,7 @@ func redactWrapper(buf *strings.Builder, err error) {
 	case *os.PathError:
 		typAnd(buf, t, t.Op)
 	case *os.LinkError:
-		fmt.Fprintf(buf, "%T: %s %s %s", t, t.Op, t.Old, t.New)
+		fmt.Fprintf(buf, "%T: %s <redacted> <redacted>", t, t.Op)
 	case *net.OpError:
 		typAnd(buf, t, t.Op)
 		if t.Net != "" {
