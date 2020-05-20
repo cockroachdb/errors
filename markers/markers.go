@@ -43,6 +43,13 @@ func Is(err, reference error) bool {
 		}
 	}
 
+	if err == nil {
+		// Err is nil and reference is non-nil, so it cannot match. We
+		// want to short-circuit the loop below in this case, otherwise
+		// we're paying the expense of getMark() without need.
+		return false
+	}
+
 	// Not directly equal. Try harder, using error marks. We don't this
 	// during the loop above as it may be more expensive.
 	//
@@ -122,6 +129,14 @@ func IsAny(err error, references ...error) bool {
 			// reference.
 			break
 		}
+	}
+
+	if err == nil {
+		// The mark-based comparison below will never match anything if
+		// the error is nil, so don't bother with computing the marks in
+		// that case. This avoids the computational expense of computing
+		// the reference marks upfront.
+		return false
 	}
 
 	// Try harder with marks.
