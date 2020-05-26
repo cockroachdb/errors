@@ -28,15 +28,80 @@ import (
 // BuildSentryReport builds the components of a sentry report.  This
 // can be used instead of ReportError() below to use additional custom
 // conditions in the reporting or add additional reporting tags.
+//
+// The Sentry Event is populated for maximal utility when exploited in
+// the Sentry.io web interface and database.
+//
+// A Sentry report is displayed visually in the Sentry UI as follows:
+//
+////////////////
+// Title: (1) some prefix in bold (2) one line for a stack trace
+// (3) a single-line subtitle
+//
+// (4) the tags, as a tag soup (concatenated in a single paragrah,
+// unsorted)
+//
+// (5) a "message"
+//
+// (6) zero or more "exceptions", each composed of:
+//    (7) a bold title
+//    (8) some freeform text
+//    (9) a stack trace
+//
+// (10) metadata fields: environment, arch, etc
+//
+// (11) "Additional data" fields
+//
+// (12) SDK version
+/////////////////
+//
+// These visual items map to the Sentry Event object as follows:
+//
+// (1) the Type field of the 1st Exception object, if any
+//     otherwise the Message field
+// (2) the topmost entry from the Stacktrace field of the 1st Exception object, if any
+// (3) the Value field of the 1st Exception object, if any, unwrapped as a single line
+// (4) the Tags field
+// (5) the Message field
+// (7) the Type field (same as (1) for 1st execption)
+// (8) the Value field (same as (3) for 1st exception)
+// (9) the Stacktrace field (input to (2) on 1st exception)
+// (10) the other fields on the Event object
+// (11) the Extra field
+//
+// (Note how the top-level title fields (1) (3) are unrelated to the
+// Message field in the event, which is surprising!)
+//
+// Given this mapping, an error object is decomposed as follows:
+//
+// (1)/(7): <filename>:<lineno> (<functionname>)
+// (3)/(8): <error type>: <first safe detail line, if any>
+// (4): not populated in this function, caller is to manage this
+// (5): detailed structure of the entire error object, with references to "additional data"
+//      and additional "exception" objects
+// (9): generated from innermost stack trace
+// (6): every exception object after the 1st reports additional stack trace contexts
+// (11): "additional data" populated from safe detail payloads
+//
+// If there is no stack trace in the error, a synthetic Exception
+// object is still produced to provide visual detail in the Sentry UI.
+//
+// Note that if a layer in the error has both a stack trace (ie
+// provides the `StackTrace()` interface) and also safe details
+// (`SafeDetails()`) other than the stack trace, only the stack trace
+// is included in the Sentry report. This does not affect error types
+// provided by the library, but could impact error types defined by
+// 3rd parties. This limitation may be lifted in a later version.
+//
 func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]interface{}) {
 	if err == nil {
 		// No error: do nothing.
 		return
 	}
 
+	// First step is to collect the details.
 	var stacks []*withstack.ReportableStackTrace
 	var details []errbase.SafeDetailPayload
-	// Peel the error.
 	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
 		st := withstack.GetReportableStackTrace(c)
 		stacks = append(stacks, st)
@@ -44,71 +109,141 @@ func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]
 		sd := errbase.GetSafeDetails(c)
 		details = append(details, sd)
 	}
+	module := string(domains.GetDomain(err))
 
-	// A report can contain at most one "message", any number of
-	// "exceptions", and arbitrarily many "extra" fields.
-	//
-	// So we populate the event as follow:
-	// - the "message" will contain the type of the first error
-	// - the "exceptions" will contain the details with
-	//   populated encoded exceptions field.
-	// - the "extra" will contain all the encoded stack traces
-	//   or safe detail arrays.
+	// For the summary, we collect the innermost source context.
+	//	file, line, fn, hasOneLineSource := withstack.GetOneLineSource(err)
 
-	var firstError *string
-	var exceptions []*withstack.ReportableStackTrace
-	extras := make(map[string]interface{})
-	var longMsgBuf bytes.Buffer
-	var typesBuf bytes.Buffer
+	// longMsgBuf will become the Message field, which contains the full
+	// structure of the error with cross-references to "Exception" and
+	// "Additional data" fields.
+	var longMsgBuf strings.Builder
 
-	extraNum := 1
+	// sep is used to separate the entries in the longMsgBuf / Message
+	// payload.
 	sep := ""
-	for i := len(details) - 1; i >= 0; i-- {
-		longMsgBuf.WriteString(sep)
-		sep = "\n"
 
-		// Collect the type name.
-		tn := details[i].OriginalTypeName
+	// extras will become the per-layer "Additional data" fields.
+	extras := make(map[string]interface{})
+
+	// extraNum counts the number of "Additional data" payloads and is
+	// used to generate the cross-reference counters in the Message
+	// payload.
+	extraNum := 1
+
+	// typesBuf will become the payload for the "error types" Additional
+	// data field. It explains the Go types of the layers in the error
+	// object.
+	var typesBuf strings.Builder
+
+	// exceptions accumulates the Exception payloads.
+	var exceptions []sentry.Exception
+
+	// leafErrorType is the type name of the leaf error.
+	// This is used as fallback when no Exception payload is generated.
+	var leafErrorType string
+
+	// firstDetailLine is the first detail string encountered.
+	// This is added as decoration to the first Exception
+	// payload (either from the error object or synthetic)
+	// so as to populate the Sentry report title.
+	var firstDetailLine string
+
+	// Iterate from the last (innermost) to first (outermost) error
+	// layer. We iterate in this order because we want to describe the
+	// error from innermost to outermost layer in longMsgBuf and
+	// typesBuf.
+	for i := len(details) - 1; i >= 0; i-- {
+		// Collect the type name for this layer of error wrapping, towards
+		// the "error types" additional data field.
+		fullTypeName := details[i].OriginalTypeName
 		mark := details[i].ErrorTypeMark
 		fm := "*"
-		if tn != mark.FamilyName {
+		if fullTypeName != mark.FamilyName {
+			// fullTypeName can be different from the family when an error type has
+			// been renamed or moved.
 			fm = mark.FamilyName
 		}
-		fmt.Fprintf(&typesBuf, "%s (%s::%s)\n", tn, fm, mark.Extension)
+		fmt.Fprintf(&typesBuf, "%s (%s::%s)\n", fullTypeName, fm, mark.Extension)
+		shortTypename := lastPathComponent(fullTypeName)
+		if i == len(details)-1 {
+			leafErrorType = shortTypename
+		}
 
-		// Compose the message for this layer. The message consists of:
+		// Compose the Message line for this layer.
+		//
+		// The message line consists of:
 		// - optionally, a file/line reference, if a stack trace was available.
 		// - the error/wrapper type name, with file prefix removed.
 		// - optionally, the first line of the first detail string, if one is available.
 		// - optionally, references to stack trace / details.
+
+		// If not at the first layer, separate from the previous layer
+		// with a newline character.
+		longMsgBuf.WriteString(sep)
+		sep = "\n"
+		// Add a file:lineno prefix, if there's a stack trace entry with
+		// that info.
+		var file, fn string
+		var lineno int
 		if stacks[i] != nil && len(stacks[i].Frames) > 0 {
 			f := stacks[i].Frames[len(stacks[i].Frames)-1]
-			fn := f.Filename
-			if j := strings.LastIndexByte(fn, '/'); j >= 0 {
-				fn = fn[j+1:]
-			}
-			fmt.Fprintf(&longMsgBuf, "%s:%d: ", fn, f.Lineno)
+			file = lastPathComponent(f.Filename)
+			fn = f.Function
+			lineno = f.Lineno
+			fmt.Fprintf(&longMsgBuf, "%s:%d: ", file, f.Lineno)
 		}
+		longMsgBuf.WriteString(shortTypename)
 
-		longMsgBuf.WriteString(simpleErrType(tn))
+		// Now decide what kind of payload we want to add to the Event
+		// object.
 
+		// genExtra will remember whether we are adding an
+		// additional payload or not.
 		var genExtra bool
 
 		// Is there a stack trace?
 		if st := stacks[i]; st != nil {
-			// Yes: generate the extra and list it on the line.
-			stKey := fmt.Sprintf("%d: stacktrace", extraNum)
-			extras[stKey] = PrintStackTrace(st)
-			fmt.Fprintf(&longMsgBuf, " (%d)", extraNum)
-			extraNum++
+			var excType strings.Builder
+			if file != "" {
+				fmt.Fprintf(&excType, "%s:%d ", file, lineno)
+			}
+			if fn != "" {
+				fmt.Fprintf(&excType, "(%s)", fn)
+			}
+			if excType.Len() == 0 {
+				excType.WriteString("<unknown error>")
+			}
+			exc := sentry.Exception{
+				Module:     module,
+				Stacktrace: st,
+				Type:       excType.String(),
+				Value:      shortTypename,
+			}
 
-			exceptions = append(exceptions, st)
+			// Refer to the exception payload in the Message field.
+			//
+			// We only add a numeric counter for every exception *after* the
+			// first one. This is because the 1st exception payload is
+			// special, it is used as report title for Sentry and we don't
+			// want to pollute that title with a counter.
+			if len(exceptions) == 0 {
+				longMsgBuf.WriteString(" (top exception)")
+			} else {
+				counterStr := fmt.Sprintf("(%d)", extraNum)
+				extraNum++
+				exc.Type = counterStr + " " + exc.Type
+				fmt.Fprintf(&longMsgBuf, " %s", counterStr)
+			}
+
+			exceptions = append(exceptions, exc)
 		} else {
-			// No: are there details? If so, print them.
-			// Note: we only print the details if no stack trace
-			// was found that that level. This is because
-			// stack trace annotations also produce the stack
-			// trace as safe detail string.
+			// No stack trace.
+			// Are there safe details? If so, print them.
+			//
+			// Note: we only print the details if no stack trace was found
+			// at that level. This is because stack trace annotations also
+			// produce the stack trace as safe detail string.
 			genExtra = len(details[i].SafeDetails) > 1
 			if len(details[i].SafeDetails) > 0 {
 				d := details[i].SafeDetails[0]
@@ -121,9 +256,9 @@ func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]
 				if d != "" {
 					longMsgBuf.WriteString(": ")
 					longMsgBuf.WriteString(d)
-					if firstError == nil {
+					if firstDetailLine == "" {
 						// Keep the string for later.
-						firstError = &d
+						firstDetailLine = d
 					}
 				}
 			}
@@ -142,33 +277,72 @@ func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]
 		}
 	}
 
-	// Determine a head message for the report.
-	headMsg := "<unknown error>"
-	if firstError != nil {
-		headMsg = *firstError
-	}
-	// Prepend the "main" source line information if available/found.
-	if file, line, fn, ok := withstack.GetOneLineSource(err); ok {
-		headMsg = fmt.Sprintf("%s:%d: %s: %s", file, line, fn, headMsg)
+	if extraNum > 1 {
+		// Make the message part more informational.
+		longMsgBuf.WriteString("\n(check the extra data payloads)")
 	}
 
+	// Produce the full error type description.
 	extras["error types"] = typesBuf.String()
 
-	// Make the message part more informational.
-	longMsgBuf.WriteString("\n(check the extra data payloads)")
-	extras["long message"] = longMsgBuf.String()
+	// Sentry is mightily annoying.
+	reverseExceptionOrder(exceptions)
 
+	// Start assembling the event.
 	event = sentry.NewEvent()
-	event.Message = headMsg
+	event.Message = longMsgBuf.String()
+	event.Exception = exceptions
 
-	module := domains.GetDomain(err)
-	for _, exception := range exceptions {
-		event.Exception = append(event.Exception,
-			sentry.Exception{
-				Type:       "<reported error>",
-				Module:     string(module),
-				Stacktrace: exception,
-			})
+	// If there is no exception payload, synthetize one.
+	if len(event.Exception) == 0 {
+		// We know we don't have a stack trace to extract line/function
+		// info from (if we had, we'd have an Exception payload at that
+		// point). Instead, we make a best effort using bits and pieces
+		// assembled so far.
+		event.Exception = append(event.Exception, sentry.Exception{
+			Module: module,
+			Type:   leafErrorType,
+			Value:  firstDetailLine,
+		})
+	} else {
+		// We have at least one exception payload already. In that case,
+		// decorate the first exception with the first detail line if
+		// there is one. This enhances the title of the Sentry report.
+		//
+		// This goes from:
+		//    <file> (func)
+		//    <type>
+		//
+		// to:
+		//    <file> (func)
+		//    wrapped <leaftype>[: <detail>]
+		//    via <type>
+		// if wrapped; or if leaf:
+		//    <file> (func)
+		//    <leaftype>[: <detail>]
+
+		var newValueBuf strings.Builder
+		// Note that "first exception" is the last item in the slice,
+		// because... Sentry is annoying.
+		firstExc := &event.Exception[len(event.Exception)-1]
+		// Add the leaf error type if different from the type at this
+		// level (this is going to be the common case, unless using
+		// pkg/errors.WithStack).
+		wrapped := false
+		if firstExc.Value == leafErrorType {
+			newValueBuf.WriteString(firstExc.Value)
+		} else {
+			newValueBuf.WriteString(leafErrorType)
+			wrapped = true
+		}
+		// Add the detail info line, if any.
+		if firstDetailLine != "" {
+			fmt.Fprintf(&newValueBuf, ": %s", firstDetailLine)
+		}
+		if wrapped {
+			fmt.Fprintf(&newValueBuf, "\nvia %s", firstExc.Value)
+		}
+		firstExc.Value = newValueBuf.String()
 	}
 
 	return event, extras
@@ -206,10 +380,16 @@ func ReportError(err error) (eventID string) {
 	return
 }
 
-func simpleErrType(tn string) string {
+func lastPathComponent(tn string) string {
 	// Strip the path prefix.
 	if i := strings.LastIndexByte(tn, '/'); i >= 0 {
 		tn = tn[i+1:]
 	}
 	return tn
+}
+
+func reverseExceptionOrder(ex []sentry.Exception) {
+	for i := 0; i < len(ex)/2; i++ {
+		ex[i], ex[len(ex)-i-1] = ex[len(ex)-i-1], ex[i]
+	}
 }

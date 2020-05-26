@@ -71,8 +71,14 @@ func TestReport(t *testing.T) {
 	tt.Assert(len(events) == 1)
 	e := events[0]
 
-	tt.Run("valid short message", func(tt testutils.T) {
-		tt.CheckRegexpEqual(e.Message, `report_test.go:\d+: TestReport: universe %d`)
+	tt.Run("long message payload", func(tt testutils.T) {
+		expectedLongMessage := `^\*errors.errorString
+\*safedetails.withSafeDetails: universe %d \(1\)
+report_test.go:\d+: \*withstack.withStack \(top exception\)
+\*domains\.withDomain: error domain: "thisdomain" \(2\)
+\*report_test\.myWrapper
+\(check the extra data payloads\)$`
+		tt.CheckRegexpEqual(e.Message, expectedLongMessage)
 	})
 
 	tt.Run("valid extra details", func(tt testutils.T) {
@@ -90,21 +96,11 @@ github.com/cockroachdb/errors/report_test/*report_test.myWrapper (some/previous/
 		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)
 
 		expectedDetail = string(thisDomain)
-		detail = fmt.Sprintf("%s", e.Extra["3: details"])
+		detail = fmt.Sprintf("%s", e.Extra["2: details"])
 		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)
 	})
 
 	hasStack := false
-
-	tt.Run("long message payload", func(tt testutils.T) {
-		expectedLongMessage := `^\*errors.errorString
-\*safedetails.withSafeDetails: universe %d \(1\)
-report_test.go:\d+: \*withstack.withStack \(2\)
-\*domains\.withDomain: error domain: "thisdomain" \(3\)
-\*report_test\.myWrapper
-\(check the extra data payloads\)$`
-		tt.CheckRegexpEqual(e.Extra["long message"].(string), expectedLongMessage)
-	})
 
 	for _, exc := range e.Exception {
 		tt.Check(!hasStack)
