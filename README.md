@@ -95,7 +95,7 @@ An error *leaf* is an object that implements the `error` interface,
 but does not refer to another error via a `Unwrap()` or `Cause()`
 method.
 
-- `New(string) error`, `Newf(string, ...interface{}) error`, `Errorf(string, ...interface{}) error`: leaf errors with message
+- `New(string) error`, `Newf(string, ...interface{}) error`, `NewV(interface{}) error`, `Errorf(string, ...interface{}) error`: leaf errors with message
   - **when to use: common error cases.**
   - what it does: also captures the stack trace at point of call and redacts the provided message for safe reporting.
   - how to access the detail: `Error()`, regular Go formatting. Details redacted in Sentry report.
@@ -138,7 +138,7 @@ they behave as no-ops in this case:
 return errors.Wrap(foo(), "foo")
 ```
 
-- `Wrap(error, string) error`, `Wrapf(error, string, ...interface{}) error`:
+- `Wrap(error, string) error`, `Wrapf(error, string, ...interface{}) error`, `WrapV(interface{}) error`:
   - **when to use: on error return paths.**
   - what it does: combines `WithMessage()`, `WithStack()`, `WithSafeDetails()`.
   - how to access the details: `Error()`, regular Go formatting. Details redacted in Sentry report.
@@ -258,8 +258,8 @@ considered to be PII-free, and thus included in Sentry reports automatically:
 - error domains,
 - context tag keys,
 - the `format string` argument of `Newf`, `AssertionFailedf`, etc (the constructors ending with `...f()`),
-- the *type* of the additional arguments passed to the `...f()` constructors,
-- the *value of specific argument types* passed to the `...f()` constructors, when known to be PII-safe.
+- the *type* of the additional arguments passed to the `...f()` and `...V()` constructors,
+- the *value of specific argument types* passed to the `...f()` an `...V()` constructors, when known to be PII-safe.
   For details of which arguments are considered PII-free, see the [`Redact()` function](safedetails/redact.go).
 
 It is possible to opt additional in to Sentry reporting, using either of the following methods:
@@ -267,7 +267,7 @@ It is possible to opt additional in to Sentry reporting, using either of the fol
 - implement the `errors.SafeDetailer` interface, providing the
   `SafeDetails() []string` method on your error type.
 
-- enclose additional arguments passed to the `...f()` constructors with `errors.Safe()`. For example:
+- enclose additional arguments passed to the `...f()` / `...V()`  constructors with `errors.Safe()`. For example:
   `err := errors.Newf("my code: %d", errors.Safe(123))`
   — in this example, the value 123 will be included when a Sentry report is constructed.
   - it also makes it available via `errors.GetSafeDetails()`/`GetAllSafeDetails()`.
@@ -497,15 +497,19 @@ proposal](https://go.googlesource.com/proposal/+/master/design/29934-error-value
 | `New`                              | `NewWithDepth` (see below)                                                                       |
 | `Errorf`                           | = `Newf`                                                                                         |
 | `Newf`                             | `NewWithDepthf` (see below)                                                                      |
+| `NewV`                             | `NewWithDepthV` (see below)                                                                      |
 | `WithMessage`                      | = `pkgErr.WithMessage`                                                                           |
 | `Wrap`                             | `WrapWithDepth` (see below)                                                                      |
 | `Wrapf`                            | `WrapWithDepthf` (see below)                                                                     |
+| `WrapV`                            | `WrapWithDepthV` (see below)                                                                     |
 | `AssertionFailed`                  | `AssertionFailedWithDepthf` (see below)                                                          |
 | `NewWithDepth`                     | `goErr.New` + `WithStackDepth` (see below)                                                       |
 | `NewWithDepthf`                    | `fmt.Errorf` + `WithSafeDetails` + `WithStackDepth`                                              |
+| `NewWithDepthV`                    | `fmt.Errorf` + `WithSafeDetails` + `WithStackDepth`                                              |
 | `WithMessagef`                     | `pkgErr.WithMessagef` + `WithSafeDetails`                                                        |
 | `WrapWithDepth`                    | `WithMessage` + `WithStackDepth`                                                                 |
-| `WrapWithDepthf`                   | `WithMessage` + `WithStackDepth` + `WithSafeDetails`                                             |
+| `WrapWithDepthf`                   | `fmt.Errorf` + `WithStackDepth` + `WithSafeDetails`                                              |
+| `WrapWithDepthV`                   | `fmt.Errorf` + `WithStackDepth` + `WithSafeDetails`                                              |
 | `AssertionFailedWithDepthf`        | `fmt.Errorf` + `WithStackDepth` + `WithSafeDetails` + `WithAssertionFailure`                     |
 | `NewAssertionErrorWithWrappedErrf` | `HandledWithMessagef` (barrier) + `WithStackDepth` + `WithSafeDetails` +  `WithAssertionFailure` |
 
@@ -524,6 +528,8 @@ func Is(err, reference error) bool
 func IsAny(err error, references ...error) bool
 func If(err error, pred func(err error) (interface{}, bool)) (interface{}, bool)
 func As(err error, target interface{}) bool
+func HasType(err error, refType error) bool
+func HasInterface(err error, refInterface interface{}) bool
 
 // Encode/decode errors.
 type EncodedError // this is protobuf-encodable
