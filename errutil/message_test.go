@@ -34,6 +34,7 @@ func TestFormat(t *testing.T) {
 		err           error
 		expFmtSimple  string
 		expFmtVerbose string
+		details       string
 	}{
 		{"fmt wrap + local msg + fmt leaf",
 			&werrFmt{
@@ -48,6 +49,7 @@ wuu: waa: woo
 Wraps: (2) waa
 Wraps: (3) woo
 Error types: (1) *errutil_test.werrFmt (2) *errutil.withMessage (3) *errors.errorString`,
+			``,
 		},
 
 		{"newf",
@@ -64,6 +66,16 @@ waa: hello
 Wraps: (2) 2 safe details enclosed
 Wraps: (3) waa: hello
 Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(1.0) waa: %s
+(1.1) -- arg 1: <string>
+`,
 		},
 
 		{"newf-empty",
@@ -79,6 +91,14 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erro
   | <tab><path>
 Wraps: (2)
 Error types: (1) *withstack.withStack (2) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+`,
 		},
 
 		{"newf-empty-arg",
@@ -95,6 +115,15 @@ Error types: (1) *withstack.withStack (2) *errors.errorString`,
 Wraps: (2) 2 safe details enclosed
 Wraps: (3) %!(EXTRA int=123)
 Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(1.1) -- arg 1: <int>
+`,
 		},
 
 		{"wrapf",
@@ -112,6 +141,16 @@ Wraps: (2) 2 safe details enclosed
 Wraps: (3) waa: hello
 Wraps: (4) woo
 Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(1.0) waa: %s
+(1.1) -- arg 1: <string>
+`,
 		},
 
 		{"wrapf-empty",
@@ -127,6 +166,14 @@ woo
   | <tab><path>
 Wraps: (2) woo
 Error types: (1) *withstack.withStack (2) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+`,
 		},
 
 		{"wrapf-empty-arg",
@@ -144,6 +191,15 @@ Wraps: (2) 2 safe details enclosed
 Wraps: (3) %!(EXTRA int=123)
 Wraps: (4) woo
 Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(1.1) -- arg 1: <int>
+`,
 		},
 
 		{"handled assert",
@@ -168,6 +224,16 @@ Wraps: (3) wuu: woo
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
 Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError`,
+			`
+(1.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(2.0) -- details for github.com/cockroachdb/errors/errutil_test/*errutil_test.werrFmt:::
+(2.1) -- details for errors/*errors.errorString:::
+`,
 		},
 
 		{"assert + wrap",
@@ -193,6 +259,18 @@ Wraps: (5) wuu: woo
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
 Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safedetails.withSafeDetails (4) *errutil.withMessage (5) *barriers.barrierError`,
+			`
+(1.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(2.0) waa: %s
+(2.1) -- arg 1: <string>
+(4.0) -- details for github.com/cockroachdb/errors/errutil_test/*errutil_test.werrFmt:::
+(4.1) -- details for errors/*errors.errorString:::
+`,
 		},
 
 		{"assert + wrap empty",
@@ -216,6 +294,16 @@ Wraps: (3) wuu: woo
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
 Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError`,
+			`
+(1.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(2.0) -- details for github.com/cockroachdb/errors/errutil_test/*errutil_test.werrFmt:::
+(2.1) -- details for errors/*errors.errorString:::
+`,
 		},
 
 		{"assert + wrap empty+arg",
@@ -241,6 +329,17 @@ Wraps: (5) wuu: woo
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
 Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safedetails.withSafeDetails (4) *errutil.withMessage (5) *barriers.barrierError`,
+			`
+(1.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(2.1) -- arg 1: <int>
+(4.0) -- details for github.com/cockroachdb/errors/errutil_test/*errutil_test.werrFmt:::
+(4.1) -- details for errors/*errors.errorString:::
+`,
 		},
 	}
 
@@ -264,6 +363,26 @@ Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safe
 			spv = fileref.ReplaceAllString(spv, "<path>")
 			spv = strings.ReplaceAll(spv, "\t", "<tab>")
 			tt.CheckStringEqual(spv, refV)
+
+			details := errbase.GetAllSafeDetails(err)
+			var buf strings.Builder
+			for i, d := range details {
+				if len(d.SafeDetails) == 0 || (len(d.SafeDetails) == 1 && d.SafeDetails[0] == "") {
+					continue
+				}
+				for j, sd := range d.SafeDetails {
+					if len(sd) == 0 {
+						continue
+					}
+					sd = fileref.ReplaceAllString(sd, "<path>")
+					sd = strings.ReplaceAll(sd, "\t", "<tab>")
+					sd = strings.ReplaceAll(sd, "\n", "\n      ")
+					sd = strings.TrimSpace(sd)
+					fmt.Fprintf(&buf, "(%d.%d) %s\n", i, j, sd)
+				}
+			}
+			refDetail := strings.TrimPrefix(test.details, "\n")
+			tt.CheckStringEqual(buf.String(), refDetail)
 		})
 	}
 }
