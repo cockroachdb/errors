@@ -36,6 +36,12 @@ func NewWithDepthf(depth int, format string, args ...interface{}) error {
 	return errutil.NewWithDepthf(depth+1, format, args...)
 }
 
+// NewV forwards a definition.
+func NewV(obj interface{}) error { return errutil.NewWithDepthV(1, obj) }
+
+// NewWithDepthV forwards a definition.
+func NewWithDepthV(depth int, obj interface{}) error { return errutil.NewWithDepthV(depth+1, obj) }
+
 // Errorf forwards a definition.
 func Errorf(format string, args ...interface{}) error {
 	return errutil.NewWithDepthf(1, format, args...)
@@ -88,6 +94,16 @@ func Wrapf(err error, format string, args ...interface{}) error {
 // WrapWithDepthf forwards a definition.
 func WrapWithDepthf(depth int, err error, format string, args ...interface{}) error {
 	return errutil.WrapWithDepthf(depth+1, err, format, args...)
+}
+
+// WrapV forwards a definition.
+func WrapV(err error, obj interface{}) error {
+	return errutil.WrapWithDepthV(1, err, obj)
+}
+
+// WrapWithDepthV forwards a definition.
+func WrapWithDepthV(depth int, err error, obj interface{}) error {
+	return errutil.WrapWithDepthV(depth+1, err, obj)
 }
 
 // AssertionFailedf forwards a definition.

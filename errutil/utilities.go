@@ -62,6 +62,27 @@ func NewWithDepthf(depth int, format string, args ...interface{}) error {
 	return err
 }
 
+// NewV creates an error whose message is given
+// by the provided object.
+//
+// The semantics of NewV(myObj) are nearly equivalent to
+// Newf("%v", myObj). The message produced by myObj
+// is considered safe for reporting if it implements
+// the safe interface.
+func NewV(obj interface{}) error {
+	return NewWithDepthV(1, obj)
+}
+
+// NewWithDepthV is like NewV() except the depth to capture the stack
+// trace is configurable.
+// See the doc of `NewV()` for more details.
+func NewWithDepthV(depth int, obj interface{}) error {
+	err := fmt.Errorf("%v", obj)
+	err = safedetails.WithSafeDetails(err, "", obj)
+	err = withstack.WithStackDepth(err, 1+depth)
+	return err
+}
+
 // Wrap wraps an error with a message prefix.
 // A stack trace is retained.
 //
@@ -100,12 +121,31 @@ func Wrapf(err error, format string, args ...interface{}) error {
 
 // WrapWithDepthf is like Wrapf except the depth to capture the stack
 // trace is configurable.
-// The the doc of `Wrapf()` for more details.
+// See the doc of `Wrapf()` for more details.
 func WrapWithDepthf(depth int, err error, format string, args ...interface{}) error {
 	if format != "" || len(args) > 0 {
 		err = WithMessagef(err, format, args...)
 		err = safedetails.WithSafeDetails(err, format, args...)
 	}
+	err = withstack.WithStackDepth(err, depth+1)
+	return err
+}
+
+// WrapV wraps an error with a message prefix.
+//
+// The semantics of WrapV(err, myObj) are nearly equivalent to
+// Wrapf(err, "%v", myObj). The meessage produced by myObj is
+// considered safe for reporting if it implements the safe interface.
+func WrapV(err error, obj interface{}) error {
+	return WrapWithDepthV(1, err, obj)
+}
+
+// WrapWithDepthV is like WrapV except the depth to capture
+// the stack trace is configurable.
+// See the doc of `WrapV()` for more details.
+func WrapWithDepthV(depth int, err error, obj interface{}) error {
+	err = WithMessagef(err, "%v", obj)
+	err = safedetails.WithSafeDetails(err, "", obj)
 	err = withstack.WithStackDepth(err, depth+1)
 	return err
 }

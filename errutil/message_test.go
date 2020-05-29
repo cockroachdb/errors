@@ -23,6 +23,7 @@ import (
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errutil"
+	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/testutils"
 )
 
@@ -126,6 +127,58 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erro
 `,
 		},
 
+		{"newv",
+			errutil.NewV(123),
+			`123`,
+			`
+123
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) 2 safe details enclosed
+Wraps: (3) 123
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(1.1) -- arg 1: <int>
+`,
+		},
+
+		{"newv-safe",
+			errutil.NewV(safedetails.Safe(123)),
+			`123`,
+			`
+123
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) 2 safe details enclosed
+Wraps: (3) 123
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(1.1) -- arg 1: 123
+`,
+		},
+
 		{"wrapf",
 			errutil.Wrapf(goErr.New("woo"), "waa: %s", "hello"),
 			`waa: hello: woo`, `
@@ -199,6 +252,60 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erru
       runtime.goexit
       <tab><path>
 (1.1) -- arg 1: <int>
+`,
+		},
+
+		{"wrapv",
+			errutil.WrapV(goErr.New("woo"), 123),
+			`123: woo`,
+			`
+123: woo
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) 2 safe details enclosed
+Wraps: (3) 123
+Wraps: (4) woo
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(1.1) -- arg 1: <int>
+`,
+		},
+
+		{"wrapv-safe",
+			errutil.WrapV(goErr.New("woo"), safedetails.Safe(123)),
+			`123: woo`,
+			`
+123: woo
+(1) attached stack trace
+  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | <tab><path>
+  | testing.tRunner
+  | <tab><path>
+  | runtime.goexit
+  | <tab><path>
+Wraps: (2) 2 safe details enclosed
+Wraps: (3) 123
+Wraps: (4) woo
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *errors.errorString`,
+			`
+(0.0) github.com/cockroachdb/errors/errutil_test.TestFormat
+      <tab><path>
+      testing.tRunner
+      <tab><path>
+      runtime.goexit
+      <tab><path>
+(1.1) -- arg 1: 123
 `,
 		},
 
