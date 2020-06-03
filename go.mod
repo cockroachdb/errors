@@ -1,4 +1,4 @@
-module github.com/cockroachdb/errors
+module github.com/interspace/errors
 
 go 1.13
 
