@@ -3,7 +3,7 @@ module github.com/interspace/errors
 go 1.13
 
 require (
-	github.com/cockroachdb/errors v0.0.0-00010101000000-000000000000
+	github.com/cockroachdb/errors v1.2.5-0.20200526111402-489491acc692
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f
 	github.com/cockroachdb/sentry-go v0.3.999
 	github.com/gogo/protobuf v1.3.1
