@@ -1,0 +1,14 @@
+linters:
+  enable-all: true
+  disable:
+    - megacheck
+    - stylecheck
+    - funlen
+run:
+  skip-dirs:
+    - echo
+    - example/echo
+issues:
+  exclude:
+    - "not declared by package utf8"
+    - "unicode/utf8/utf8.go"
