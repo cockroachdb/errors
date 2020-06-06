@@ -17,7 +17,7 @@ package withstack
 import (
 	"fmt"
 
-	"github.com/cockroachdb/errors/errbase"
+	"github.com/interspace/errors/errbase"
 )
 
 // This file mirrors the WithStack functionality from

@@ -1,8 +1,8 @@
 package status
 
 import (
-	"github.com/cockroachdb/errors"
-	"github.com/cockroachdb/errors/extgrpc"
+	"github.com/interspace/errors"
+	"github.com/interspace/errors/extgrpc"
 
 	"google.golang.org/grpc/codes"
 )

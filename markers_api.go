@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/markers"
+import "github.com/interspace/errors/markers"
 
 // Is forwards a definition.
 func Is(err, reference error) bool { return markers.Is(err, reference) }

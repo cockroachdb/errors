@@ -17,7 +17,7 @@ package internal
 import (
 	"errors"
 
-	"github.com/cockroachdb/errors/domains"
+	"github.com/interspace/errors/domains"
 )
 
 // ThisDomain is a helper for tests.

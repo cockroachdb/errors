@@ -21,9 +21,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/errutil"
-	"github.com/cockroachdb/errors/testutils"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/errutil"
+	"github.com/interspace/errors/testutils"
 )
 
 func TestFormat(t *testing.T) {
@@ -55,7 +55,7 @@ Error types: (1) *errutil_test.werrFmt (2) *errutil.withMessage (3) *errors.erro
 			`waa: hello`, `
 waa: hello
 (1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -71,7 +71,7 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erro
 			``, `
 
 (1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -86,7 +86,7 @@ Error types: (1) *withstack.withStack (2) *errors.errorString`,
 			`%!(EXTRA int=123)`, `
 %!(EXTRA int=123)
 (1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -102,7 +102,7 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erro
 			`waa: hello: woo`, `
 waa: hello: woo
 (1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -119,7 +119,7 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erru
 			`woo`, `
 woo
 (1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -134,7 +134,7 @@ Error types: (1) *withstack.withStack (2) *errors.errorString`,
 			`%!(EXTRA int=123): woo`, `
 %!(EXTRA int=123): woo
 (1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -153,7 +153,7 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erru
 wuu: woo
 (1) assertion failure
 Wraps: (2) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -176,7 +176,7 @@ Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barr
 waa: hello: wuu: woo
 (1) assertion failure
 Wraps: (2) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -201,7 +201,7 @@ Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safe
 wuu: woo
 (1) assertion failure
 Wraps: (2) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -224,7 +224,7 @@ Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barr
 %!(EXTRA int=123): wuu: woo
 (1) assertion failure
 Wraps: (2) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
+  | github.com/interspace/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>

@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/assert"
+import "github.com/interspace/errors/assert"
 
 // WithAssertionFailure forwards a definition.
 func WithAssertionFailure(err error) error { return assert.WithAssertionFailure(err) }

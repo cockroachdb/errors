@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/safedetails"
+import "github.com/interspace/errors/safedetails"
 
 // WithSafeDetails forwards a definition.
 func WithSafeDetails(err error, format string, args ...interface{}) error {

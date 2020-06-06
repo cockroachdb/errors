@@ -1,3 +1,8 @@
+### Note about modifications
+This package is forked from [cockroachdb/errors](https://github.com/cockroachdb/errors) and modified so that all error 
+strings including potentially "unsafe PII" are included in "SafeDetails" that are reported to Sentry. This change has 
+been made so that normal error strings are included in Sentry.
+
 # cockroachdb/errors: Go errors with network portability
 
 This library aims to be used as a drop-in replacement to

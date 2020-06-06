@@ -23,9 +23,9 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/cockroachdb/errors/safedetails"
-	"github.com/cockroachdb/errors/testutils"
-	"github.com/cockroachdb/errors/withstack"
+	"github.com/interspace/errors/safedetails"
+	"github.com/interspace/errors/testutils"
+	"github.com/interspace/errors/withstack"
 )
 
 func TestRedact(t *testing.T) {
@@ -55,7 +55,7 @@ func TestRedact(t *testing.T) {
 			`<path>: <*errors.errorString>
 wrapper: <*withstack.withStack>
 (more details:)
-github.com/cockroachdb/errors/safedetails_test.TestRedact
+github.com/interspace/errors/safedetails_test.TestRedact
 	<path>
 testing.tRunner
 	<path>

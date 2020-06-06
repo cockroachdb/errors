@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cockroachdb/errors"
-	"github.com/cockroachdb/errors/testutils"
+	"github.com/interspace/errors"
+	"github.com/interspace/errors/testutils"
 )
 
 func TestAs(t *testing.T) {

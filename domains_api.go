@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/domains"
+import "github.com/interspace/errors/domains"
 
 // Domain forwards a definition.
 type Domain = domains.Domain

@@ -19,9 +19,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/markers"
 	"github.com/gogo/protobuf/proto"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/markers"
 )
 
 // Scenario 1: simple migration, forward direction

@@ -18,7 +18,7 @@ package errutil
 import (
 	"reflect"
 
-	"github.com/cockroachdb/errors/errbase"
+	"github.com/interspace/errors/errbase"
 )
 
 // As finds the first error in err's chain that matches the type to which target

@@ -22,8 +22,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/testutils"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/testutils"
 	pkgErr "github.com/pkg/errors"
 )
 
@@ -82,15 +82,15 @@ func TestSimplifyStacks(t *testing.T) {
 		spv := fmtClean(&errFormatter{errWrapper})
 		tt.CheckStringEqual(spv, `hello world
 (1)
-  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func2
+  | github.com/interspace/errors/errbase_test.TestSimplifyStacks.func2
   | <tab><path>:<lineno>
   | [...repeated from below...]
 Wraps: (2) hello world
-  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func1
+  | github.com/interspace/errors/errbase_test.TestSimplifyStacks.func1
   | <tab><path>:<lineno>
-  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func2
+  | github.com/interspace/errors/errbase_test.TestSimplifyStacks.func2
   | <tab><path>:<lineno>
-  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks
+  | github.com/interspace/errors/errbase_test.TestSimplifyStacks
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>
@@ -430,7 +430,7 @@ woo
 (1) woo
   |
   | (opaque error leaf)
-  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.errNoFmt
+  | type name: github.com/interspace/errors/errbase_test/*errbase_test.errNoFmt
 Error types: (1) *errbase.opaqueLeaf`, ``},
 
 		// Opaque wrapper.
@@ -441,7 +441,7 @@ waa: woo
 (1) waa
   |
   | (opaque error wrapper)
-  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
+  | type name: github.com/interspace/errors/errbase_test/*errbase_test.werrNoFmt
 Wraps: (2) woo
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString`, ``},
 
@@ -452,11 +452,11 @@ wuu: waa: woo
 (1) wuu
   |
   | (opaque error wrapper)
-  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
+  | type name: github.com/interspace/errors/errbase_test/*errbase_test.werrNoFmt
 Wraps: (2) waa
   |
   | (opaque error wrapper)
-  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
+  | type name: github.com/interspace/errors/errbase_test/*errbase_test.werrNoFmt
 Wraps: (3) woo
 Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errors.errorString`, ``},
 
@@ -517,7 +517,7 @@ waa: woo
   | -- this is waa's
   | multi-line wrapper payload
 Wraps: (2)
-  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  | github.com/interspace/errors/errbase_test.TestFormat
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>
@@ -547,7 +547,7 @@ prefix: woo
   | -- multi-line
   | wrapper payload
 Wraps: (2)
-  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  | github.com/interspace/errors/errbase_test.TestFormat
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>
@@ -573,7 +573,7 @@ Error types: (1) *errbase_test.werrEmpty (2) *errbase_test.errNoFmt`, ``,
 woo
 (1)
 Wraps: (2)
-  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  | github.com/interspace/errors/errbase_test.TestFormat
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>
@@ -599,7 +599,7 @@ Error types: (1) *errbase_test.werrDelegateEmpty (2) *errbase_test.errNoFmt`, ``
 woo
 (1)
 Wraps: (2)
-  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  | github.com/interspace/errors/errbase_test.TestFormat
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>

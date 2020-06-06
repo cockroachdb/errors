@@ -17,8 +17,8 @@ package errors
 import (
 	"context"
 
-	"github.com/cockroachdb/errors/contexttags"
 	"github.com/cockroachdb/logtags"
+	"github.com/interspace/errors/contexttags"
 )
 
 // WithContextTags forwards a definition.

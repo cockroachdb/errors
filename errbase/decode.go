@@ -17,9 +17,9 @@ package errbase
 import (
 	"context"
 
-	"github.com/cockroachdb/errors/errorspb"
 	"github.com/gogo/protobuf/proto"
 	"github.com/gogo/protobuf/types"
+	"github.com/interspace/errors/errorspb"
 )
 
 // DecodeError decodes an error.

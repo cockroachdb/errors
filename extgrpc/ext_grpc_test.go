@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cockroachdb/errors"
-	"github.com/cockroachdb/errors/extgrpc"
-	"github.com/cockroachdb/errors/testutils"
+	"github.com/interspace/errors"
+	"github.com/interspace/errors/extgrpc"
+	"github.com/interspace/errors/testutils"
 	"google.golang.org/grpc/codes"
 )
 

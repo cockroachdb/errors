@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/cockroachdb/errors"
-	"github.com/cockroachdb/errors/exthttp"
-	"github.com/cockroachdb/errors/testutils"
+	"github.com/interspace/errors"
+	"github.com/interspace/errors/exthttp"
+	"github.com/interspace/errors/testutils"
 )
 
 func TestHTTP(t *testing.T) {

@@ -21,8 +21,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cockroachdb/errors/errutil"
-	"github.com/cockroachdb/errors/testutils"
+	"github.com/interspace/errors/errutil"
+	"github.com/interspace/errors/testutils"
 )
 
 func TestErrorWrap(t *testing.T) {
@@ -49,13 +49,13 @@ func TestErrorWrap(t *testing.T) {
 			// However, ours do.
 			`woo: hello: world
 (1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestErrorWrap
+  | github.com/interspace/errors/errutil_test.TestErrorWrap
   | <tab><path>
   | [...repeated from below...]
 Wraps: (2) woo
 Wraps: (3) hello
 Wraps: (4) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestErrorWrap
+  | github.com/interspace/errors/errutil_test.TestErrorWrap
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -69,13 +69,13 @@ Error types: (1) *withstack.withStack (2) *errutil.withMessage (3) *fmt.wrapErro
 			`hello: world`,
 			`hello: world
 (1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestErrorWrap
+  | github.com/interspace/errors/errutil_test.TestErrorWrap
   | <tab><path>
   | [...repeated from below...]
 Wraps: (2) 2 safe details enclosed
 Wraps: (3) hello
 Wraps: (4) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestErrorWrap
+  | github.com/interspace/errors/errutil_test.TestErrorWrap
   | <tab><path>
   | testing.tRunner
   | <tab><path>

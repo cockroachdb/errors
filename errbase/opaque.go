@@ -17,7 +17,7 @@ package errbase
 import (
 	"fmt"
 
-	"github.com/cockroachdb/errors/errorspb"
+	"github.com/interspace/errors/errorspb"
 )
 
 // opaqueLeaf is used when receiving an unknown leaf type.

@@ -17,7 +17,7 @@ package errbase
 import (
 	"fmt"
 
-	"github.com/cockroachdb/errors/errorspb"
+	"github.com/interspace/errors/errorspb"
 	pkgErr "github.com/pkg/errors"
 )
 
@@ -57,12 +57,14 @@ func getDetails(err error) []string {
 	if sd, ok := err.(SafeDetailer); ok {
 		return sd.SafeDetails()
 	}
+
 	// For convenience, we also know how to extract stack traces
 	// in the style of github.com/pkg/errors.
 	if st, ok := err.(interface{ StackTrace() pkgErr.StackTrace }); ok {
 		return []string{fmt.Sprintf("%+v", st.StackTrace())}
 	}
-	return nil
+
+	return []string{err.Error()}
 }
 
 // SafeDetailPayload captures the safe strings for one

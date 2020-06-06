@@ -17,8 +17,8 @@ package errbase_test
 import (
 	"testing"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/testutils"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/testutils"
 )
 
 type myE struct{ marker string }

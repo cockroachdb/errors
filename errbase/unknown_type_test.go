@@ -22,10 +22,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/errbase/internal"
-	"github.com/cockroachdb/errors/testutils"
 	"github.com/gogo/protobuf/proto"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/errbase/internal"
+	"github.com/interspace/errors/testutils"
 	"github.com/kr/pretty"
 )
 

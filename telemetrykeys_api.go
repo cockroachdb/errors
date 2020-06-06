@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/telemetrykeys"
+import "github.com/interspace/errors/telemetrykeys"
 
 // WithTelemetry forwards a definition.
 func WithTelemetry(err error, keys ...string) error { return telemetrykeys.WithTelemetry(err, keys...) }

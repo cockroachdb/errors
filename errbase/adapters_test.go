@@ -22,9 +22,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/errorspb"
-	"github.com/cockroachdb/errors/testutils"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/errorspb"
+	"github.com/interspace/errors/testutils"
 	"github.com/kr/pretty"
 	pkgErr "github.com/pkg/errors"
 )

@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/secondary"
+import "github.com/interspace/errors/secondary"
 
 // WithSecondaryError forwards a definition.
 func WithSecondaryError(err error, additionalErr error) error {

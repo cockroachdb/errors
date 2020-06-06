@@ -18,8 +18,8 @@ import (
 	goErr "errors"
 	"fmt"
 
-	"github.com/cockroachdb/errors/safedetails"
-	"github.com/cockroachdb/errors/withstack"
+	"github.com/interspace/errors/safedetails"
+	"github.com/interspace/errors/withstack"
 )
 
 // New creates an error with a simple error message.

@@ -20,9 +20,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/cockroachdb/errors/errorspb"
 	"github.com/gogo/protobuf/proto"
 	"github.com/gogo/protobuf/types"
+	"github.com/interspace/errors/errorspb"
 )
 
 // EncodedError is the type of an encoded (and protobuf-encodable) error.

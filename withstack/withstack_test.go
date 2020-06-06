@@ -23,10 +23,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/markers"
-	"github.com/cockroachdb/errors/testutils"
-	"github.com/cockroachdb/errors/withstack"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/markers"
+	"github.com/interspace/errors/testutils"
+	"github.com/interspace/errors/withstack"
 	"github.com/kr/pretty"
 )
 
@@ -81,7 +81,7 @@ func TestFormat(t *testing.T) {
 			woo, `
 woo
 (1) attached stack trace
-  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | github.com/interspace/errors/withstack_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -95,7 +95,7 @@ Error types: (1) *withstack.withStack (2) *errors.errorString`},
 			waawoo, `
 waa: woo
 (1) attached stack trace
-  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | github.com/interspace/errors/withstack_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -115,7 +115,7 @@ waa: woo
   | -- verbose wrapper:
   | waa
 Wraps: (2) attached stack trace
-  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | github.com/interspace/errors/withstack_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
@@ -130,11 +130,11 @@ Error types: (1) *withstack_test.werrFmt (2) *withstack.withStack (3) *errors.er
 			woo, `
 woo
 (1) attached stack trace
-  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | github.com/interspace/errors/withstack_test.TestFormat
   | <tab><path>
   | [...repeated from below...]
 Wraps: (2) attached stack trace
-  | github.com/cockroachdb/errors/withstack_test.TestFormat
+  | github.com/interspace/errors/withstack_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>

@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/barriers"
+import "github.com/interspace/errors/barriers"
 
 // Handled forwards a definition.
 func Handled(err error) error { return barriers.Handled(err) }

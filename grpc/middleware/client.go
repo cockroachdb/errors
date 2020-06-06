@@ -3,8 +3,8 @@ package middleware
 import (
 	"context"
 
-	"github.com/cockroachdb/errors"
 	"github.com/gogo/status"
+	"github.com/interspace/errors"
 
 	"google.golang.org/grpc"
 )

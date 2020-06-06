@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/cockroachdb/errors/markers"
+	"github.com/interspace/errors/markers"
 	"github.com/pkg/errors"
 )
 

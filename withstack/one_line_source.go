@@ -19,7 +19,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/cockroachdb/errors/errbase"
+	"github.com/interspace/errors/errbase"
 )
 
 // GetOneLineSource extracts the file/line/function information

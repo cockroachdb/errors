@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cockroachdb/errors/errbase"
 	"github.com/gogo/protobuf/proto"
+	"github.com/interspace/errors/errbase"
 )
 
 type withSecondaryError struct {

@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/issuelink"
+import "github.com/interspace/errors/issuelink"
 
 // WithIssueLink forwards a definition.
 func WithIssueLink(err error, issue IssueLink) error { return issuelink.WithIssueLink(err, issue) }

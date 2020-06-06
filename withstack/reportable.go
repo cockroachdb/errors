@@ -22,9 +22,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/sentry-go"
+	"github.com/getsentry/sentry-go"
 	pkgErr "github.com/pkg/errors"
+
+	"github.com/interspace/errors/errbase"
 )
 
 // ReportableStackTrace aliases the type of the same name in the sentry

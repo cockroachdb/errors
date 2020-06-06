@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/withstack"
+import "github.com/interspace/errors/withstack"
 
 // WithStack forwards a definition.
 func WithStack(err error) error { return withstack.WithStackDepth(err, 1) }

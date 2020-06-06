@@ -1,33 +1,7 @@
-# github.com/cockroachdb/errors v1.2.5-0.20200526111402-489491acc692 => ./
-github.com/cockroachdb/errors
-github.com/cockroachdb/errors/assert
-github.com/cockroachdb/errors/barriers
-github.com/cockroachdb/errors/contexttags
-github.com/cockroachdb/errors/domains
-github.com/cockroachdb/errors/domains/internal
-github.com/cockroachdb/errors/errbase
-github.com/cockroachdb/errors/errbase/internal
-github.com/cockroachdb/errors/errorspb
-github.com/cockroachdb/errors/errutil
-github.com/cockroachdb/errors/extgrpc
-github.com/cockroachdb/errors/exthttp
-github.com/cockroachdb/errors/grpc/middleware
-github.com/cockroachdb/errors/grpc/status
-github.com/cockroachdb/errors/hintdetail
-github.com/cockroachdb/errors/issuelink
-github.com/cockroachdb/errors/markers
-github.com/cockroachdb/errors/report
-github.com/cockroachdb/errors/safedetails
-github.com/cockroachdb/errors/secondary
-github.com/cockroachdb/errors/stdstrings
-github.com/cockroachdb/errors/telemetrykeys
-github.com/cockroachdb/errors/testutils
-github.com/cockroachdb/errors/withstack
-github.com/cockroachdb/errors/withstack/internal
 # github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f
 github.com/cockroachdb/logtags
-# github.com/cockroachdb/sentry-go v0.3.999
-github.com/cockroachdb/sentry-go
+# github.com/getsentry/sentry-go v0.6.1
+github.com/getsentry/sentry-go
 # github.com/gogo/googleapis v0.0.0-20180223154316-0cd9801be74a
 github.com/gogo/googleapis/google/rpc
 # github.com/gogo/protobuf v1.3.1

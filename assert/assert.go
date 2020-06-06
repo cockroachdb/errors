@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/markers"
-	"github.com/cockroachdb/errors/stdstrings"
 	"github.com/gogo/protobuf/proto"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/markers"
+	"github.com/interspace/errors/stdstrings"
 )
 
 // WithAssertionFailure decorates the error with an assertion failure marker.

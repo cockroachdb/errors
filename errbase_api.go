@@ -17,7 +17,7 @@ package errors
 import (
 	"context"
 
-	"github.com/cockroachdb/errors/errbase"
+	"github.com/interspace/errors/errbase"
 )
 
 // UnwrapOnce forwards a definition.

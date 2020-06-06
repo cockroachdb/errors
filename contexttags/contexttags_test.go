@@ -21,12 +21,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cockroachdb/errors"
-	"github.com/cockroachdb/errors/contexttags"
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/markers"
-	"github.com/cockroachdb/errors/testutils"
 	"github.com/cockroachdb/logtags"
+	"github.com/interspace/errors"
+	"github.com/interspace/errors/contexttags"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/markers"
+	"github.com/interspace/errors/testutils"
 )
 
 func TestWithContext(t *testing.T) {

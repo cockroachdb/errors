@@ -14,7 +14,7 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/hintdetail"
+import "github.com/interspace/errors/hintdetail"
 
 // ErrorHinter forwards a definition.
 type ErrorHinter = hintdetail.ErrorHinter

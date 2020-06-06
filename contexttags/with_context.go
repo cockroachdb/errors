@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/errorspb"
 	"github.com/cockroachdb/logtags"
 	"github.com/gogo/protobuf/proto"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/errorspb"
 )
 
 type withContext struct {

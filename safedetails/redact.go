@@ -23,9 +23,9 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/cockroachdb/errors/errbase"
-	"github.com/cockroachdb/errors/markers"
-	"github.com/cockroachdb/errors/withstack"
+	"github.com/interspace/errors/errbase"
+	"github.com/interspace/errors/markers"
+	"github.com/interspace/errors/withstack"
 )
 
 // Redact returns a redacted version of the supplied item that is safe to use in
