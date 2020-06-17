@@ -45,7 +45,7 @@ Table of contents:
 | wrappers for user-facing hints and details                                                            |                     |                         |                            | ✔                    |
 | wrappers to attach secondary causes                                                                   |                     |                         |                            | ✔                    |
 | wrappers to attach [`logtags`](https://github.com/cockroachdb/logtags) details from `context.Context` |                     |                         |                            | ✔                    |
-| `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | (under construction)       | (under construction) |
+| `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | (under construction)       | ✔                    |
 
 "Forward compatibility" above refers to the ability of this library to
 recognize and properly handle network communication of error types it
