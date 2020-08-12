@@ -107,8 +107,8 @@ func TestTagRedaction(t *testing.T) {
 
 	// This will be our reference expected value.
 	refStrings := [][]string{
-		[]string{"planet1=<string>", "planet2=universe"},
-		[]string{"foo1=<int>", "x<int>", "bar1", "foo2=123", "y456", "bar2"},
+		[]string{"planet1=string:<redacted>", "planet2=universe"},
+		[]string{"foo1=int:<redacted>", "xint:<redacted>", "bar1", "foo2=123", "y456", "bar2"},
 	}
 
 	// Construct the error object.

@@ -90,9 +90,9 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-(0) a
+  (0) a
 payload 1
-(empty)
+  (empty)
 `},
 
 		{"safe empty",
@@ -104,9 +104,9 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-(empty)
+  (empty)
 payload 1
-(empty)
+  (empty)
 `},
 
 		{"safe nofmt+onearg",
@@ -118,9 +118,9 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-(1) -- arg 1: <int>
+  (1) -- arg 1: int:<redacted>
 payload 1
-(empty)
+  (empty)
 `},
 
 		{"safe err",
@@ -137,11 +137,11 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-(0) a %v
-(1) -- arg 1: *errors.errorString: file does not exist
-wrapper: *os.PathError: open
+  (0) format: "a %v"
+  (1) -- arg 1 (error): *errors.errorString: file does not exist
+    *os.PathError: open
 payload 1
-(empty)
+  (empty)
 `},
 
 		{"safe",
@@ -153,11 +153,11 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-(0) a %s %s
-(1) -- arg 1: <string>
-(2) -- arg 2: c
+  (0) format: "a %s %s"
+  (1) -- arg 1: string:<redacted>
+  (2) -- arg 2: c
 payload 1
-(empty)
+  (empty)
 `},
 
 		{"safe + wrapper",
@@ -172,13 +172,13 @@ Wraps: (3) woo
 Error types: (1) *safedetails.withSafeDetails (2) *safedetails_test.werrFmt (3) *errors.errorString`,
 			// Payload
 			`payload 0
-(0) a %s %s
-(1) -- arg 1: <string>
-(2) -- arg 2: c
+  (0) format: "a %s %s"
+  (1) -- arg 1: string:<redacted>
+  (2) -- arg 2: c
 payload 1
-(empty)
+  (empty)
 payload 2
-(empty)
+  (empty)
 `},
 
 		{"wrapper + safe",
@@ -193,13 +193,13 @@ Wraps: (3) woo
 Error types: (1) *safedetails_test.werrFmt (2) *safedetails.withSafeDetails (3) *errors.errorString`,
 			// Payload
 			`payload 0
-(empty)
+  (empty)
 payload 1
-(0) a %s %s
-(1) -- arg 1: <string>
-(2) -- arg 2: c
+  (0) format: "a %s %s"
+  (1) -- arg 1: string:<redacted>
+  (2) -- arg 2: c
 payload 2
-(empty)
+  (empty)
 `},
 
 		{"safe with wrapped error",
@@ -213,11 +213,11 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-(0) a %v
-(1) -- arg 1: <*errors.errorString>
-wrapper: <*safedetails_test.werrFmt>
+  (0) format: "a %v"
+  (1) -- arg 1 (error): *errors.errorString:<redacted>
+    *safedetails_test.werrFmt:<redacted>
 payload 1
-(empty)
+  (empty)
 `},
 
 		{"safe + safe, stacked",
@@ -233,18 +233,20 @@ Wraps: (3) woo
 Error types: (1) *safedetails.withSafeDetails (2) *safedetails.withSafeDetails (3) *errors.errorString`,
 			// Payload
 			`payload 0
-(0) delicious %s
-(1) -- arg 1: coffee
+  (0) format: "delicious %s"
+  (1) -- arg 1: coffee
 payload 1
-(0) hello %s
-(1) -- arg 1: world
+  (0) format: "hello %s"
+  (1) -- arg 1: world
 payload 2
-(empty)
+  (empty)
 `},
 
 		{"safe as arg to safe",
 			safedetails.WithSafeDetails(baseErr, "a %v",
-				safedetails.WithSafeDetails(errors.New("wuu"),
+				/* this error is an argument */
+				safedetails.WithSafeDetails(
+					errors.New("wuu"),
 					"b %v", safedetails.Safe("waa"))),
 			woo,
 			`
@@ -254,14 +256,14 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-(0) a %v
-(1) -- arg 1: <*errors.errorString>
-wrapper: <*safedetails.withSafeDetails>
-(more details:)
-b %v
--- arg 1: waa
+  (0) format: "a %v"
+  (1) -- arg 1 (error): *errors.errorString:<redacted>
+    *safedetails.withSafeDetails:<redacted>
+    (more details about this error:)
+    format: "b %v"
+    -- arg 1: waa
 payload 1
-(empty)
+  (empty)
 `},
 	}
 
@@ -290,14 +292,14 @@ payload 1
 			for i, d := range details {
 				fmt.Fprintf(&buf, "payload %d\n", i)
 				if len(d.SafeDetails) == 0 || (len(d.SafeDetails) == 1 && d.SafeDetails[0] == "") {
-					fmt.Fprintf(&buf, "(empty)\n")
+					fmt.Fprintf(&buf, "  (empty)\n")
 					continue
 				}
 				for j, sd := range d.SafeDetails {
 					if len(sd) == 0 {
 						continue
 					}
-					fmt.Fprintf(&buf, "(%d) %s\n", j, sd)
+					fmt.Fprintf(&buf, "  (%d) %s\n", j, strings.ReplaceAll(sd, "\n", "\n    "))
 				}
 			}
 			tt.CheckStringEqual(buf.String(), test.details)

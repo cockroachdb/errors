@@ -42,7 +42,7 @@ func Redact(r interface{}) string {
 		}
 		redactErr(&buf, t)
 	default:
-		typAnd(&buf, r, "")
+		typRedacted(&buf, r)
 	}
 
 	return buf.String()
@@ -60,7 +60,7 @@ func redactErr(buf *strings.Builder, err error) {
 
 	// Add any additional safe strings from the wrapper, if present.
 	if payload := errbase.GetSafeDetails(err); len(payload.SafeDetails) > 0 {
-		buf.WriteString("\n(more details:)")
+		buf.WriteString("\n(more details about this error:)")
 		for _, sd := range payload.SafeDetails {
 			buf.WriteByte('\n')
 			buf.WriteString(strings.TrimSpace(sd))
@@ -69,7 +69,7 @@ func redactErr(buf *strings.Builder, err error) {
 }
 
 func redactWrapper(buf *strings.Builder, err error) {
-	buf.WriteString("\nwrapper: ")
+	buf.WriteString("\n")
 	switch t := err.(type) {
 	case *os.SyscallError:
 		typAnd(buf, t, t.Syscall)
@@ -83,16 +83,16 @@ func redactWrapper(buf *strings.Builder, err error) {
 			fmt.Fprintf(buf, " %s", t.Net)
 		}
 		if t.Source != nil {
-			buf.WriteString("<redacted>")
+			buf.WriteString(" <redacted>")
 		}
 		if t.Addr != nil {
 			if t.Source != nil {
-				buf.WriteString("->")
+				buf.WriteString(" ->")
 			}
-			buf.WriteString("<redacted>")
+			buf.WriteString(" <redacted>")
 		}
 	default:
-		typAnd(buf, err, "")
+		typRedacted(buf, err)
 	}
 }
 
@@ -126,14 +126,17 @@ func redactLeafErr(buf *strings.Builder, err error) {
 		typAnd(buf, t, t.SafeMessage())
 	default:
 		// No further information about this error, simply report its type.
-		typAnd(buf, err, "")
+		typRedacted(buf, err)
 	}
 }
 
+func typRedacted(buf *strings.Builder, r interface{}) {
+	fmt.Fprintf(buf, "%T:<redacted>", r)
+}
+
 func typAnd(buf *strings.Builder, r interface{}, msg string) {
-	if msg == "" {
-		fmt.Fprintf(buf, "<%T>", r)
-	} else {
-		fmt.Fprintf(buf, "%T: %s", r, msg)
+	if len(msg) == 0 {
+		msg = "(empty string)"
 	}
+	fmt.Fprintf(buf, "%T: %s", r, msg)
 }

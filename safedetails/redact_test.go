@@ -37,8 +37,8 @@ func TestRedact(t *testing.T) {
 	}{
 		// Redacting non-error values.
 
-		{123, `<int>`},
-		{"secret", `<string>`},
+		{123, `int:<redacted>`},
+		{"secret", `string:<redacted>`},
 
 		// Redacting SafeMessagers.
 
@@ -47,24 +47,24 @@ func TestRedact(t *testing.T) {
 		{mySafeError{}, `hello`},
 		{&werrFmt{mySafeError{}, "unseen"},
 			`safedetails_test.mySafeError: hello
-wrapper: <*safedetails_test.werrFmt>`},
+*safedetails_test.werrFmt:<redacted>`},
 
 		// Redacting errors.
 
 		// Unspecial cases, get redacted.
-		{errors.New("secret"), `<*errors.errorString>`},
+		{errors.New("secret"), `*errors.errorString:<redacted>`},
 
 		// Stack trace in error retrieves some info about the context.
 		{withstack.WithStack(errors.New("secret")),
-			`<path>: <*errors.errorString>
-wrapper: <*withstack.withStack>
-(more details:)
+			`...path...: *errors.errorString:<redacted>
+*withstack.withStack:<redacted>
+(more details about this error:)
 github.com/cockroachdb/errors/safedetails_test.TestRedact
-	<path>
+	...path...
 testing.tRunner
-	<path>
+	...path...
 runtime.goexit
-	<path>`},
+	...path...`},
 
 		// Special cases, unredacted.
 		{os.ErrInvalid, `*errors.errorString: invalid argument`},
@@ -83,22 +83,22 @@ runtime.goexit
 			`*runtime.TypeAssertionError: interface conversion: interface {} is nil, not int`},
 
 		{errSentinel, // explodes if Error() called
-			`<struct { error }>`},
+			`struct { error }:<redacted>`},
 
 		{&werrFmt{&werrFmt{os.ErrClosed, "unseen"}, "unsung"},
 			`*errors.errorString: file already closed
-wrapper: <*safedetails_test.werrFmt>
-wrapper: <*safedetails_test.werrFmt>`},
+*safedetails_test.werrFmt:<redacted>
+*safedetails_test.werrFmt:<redacted>`},
 
 		// Special cases, get partly redacted.
 
 		{os.NewSyscallError("rename", os.ErrNotExist),
 			`*errors.errorString: file does not exist
-wrapper: *os.SyscallError: rename`},
+*os.SyscallError: rename`},
 
 		{&os.PathError{Op: "rename", Path: "secret", Err: os.ErrNotExist},
 			`*errors.errorString: file does not exist
-wrapper: *os.PathError: rename`},
+*os.PathError: rename`},
 
 		{&os.LinkError{
 			Op:  "moo",
@@ -107,7 +107,7 @@ wrapper: *os.PathError: rename`},
 			Err: os.ErrNotExist,
 		},
 			`*errors.errorString: file does not exist
-wrapper: *os.LinkError: moo <redacted> <redacted>`},
+*os.LinkError: moo <redacted> <redacted>`},
 
 		{&net.OpError{
 			Op:     "write",
@@ -115,15 +115,15 @@ wrapper: *os.LinkError: moo <redacted> <redacted>`},
 			Source: &net.IPAddr{IP: net.IP("sensitive-source")},
 			Addr:   &net.IPAddr{IP: net.IP("sensitive-addr")},
 			Err:    errors.New("not safe"),
-		}, `<*errors.errorString>
-wrapper: *net.OpError: write tcp<redacted>-><redacted>`},
+		}, `*errors.errorString:<redacted>
+*net.OpError: write tcp <redacted> -> <redacted>`},
 	}
 
 	tt := testutils.T{T: t}
 
 	for _, tc := range testData {
 		s := safedetails.Redact(tc.obj)
-		s = fileref.ReplaceAllString(s, "<path>")
+		s = fileref.ReplaceAllString(s, "...path...")
 
 		tt.CheckStringEqual(s, tc.expected)
 	}
