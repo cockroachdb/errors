@@ -44,6 +44,10 @@ func TestRedact(t *testing.T) {
 
 		{mySafer{}, `hello`},
 		{safedetails.Safe(123), `123`},
+		{mySafeError{}, `hello`},
+		{&werrFmt{mySafeError{}, "unseen"},
+			`safedetails_test.mySafeError: hello
+wrapper: <*safedetails_test.werrFmt>`},
 
 		// Redacting errors.
 
@@ -142,3 +146,8 @@ func makeTypeAssertionErr() (result runtime.Error) {
 type mySafer struct{}
 
 func (mySafer) SafeMessage() string { return "hello" }
+
+type mySafeError struct{}
+
+func (mySafeError) SafeMessage() string { return "hello" }
+func (mySafeError) Error() string       { return "helloerr" }

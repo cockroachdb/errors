@@ -122,6 +122,8 @@ func redactLeafErr(buf *strings.Builder, err error) {
 		typAnd(buf, t, t.Error())
 	case syscall.Errno:
 		typAnd(buf, t, t.Error())
+	case SafeMessager:
+		typAnd(buf, t, t.SafeMessage())
 	default:
 		// No further information about this error, simply report its type.
 		typAnd(buf, err, "")
