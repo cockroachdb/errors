@@ -75,8 +75,8 @@ older version of the package.
 
 | Error detail                                                    | `Error()` and format `%s`/`%q`/`%v` | format `%+v` | `GetSafeDetails()`            | Sentry report via `ReportError()` |
 |-----------------------------------------------------------------|-------------------------------------|--------------|-------------------------------|-----------------------------------|
-| main message, eg `New()`                                        | visible                             | visible      | redacted                      | redacted                          |
-| wrap prefix, eg `WithMessage()`                                 | visible (as prefix)                 | visible      | redacted                      | redacted                          |
+| main message, eg `New()`                                        | visible                             | visible      | yes (CHANGED IN v1.6)         | full (CHANGED IN v1.6)            |
+| wrap prefix, eg `WithMessage()`                                 | visible (as prefix)                 | visible      | yes (CHANGED IN v1.6)         | full (CHANGED IN v1.6)            |
 | stack trace, eg `WithStack()`                                   | not visible                         | simplified   | yes                           | full                              |
 | hint , eg `WithHint()`                                          | not visible                         | visible      | no                            | type only                         |
 | detail, eg `WithDetail()`                                       | not visible                         | visible      | no                            | type only                         |
@@ -98,7 +98,7 @@ method.
 - `New(string) error`, `Newf(string, ...interface{}) error`, `Errorf(string, ...interface{}) error`: leaf errors with message
   - **when to use: common error cases.**
   - what it does: also captures the stack trace at point of call and redacts the provided message for safe reporting.
-  - how to access the detail: `Error()`, regular Go formatting. Details redacted in Sentry report.
+  - how to access the detail: `Error()`, regular Go formatting. **Details in Sentry report.**
   - see also: Section [Error composition](#Error-composition-summary) below. `errors.NewWithDepth()` variants to customize at which call depth the stack trace is captured.
 
 - `AssertionFailedf(string, ...interface{}) error`, `NewAssertionFailureWithWrappedErrf(error, string, ...interface{}) error`: signals an assertion failure / programming error.
@@ -141,7 +141,7 @@ return errors.Wrap(foo(), "foo")
 - `Wrap(error, string) error`, `Wrapf(error, string, ...interface{}) error`:
   - **when to use: on error return paths.**
   - what it does: combines `WithMessage()`, `WithStack()`, `WithSafeDetails()`.
-  - how to access the details: `Error()`, regular Go formatting. Details redacted in Sentry report.
+  - how to access the details: `Error()`, regular Go formatting. **Details in Sentry report.**
   - see also: Section [Error composition](#Error-composition-summary) below. `WrapWithDepth()` variants to customize at which depth the stack trace is captured.
 
 - `WithSecondaryError(error, error) error`: annotate an error with a secondary error.

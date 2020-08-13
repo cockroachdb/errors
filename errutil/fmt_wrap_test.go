@@ -52,17 +52,19 @@ func TestErrorWrap(t *testing.T) {
   | github.com/cockroachdb/errors/errutil_test.TestErrorWrap
   | <tab><path>
   | [...repeated from below...]
-Wraps: (2) woo
-Wraps: (3) hello
-Wraps: (4) attached stack trace
+Wraps: (2) 1 safe detail enclosed
+Wraps: (3) woo
+Wraps: (4) hello
+Wraps: (5) attached stack trace
   | github.com/cockroachdb/errors/errutil_test.TestErrorWrap
   | <tab><path>
   | testing.tRunner
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (5) world
-Error types: (1) *withstack.withStack (2) *errutil.withMessage (3) *fmt.wrapError (4) *withstack.withStack (5) *errors.errorString`},
+Wraps: (6) 1 safe detail enclosed
+Wraps: (7) world
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *fmt.wrapError (5) *withstack.withStack (6) *safedetails.withSafeDetails (7) *errors.errorString`},
 
 		{"new wrap err",
 			errutil.Newf("hello: %w", baseErr),
@@ -81,8 +83,9 @@ Wraps: (4) attached stack trace
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (5) world
-Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *fmt.wrapError (4) *withstack.withStack (5) *errors.errorString`},
+Wraps: (5) 1 safe detail enclosed
+Wraps: (6) world
+Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *fmt.wrapError (4) *withstack.withStack (5) *safedetails.withSafeDetails (6) *errors.errorString`},
 	}
 
 	for _, test := range testCases {

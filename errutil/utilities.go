@@ -25,11 +25,16 @@ import (
 // New creates an error with a simple error message.
 // A stack trace is retained.
 //
+// Note: the message string is assumed to not contain
+// PII and is included in Sentry reports.
+// Use errors.Newf("%s", <unsafestring>) for errors
+// strings that may contain PII information.
+//
 // Detail output:
 // - message via `Error()` and formatting using `%v`/`%s`/`%q`.
 // - everything when formatting with `%+v`.
-// - stack trace (not message) via `errors.GetSafeDetails()`.
-// - stack trace (not message) in Sentry reports.
+// - stack trace and message via `errors.GetSafeDetails()`.
+// - stack trace and message in Sentry reports.
 func New(msg string) error {
 	return NewWithDepth(1, msg)
 }
@@ -39,12 +44,21 @@ func New(msg string) error {
 // See the doc of `New()` for more details.
 func NewWithDepth(depth int, msg string) error {
 	err := goErr.New(msg)
+	if len(msg) > 0 {
+		err = safedetails.WithSafeDetails(err, msg)
+	}
 	err = withstack.WithStackDepth(err, 1+depth)
 	return err
 }
 
 // Newf creates an error with a formatted error message.
 // A stack trace is retained.
+//
+// Note: the format string is assumed to not contain
+// PII and is included in Sentry reports.
+// Use errors.Newf("%s", <unsafestring>) for errors
+// strings that may contain PII information.
+//
 // See the doc of `New()` for more details.
 func Newf(format string, args ...interface{}) error {
 	return NewWithDepthf(1, format, args...)
@@ -65,11 +79,16 @@ func NewWithDepthf(depth int, format string, args ...interface{}) error {
 // Wrap wraps an error with a message prefix.
 // A stack trace is retained.
 //
+// Note: the prefix string is assumed to not contain
+// PII and is included in Sentry reports.
+// Use errors.Wrapf(err, "%s", <unsafestring>) for errors
+// strings that may contain PII information.
+//
 // Detail output:
 // - original error message + prefix via `Error()` and formatting using `%v`/`%s`/`%q`.
 // - everything when formatting with `%+v`.
-// - stack trace (not message) via `errors.GetSafeDetails()`.
-// - stack trace (not message) in Sentry reports.
+// - stack trace and message via `errors.GetSafeDetails()`.
+// - stack trace and message in Sentry reports.
 func Wrap(err error, msg string) error {
 	return WrapWithDepth(1, err, msg)
 }
@@ -80,6 +99,7 @@ func Wrap(err error, msg string) error {
 func WrapWithDepth(depth int, err error, msg string) error {
 	if msg != "" {
 		err = WithMessage(err, msg)
+		err = safedetails.WithSafeDetails(err, msg)
 	}
 	err = withstack.WithStackDepth(err, depth+1)
 	return err
@@ -89,11 +109,16 @@ func WrapWithDepth(depth int, err error, msg string) error {
 // trace is also retained. If the format is empty, no prefix is added,
 // but the extra arguments are still processed for reportable strings.
 //
+// Note: the format string is assumed to not contain
+// PII and is included in Sentry reports.
+// Use errors.Wrapf(err, "%s", <unsafestring>) for errors
+// strings that may contain PII information.
+//
 // Detail output:
 // - original error message + prefix via `Error()` and formatting using `%v`/`%s`/`%q`.
 // - everything when formatting with `%+v`.
-// - stack trace (not message) and redacted details via `errors.GetSafeDetails()`.
-// - stack trace (not message) and redacted details in Sentry reports.
+// - stack trace, format, and redacted details via `errors.GetSafeDetails()`.
+// - stack trace, format, and redacted details in Sentry reports.
 func Wrapf(err error, format string, args ...interface{}) error {
 	return WrapWithDepthf(1, err, format, args...)
 }
