@@ -53,7 +53,8 @@ func TestReport(t *testing.T) {
 	thisDomain := domains.NamedDomain("thisdomain")
 
 	err = goErr.New("hello")
-	err = safedetails.WithSafeDetails(err, "universe %d", safedetails.Safe(123))
+	err = safedetails.WithSafeDetails(err, "universe %d %s",
+		safedetails.Safe(123), safedetails.Safe("multi\nline"))
 	err = withstack.WithStack(err)
 	err = domains.WithDomain(err, thisDomain)
 	defer errbase.TestingWithEmptyMigrationRegistry()()
@@ -73,7 +74,7 @@ func TestReport(t *testing.T) {
 
 	tt.Run("long message payload", func(tt testutils.T) {
 		expectedLongMessage := `^\*errors.errorString
-\*safedetails.withSafeDetails: universe %d \(1\)
+\*safedetails.withSafeDetails: format: "universe %d %s" \(1\)
 report_test.go:\d+: \*withstack.withStack \(top exception\)
 \*domains\.withDomain: error domain: "thisdomain" \(2\)
 \*report_test\.myWrapper
@@ -91,7 +92,10 @@ github.com/cockroachdb/errors/report_test/*report_test.myWrapper (some/previous/
 		types := fmt.Sprintf("%s", e.Extra["error types"])
 		tt.CheckEqual(types, expectedTypes)
 
-		expectedDetail := "universe %d\n-- arg 1: 123"
+		expectedDetail := `format: "universe %d %s"
+-- arg 1: 123
+-- arg 2: multi
+   line`
 		detail := fmt.Sprintf("%s", e.Extra["1: details"])
 		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)
 

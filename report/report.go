@@ -269,7 +269,7 @@ func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]
 			stKey := fmt.Sprintf("%d: details", extraNum)
 			var extraStr bytes.Buffer
 			for _, d := range details[i].SafeDetails {
-				fmt.Fprintln(&extraStr, d)
+				fmt.Fprintln(&extraStr, strings.ReplaceAll(d, "\n", "\n   "))
 			}
 			extras[stKey] = extraStr.String()
 			fmt.Fprintf(&longMsgBuf, " (%d)", extraNum)
