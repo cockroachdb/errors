@@ -214,8 +214,8 @@ Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
   (0) format: "a %v"
-  (1) -- arg 1 (error): *errors.errorString:<redacted>
-    *safedetails_test.werrFmt:<redacted>
+  (1) -- arg 1 (error): *errors.errorString: <redacted>
+    *safedetails_test.werrFmt: <redacted>
 payload 1
   (empty)
 `},
@@ -247,7 +247,7 @@ payload 2
 				/* this error is an argument */
 				safedetails.WithSafeDetails(
 					errors.New("wuu"),
-					"b %v", safedetails.Safe("waa"))),
+					"b %v\nmulti line", safedetails.Safe("waa\nmulti line"))),
 			woo,
 			`
 woo
@@ -257,11 +257,11 @@ Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
   (0) format: "a %v"
-  (1) -- arg 1 (error): *errors.errorString:<redacted>
-    *safedetails.withSafeDetails:<redacted>
-    (more details about this error:)
-    format: "b %v"
-    -- arg 1: waa
+  (1) -- arg 1 (error): *errors.errorString: <redacted>
+    *safedetails.withSafeDetails: format: "b %v\nmulti line"
+      (more details:)
+      -- arg 1: waa
+      multi line
 payload 1
   (empty)
 `},

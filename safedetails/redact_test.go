@@ -47,24 +47,24 @@ func TestRedact(t *testing.T) {
 		{mySafeError{}, `hello`},
 		{&werrFmt{mySafeError{}, "unseen"},
 			`safedetails_test.mySafeError: hello
-*safedetails_test.werrFmt:<redacted>`},
+*safedetails_test.werrFmt: <redacted>`},
 
 		// Redacting errors.
 
 		// Unspecial cases, get redacted.
-		{errors.New("secret"), `*errors.errorString:<redacted>`},
+		{errors.New("secret"), `*errors.errorString: <redacted>`},
 
 		// Stack trace in error retrieves some info about the context.
 		{withstack.WithStack(errors.New("secret")),
-			`...path...: *errors.errorString:<redacted>
-*withstack.withStack:<redacted>
-(more details about this error:)
-github.com/cockroachdb/errors/safedetails_test.TestRedact
-	...path...
-testing.tRunner
-	...path...
-runtime.goexit
-	...path...`},
+			`...path...: *errors.errorString: <redacted>
+*withstack.withStack
+  (more details:)
+  github.com/cockroachdb/errors/safedetails_test.TestRedact
+  	...path...
+  testing.tRunner
+  	...path...
+  runtime.goexit
+  	...path...`},
 
 		// Special cases, unredacted.
 		{os.ErrInvalid, `*errors.errorString: invalid argument`},
@@ -83,12 +83,12 @@ runtime.goexit
 			`*runtime.TypeAssertionError: interface conversion: interface {} is nil, not int`},
 
 		{errSentinel, // explodes if Error() called
-			`struct { error }:<redacted>`},
+			`struct { error }: <redacted>`},
 
 		{&werrFmt{&werrFmt{os.ErrClosed, "unseen"}, "unsung"},
 			`*errors.errorString: file already closed
-*safedetails_test.werrFmt:<redacted>
-*safedetails_test.werrFmt:<redacted>`},
+*safedetails_test.werrFmt: <redacted>
+*safedetails_test.werrFmt: <redacted>`},
 
 		// Special cases, get partly redacted.
 
@@ -115,7 +115,7 @@ runtime.goexit
 			Source: &net.IPAddr{IP: net.IP("sensitive-source")},
 			Addr:   &net.IPAddr{IP: net.IP("sensitive-addr")},
 			Err:    errors.New("not safe"),
-		}, `*errors.errorString:<redacted>
+		}, `*errors.errorString: <redacted>
 *net.OpError: write tcp <redacted> -> <redacted>`},
 	}
 
