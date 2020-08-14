@@ -49,35 +49,59 @@ func Redact(r interface{}) string {
 }
 
 func redactErr(buf *strings.Builder, err error) {
+	foundDetail := false
 	if c := errbase.UnwrapOnce(err); c == nil {
 		// This is a leaf error. Decode the leaf and return.
-		redactLeafErr(buf, err)
+		foundDetail = redactLeafErr(buf, err)
 	} else /* c != nil */ {
 		// Print the inner error before the outer error.
 		redactErr(buf, c)
-		redactWrapper(buf, err)
+		foundDetail = redactWrapper(buf, err)
 	}
 
 	// Add any additional safe strings from the wrapper, if present.
 	if payload := errbase.GetSafeDetails(err); len(payload.SafeDetails) > 0 {
-		buf.WriteString("\n(more details about this error:)")
-		for _, sd := range payload.SafeDetails {
-			buf.WriteByte('\n')
-			buf.WriteString(strings.TrimSpace(sd))
+		consumed := 0
+		if !foundDetail {
+			firstDetail := strings.TrimSpace(payload.SafeDetails[0])
+			if strings.IndexByte(firstDetail, '\n') < 0 {
+				firstDetail = strings.ReplaceAll(strings.TrimSpace(payload.SafeDetails[0]), "\n", "\n  ")
+				if len(firstDetail) > 0 {
+					buf.WriteString(": ")
+				}
+				buf.WriteString(firstDetail)
+				consumed = 1
+				foundDetail = true
+			}
 		}
+		if len(payload.SafeDetails) > consumed {
+			buf.WriteString("\n  (more details:)")
+			for _, sd := range payload.SafeDetails[consumed:] {
+				buf.WriteString("\n  ")
+				buf.WriteString(strings.ReplaceAll(strings.TrimSpace(sd), "\n", "\n  "))
+			}
+			foundDetail = true
+		}
+	}
+	if !foundDetail {
+		buf.WriteString(": <redacted>")
 	}
 }
 
-func redactWrapper(buf *strings.Builder, err error) {
+func redactWrapper(buf *strings.Builder, err error) (hasDetail bool) {
 	buf.WriteString("\n")
 	switch t := err.(type) {
 	case *os.SyscallError:
+		hasDetail = true
 		typAnd(buf, t, t.Syscall)
 	case *os.PathError:
+		hasDetail = true
 		typAnd(buf, t, t.Op)
 	case *os.LinkError:
+		hasDetail = true
 		fmt.Fprintf(buf, "%T: %s <redacted> <redacted>", t, t.Op)
 	case *net.OpError:
+		hasDetail = true
 		typAnd(buf, t, t.Op)
 		if t.Net != "" {
 			fmt.Fprintf(buf, " %s", t.Net)
@@ -92,11 +116,12 @@ func redactWrapper(buf *strings.Builder, err error) {
 			buf.WriteString(" <redacted>")
 		}
 	default:
-		typRedacted(buf, err)
+		fmt.Fprintf(buf, "%T", err)
 	}
+	return
 }
 
-func redactLeafErr(buf *strings.Builder, err error) {
+func redactLeafErr(buf *strings.Builder, err error) (hasDetail bool) {
 	// Is it a sentinel error? These are safe.
 	if markers.IsAny(err,
 		context.DeadlineExceeded,
@@ -108,26 +133,32 @@ func redactLeafErr(buf *strings.Builder, err error) {
 		os.ErrClosed,
 		os.ErrNoDeadline,
 	) {
+		hasDetail = true
 		typAnd(buf, err, err.Error())
 		return
 	}
 
 	if redactPre113Wrappers(buf, err) {
+		hasDetail = true
 		return
 	}
 
 	// The following two types are safe too.
 	switch t := err.(type) {
 	case runtime.Error:
+		hasDetail = true
 		typAnd(buf, t, t.Error())
 	case syscall.Errno:
+		hasDetail = true
 		typAnd(buf, t, t.Error())
 	case SafeMessager:
+		hasDetail = true
 		typAnd(buf, t, t.SafeMessage())
 	default:
 		// No further information about this error, simply report its type.
-		typRedacted(buf, err)
+		fmt.Fprintf(buf, "%T", err)
 	}
+	return
 }
 
 func typRedacted(buf *strings.Builder, r interface{}) {
