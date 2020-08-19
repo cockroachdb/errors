@@ -14,7 +14,10 @@
 
 package errors
 
-import "github.com/cockroachdb/errors/safedetails"
+import (
+	"github.com/cockroachdb/errors/safedetails"
+	"github.com/cockroachdb/redact"
+)
 
 // WithSafeDetails forwards a definition.
 func WithSafeDetails(err error, format string, args ...interface{}) error {
@@ -22,10 +25,12 @@ func WithSafeDetails(err error, format string, args ...interface{}) error {
 }
 
 // SafeMessager forwards a definition.
-type SafeMessager = safedetails.SafeMessager
+// NB: this is obsolete. Use redact.SafeFormatter
+// or errors.SafeFormatter instead.
+type SafeMessager = redact.SafeMessager
 
 // Safe forwards a definition.
-func Safe(v interface{}) SafeMessager { return safedetails.Safe(v) }
+func Safe(v interface{}) redact.SafeValue { return safedetails.Safe(v) }
 
 // Redact returns a redacted version of the supplied item that is safe
 // to use in anonymized reporting.

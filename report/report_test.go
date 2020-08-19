@@ -31,6 +31,27 @@ import (
 	"github.com/kr/pretty"
 )
 
+// func TestReport2(t *testing.T) {
+// 	client, err := sentry.NewClient(
+// 		sentry.ClientOptions{
+// 			Debug: true,
+// 			Dsn:   "<URL HERE>",
+// 		})
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	sentry.CurrentHub().BindClient(client)
+//
+// 	myErr := errutil.Newf("Hello %s %d", "world", redact.Safe(123))
+// 	myErr = errutil.Wrapf(myErr, "some prefix %s", "unseen")
+//
+// 	if eventID := report.ReportError(myErr); eventID == "" {
+// 		t.Fatal("eventID is empty")
+// 	}
+// 	sentry.Flush(2 * time.Second)
+//
+// }
+
 func TestReport(t *testing.T) {
 	var events []*sentry.Event
 
@@ -74,7 +95,7 @@ func TestReport(t *testing.T) {
 
 	tt.Run("long message payload", func(tt testutils.T) {
 		expectedLongMessage := `^\*errors.errorString
-\*safedetails.withSafeDetails: format: "universe %d %s" \(1\)
+\*safedetails.withSafeDetails: universe 123 multi \(1\)
 report_test.go:\d+: \*withstack.withStack \(top exception\)
 \*domains\.withDomain: error domain: "thisdomain" \(2\)
 \*report_test\.myWrapper
@@ -92,9 +113,10 @@ github.com/cockroachdb/errors/report_test/*report_test.myWrapper (some/previous/
 		types := fmt.Sprintf("%s", e.Extra["error types"])
 		tt.CheckEqual(types, expectedTypes)
 
-		expectedDetail := `format: "universe %d %s"
--- arg 1: 123
--- arg 2: multi
+		expectedDetail := `universe 123 multi
+   line
+-- arg 1 (redact.safeWrapper): 123
+-- arg 2 (redact.safeWrapper): multi
    line`
 		detail := fmt.Sprintf("%s", e.Extra["1: details"])
 		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)

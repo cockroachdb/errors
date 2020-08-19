@@ -21,6 +21,7 @@ import (
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errorspb"
+	"github.com/cockroachdb/redact"
 	"github.com/gogo/protobuf/proto"
 )
 
@@ -225,7 +226,7 @@ type withMark struct {
 
 var _ error = (*withMark)(nil)
 var _ fmt.Formatter = (*withMark)(nil)
-var _ errbase.Formatter = (*withMark)(nil)
+var _ errbase.SafeFormatter = (*withMark)(nil)
 
 func (m *withMark) Error() string { return m.cause.Error() }
 func (m *withMark) Cause() error  { return m.cause }
@@ -233,13 +234,13 @@ func (m *withMark) Unwrap() error { return m.cause }
 
 func (m *withMark) Format(s fmt.State, verb rune) { errbase.FormatError(m, s, verb) }
 
-func (m *withMark) FormatError(p errbase.Printer) error {
+func (m *withMark) SafeFormatError(p errbase.Printer) error {
 	if p.Detail() {
-		p.Print("forced error mark\n")
+		p.Printf("forced error mark\n")
 		p.Printf("%q\n%s::%s",
 			m.mark.msg,
-			m.mark.types[0].FamilyName,
-			m.mark.types[0].Extension,
+			redact.Safe(m.mark.types[0].FamilyName),
+			redact.Safe(m.mark.types[0].Extension),
 		)
 	}
 	return m.cause
