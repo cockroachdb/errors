@@ -16,6 +16,7 @@ package errors
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
 )
@@ -87,3 +88,23 @@ type WrapperEncoder = errbase.WrapperEncoder
 
 // SetWarningFn forwards a definition.
 func SetWarningFn(fn func(context.Context, string, ...interface{})) { errbase.SetWarningFn(fn) }
+
+// Formatter is provided for compatibility with xerrors.
+// This should probably not be used directly, and
+// SafeFormatter preferred instead.
+type Formatter = errbase.Formatter
+
+// SafeFormatter is like Formatter but supports the separation
+// of safe and unsafe strings.
+type SafeFormatter = errbase.SafeFormatter
+
+// Printer is provided for compatibility with xerrors.
+type Printer = errbase.Printer
+
+// FormatError can be used to implement the fmt.Formatter interface.
+func FormatError(err error, s fmt.State, verb rune) { errbase.FormatError(err, s, verb) }
+
+// Formattable can be used to print an error with enhanced detail
+// printout when the outer layer of wrapping may not be provided by
+// this library.
+func Formattable(err error) fmt.Formatter { return errbase.Formattable(err) }

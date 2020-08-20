@@ -25,11 +25,14 @@ import (
 
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/testutils"
-	"github.com/cockroachdb/errors/withstack"
+	"github.com/cockroachdb/redact"
 )
 
 func TestRedact(t *testing.T) {
 	errSentinel := (error)(struct{ error }{})
+
+	// rm is what's left over after redaction.
+	rm := string(redact.RedactableBytes(redact.RedactedMarker()).StripMarkers())
 
 	testData := []struct {
 		obj      interface{}
@@ -37,68 +40,50 @@ func TestRedact(t *testing.T) {
 	}{
 		// Redacting non-error values.
 
-		{123, `int:<redacted>`},
-		{"secret", `string:<redacted>`},
+		{123, rm},
+		{"secret", rm},
 
 		// Redacting SafeMessagers.
 
 		{mySafer{}, `hello`},
+
 		{safedetails.Safe(123), `123`},
+
 		{mySafeError{}, `hello`},
-		{&werrFmt{mySafeError{}, "unseen"},
-			`safedetails_test.mySafeError: hello
-*safedetails_test.werrFmt: <redacted>`},
+
+		{&werrFmt{mySafeError{}, "unseen"}, rm + `: hello`},
 
 		// Redacting errors.
 
 		// Unspecial cases, get redacted.
-		{errors.New("secret"), `*errors.errorString: <redacted>`},
-
-		// Stack trace in error retrieves some info about the context.
-		{withstack.WithStack(errors.New("secret")),
-			`...path...: *errors.errorString: <redacted>
-*withstack.withStack
-  (more details:)
-  github.com/cockroachdb/errors/safedetails_test.TestRedact
-  	...path...
-  testing.tRunner
-  	...path...
-  runtime.goexit
-  	...path...`},
+		{errors.New("secret"), rm},
 
 		// Special cases, unredacted.
-		{os.ErrInvalid, `*errors.errorString: invalid argument`},
-		{os.ErrPermission, `*errors.errorString: permission denied`},
-		{os.ErrExist, `*errors.errorString: file already exists`},
-		{os.ErrNotExist, `*errors.errorString: file does not exist`},
-		{os.ErrClosed, `*errors.errorString: file already closed`},
-		{os.ErrNoDeadline, `*errors.errorString: file type does not support deadline`},
+		{os.ErrInvalid, `invalid argument`},
+		{os.ErrPermission, `permission denied`},
+		{os.ErrExist, `file already exists`},
+		{os.ErrNotExist, `file does not exist`},
+		{os.ErrClosed, `file already closed`},
+		{os.ErrNoDeadline, `file type does not support deadline`},
 
-		{context.Canceled,
-			`*errors.errorString: context canceled`},
-		{context.DeadlineExceeded,
-			`context.deadlineExceededError: context deadline exceeded`},
+		{context.Canceled, `context canceled`},
+		{context.DeadlineExceeded, `context deadline exceeded`},
 
-		{makeTypeAssertionErr(),
-			`*runtime.TypeAssertionError: interface conversion: interface {} is nil, not int`},
+		{makeTypeAssertionErr(), `interface conversion: interface {} is nil, not int`},
 
 		{errSentinel, // explodes if Error() called
-			`struct { error }: <redacted>`},
+			`%!v(PANIC=SafeFormatter method: runtime error: invalid memory address or nil pointer dereference)`},
 
 		{&werrFmt{&werrFmt{os.ErrClosed, "unseen"}, "unsung"},
-			`*errors.errorString: file already closed
-*safedetails_test.werrFmt: <redacted>
-*safedetails_test.werrFmt: <redacted>`},
+			rm + `: ` + rm + `: file already closed`},
 
 		// Special cases, get partly redacted.
 
 		{os.NewSyscallError("rename", os.ErrNotExist),
-			`*errors.errorString: file does not exist
-*os.SyscallError: rename`},
+			`rename: file does not exist`},
 
 		{&os.PathError{Op: "rename", Path: "secret", Err: os.ErrNotExist},
-			`*errors.errorString: file does not exist
-*os.PathError: rename`},
+			`rename ` + rm + `: file does not exist`},
 
 		{&os.LinkError{
 			Op:  "moo",
@@ -106,8 +91,7 @@ func TestRedact(t *testing.T) {
 			New: "cret",
 			Err: os.ErrNotExist,
 		},
-			`*errors.errorString: file does not exist
-*os.LinkError: moo <redacted> <redacted>`},
+			`moo ` + rm + ` ` + rm + `: file does not exist`},
 
 		{&net.OpError{
 			Op:     "write",
@@ -115,8 +99,7 @@ func TestRedact(t *testing.T) {
 			Source: &net.IPAddr{IP: net.IP("sensitive-source")},
 			Addr:   &net.IPAddr{IP: net.IP("sensitive-addr")},
 			Err:    errors.New("not safe"),
-		}, `*errors.errorString: <redacted>
-*net.OpError: write tcp <redacted> -> <redacted>`},
+		}, `write tcp ` + rm + ` -> ` + rm + `: ` + rm},
 	}
 
 	tt := testutils.T{T: t}

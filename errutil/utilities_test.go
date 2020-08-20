@@ -14,28 +14,30 @@
 
 package errutil
 
-import "github.com/cockroachdb/redact"
+import "testing"
 
-// WithMessage annotates err with a new message.
-// If err is nil, WithMessage returns nil.
-func WithMessage(err error, message string) error {
-	if err == nil {
-		return nil
+func TestHasVerbW(t *testing.T) {
+	testCase := []struct {
+		format   string
+		expected bool
+	}{
+		{"", false},
+		{" abc ", false},
+		{" a%%b ", false},
+		{"%3d %q", false},
+		{"%+-#[5]3.4d %q", false},
+		{"abc %%w", false},
+		{"abc %%%w", true},
+		{"abc %%%+-#[5]3.4w", true},
+		{"%w", true},
+		{"msg: %w", true},
+		{"in %w between", true},
 	}
-	return &withPrefix{
-		cause:  err,
-		prefix: redact.Sprint(redact.Safe(message)),
-	}
-}
 
-// WithMessagef annotates err with the format specifier.
-// If err is nil, WithMessagef returns nil.
-func WithMessagef(err error, format string, args ...interface{}) error {
-	if err == nil {
-		return nil
-	}
-	return &withPrefix{
-		cause:  err,
-		prefix: redact.Sprintf(format, args...),
+	for _, tc := range testCase {
+		actual := hasVerbW.MatchString(tc.format)
+		if actual != tc.expected {
+			t.Errorf("%q: expected %v, got %v", tc.format, tc.expected, actual)
+		}
 	}
 }

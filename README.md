@@ -46,6 +46,7 @@ Table of contents:
 | wrappers to attach secondary causes                                                                   |                     |                         |                            | ✔                    |
 | wrappers to attach [`logtags`](https://github.com/cockroachdb/logtags) details from `context.Context` |                     |                         |                            | ✔                    |
 | `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | (under construction)       | ✔                    |
+| `errors.SafeFormatError()`, `SafeFormatter`                                                           |                     |                         |                            | ✔                    |
 
 "Forward compatibility" above refers to the ability of this library to
 recognize and properly handle network communication of error types it
@@ -201,17 +202,17 @@ return errors.Wrap(foo(), "foo")
 - `WithMessage(error, string) error`, `WithMessagef(error, string, ...interface{}) error`: message prefix.
   - when to use: probably never. Use `errors.Wrap()`/`errors.Wrapf()` instead.
   - what it does: adds a message prefix.
-  - how to access the detail: `Error()`, regular Go formatting. Not included in Sentry reports.
+  - how to access the detail: `Error()`, regular Go formatting, Sentry Report.
 
 - `WithDetail(error, string) error`, `WithDetailf(error, string, ...interface{}) error`, user-facing detail with contextual information.
   - **when to use: need to embark a message string to output when the error is presented to a human.**
   - what it does: captures detail strings.
-  - how to access the detail: `errors.GetAllDetails()`, `errors.FlattenDetails()` (all details are preserved), format with `%+v`.
+  - how to access the detail: `errors.GetAllDetails()`, `errors.FlattenDetails()` (all details are preserved), format with `%+v`. Not included in Sentry reports.
 
 - `WithHint(error, string) error`, `WithHintf(error, string, ...interface{}) error`: user-facing detail with suggestion for action to take.
   - **when to use: need to embark a message string to output when the error is presented to a human.**
   - what it does: captures hint strings.
-  - how to access the detail: `errors.GetAllHints()`, `errors.FlattenHints()` (hints are de-duplicated), format with `%+v`.
+  - how to access the detail: `errors.GetAllHints()`, `errors.FlattenHints()` (hints are de-duplicated), format with `%+v`. Not included in Sentry reports.
 
 - `WithIssueLink(error, IssueLink) error`: annotate an error with an URL and arbitrary string.
   - **when to use: to refer (human) users to some external resources.**
@@ -260,7 +261,7 @@ considered to be PII-free, and thus included in Sentry reports automatically:
 - the `format string` argument of `Newf`, `AssertionFailedf`, etc (the constructors ending with `...f()`),
 - the *type* of the additional arguments passed to the `...f()` constructors,
 - the *value of specific argument types* passed to the `...f()` constructors, when known to be PII-safe.
-  For details of which arguments are considered PII-free, see the [`Redact()` function](safedetails/redact.go).
+  For details of which arguments are considered PII-free, see the [`redact` package](https://github.com/cockroachdb/redact).
 
 It is possible to opt additional in to Sentry reporting, using either of the following methods:
 
@@ -293,7 +294,7 @@ If your error type is a wrapper, you should implement a `Format()`
 method that redirects to `errors.FormatError()`, otherwise `%+v` will
 not work. Additionally, if your type has a payload not otherwise
 visible via `Error()`, you may want to implement
-`errors.Formatter`. See [making `%+v` work with your
+`errors.SafeFormatter`. See [making `%+v` work with your
 type](#Making-v-work-with-your-type) below for details.
 
 Finally, you may want your new error type to be portable across
@@ -445,8 +446,8 @@ In short:
   type, this will disable the recursive application of the `%+v` flag
   to the causes chained from your wrapper.)
 
-- You may optionally implement the `errors.Formatter` interface:
-  `FormatError(p errors.Printer) (next error)`.  This is optional, but
+- You may optionally implement the `errors.SafeFormatter` interface:
+  `SafeFormatError(p errors.Printer) (next error)`.  This is optional, but
   should be done when some details are not included by `Error()` and
   should be emitted upon `%+v`.
 
@@ -458,11 +459,11 @@ achieves this as follows:
 func (w *withHTTPCode) Format(s fmt.State, verb rune) { errors.FormatError(w, s, verb) }
 
 // FormatError() formats the error.
-func (w *withHTTPCode) FormatError(p errors.Printer) (next error) {
+func (w *withHTTPCode) SafeFormatError(p errors.Printer) (next error) {
 	// Note: no need to print out the cause here!
 	// FormatError() knows how to do this automatically.
 	if p.Detail() {
-		p.Printf("http code: %d", w.code)
+		p.Printf("http code: %d", errors.Safe(w.code))
 	}
 	return w.cause
 }
@@ -492,22 +493,22 @@ proposal](https://go.googlesource.com/proposal/+/master/design/29934-error-value
 
 ## Error composition (summary)
 
-| Constructor                        | Composes                                                                                         |
-|------------------------------------|--------------------------------------------------------------------------------------------------|
-| `New`                              | `NewWithDepth` (see below)                                                                       |
-| `Errorf`                           | = `Newf`                                                                                         |
-| `Newf`                             | `NewWithDepthf` (see below)                                                                      |
-| `WithMessage`                      | = `pkgErr.WithMessage`                                                                           |
-| `Wrap`                             | `WrapWithDepth` (see below)                                                                      |
-| `Wrapf`                            | `WrapWithDepthf` (see below)                                                                     |
-| `AssertionFailed`                  | `AssertionFailedWithDepthf` (see below)                                                          |
-| `NewWithDepth`                     | `goErr.New` + `WithStackDepth` (see below)                                                       |
-| `NewWithDepthf`                    | `fmt.Errorf` + `WithSafeDetails` + `WithStackDepth`                                              |
-| `WithMessagef`                     | `pkgErr.WithMessagef` + `WithSafeDetails`                                                        |
-| `WrapWithDepth`                    | `WithMessage` + `WithStackDepth`                                                                 |
-| `WrapWithDepthf`                   | `WithMessage` + `WithStackDepth` + `WithSafeDetails`                                             |
-| `AssertionFailedWithDepthf`        | `fmt.Errorf` + `WithStackDepth` + `WithSafeDetails` + `WithAssertionFailure`                     |
-| `NewAssertionErrorWithWrappedErrf` | `HandledWithMessagef` (barrier) + `WithStackDepth` + `WithSafeDetails` +  `WithAssertionFailure` |
+| Constructor                        | Composes                                                                          |
+|------------------------------------|-----------------------------------------------------------------------------------|
+| `New`                              | `NewWithDepth` (see below)                                                        |
+| `Errorf`                           | = `Newf`                                                                          |
+| `Newf`                             | `NewWithDepthf` (see below)                                                       |
+| `WithMessage`                      | custom wrapper with message prefix and knowledge of safe strings                  |
+| `Wrap`                             | `WrapWithDepth` (see below)                                                       |
+| `Wrapf`                            | `WrapWithDepthf` (see below)                                                      |
+| `AssertionFailed`                  | `AssertionFailedWithDepthf` (see below)                                           |
+| `NewWithDepth`                     | custom leaf with knowledge of safe strings + `WithStackDepth` (see below)         |
+| `NewWithDepthf`                    | custom leaf with knowledge of safe strings + `WithSafeDetails` + `WithStackDepth` |
+| `WithMessagef`                     | custom wrapper with message prefix and knowledge of safe strings                  |
+| `WrapWithDepth`                    | `WithMessage` + `WithStackDepth`                                                  |
+| `WrapWithDepthf`                   | `WithMessagef` + `WithStackDepth`                                                 |
+| `AssertionFailedWithDepthf`        | `NewWithDepthf` + `WithAssertionFailure`                                          |
+| `NewAssertionErrorWithWrappedErrf` | `HandledWithMessagef` (barrier) + `WrapWithDepthf` +  `WithAssertionFailure`      |
 
 ## API (not constructing error objects)
 
@@ -518,6 +519,13 @@ func UnwrapOnce(err error) error
 func Cause(err error) error // compatibility
 func Unwrap(err error) error // compatibility
 type Wrapper interface { ... } // compatibility
+
+// Error formatting.
+type Formatter interface { ... } // compatibility, not recommended
+type SafeFormatter interface { ... }
+type Printer interface { ... }
+func FormatError(err error, s fmt.State, verb rune)
+func Formattable(err error) fmt.Formatter
 
 // Identify errors.
 func Is(err, reference error) bool
@@ -553,9 +561,13 @@ func GetReportableStackTrace(err error) *ReportableStackTrace
 type SafeDetailPayload struct { ... }
 func GetAllSafeDetails(err error) []SafeDetailPayload
 func GetSafeDetails(err error) (payload SafeDetailPayload)
+
+// Obsolete APIs.
 type SafeMessager interface { ... }
-func Safe(v interface{}) SafeMessager
 func Redact(r interface{}) string
+
+// Aliases redact.Safe.
+func Safe(v interface{}) SafeMessager
 
 // Assertion failures.
 func HasAssertionFailure(err error) bool

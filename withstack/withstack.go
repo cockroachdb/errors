@@ -58,7 +58,7 @@ type withStack struct {
 
 var _ error = (*withStack)(nil)
 var _ fmt.Formatter = (*withStack)(nil)
-var _ errbase.Formatter = (*withStack)(nil)
+var _ errbase.SafeFormatter = (*withStack)(nil)
 var _ errbase.SafeDetailer = (*withStack)(nil)
 
 func (w *withStack) Error() string { return w.cause.Error() }
@@ -68,15 +68,17 @@ func (w *withStack) Unwrap() error { return w.cause }
 // Format implements the fmt.Formatter interface.
 func (w *withStack) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 
-func (w *withStack) FormatError(p errbase.Printer) error {
+// SafeFormatError implements the errbase.SafeFormatter interface.
+func (w *withStack) SafeFormatError(p errbase.Printer) error {
 	if p.Detail() {
-		p.Print("attached stack trace")
+		p.Printf("attached stack trace")
 	}
 	// We do not print the stack trace ourselves - errbase.FormatError()
 	// does this for us.
 	return w.cause
 }
 
+// SafeDetails implements the errbase.SafeDetailer interface.
 func (w *withStack) SafeDetails() []string {
 	return []string{fmt.Sprintf("%+v", w.StackTrace())}
 }

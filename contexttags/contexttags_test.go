@@ -27,6 +27,7 @@ import (
 	"github.com/cockroachdb/errors/markers"
 	"github.com/cockroachdb/errors/testutils"
 	"github.com/cockroachdb/logtags"
+	"github.com/cockroachdb/redact"
 )
 
 func TestWithContext(t *testing.T) {
@@ -87,7 +88,7 @@ func TestWithContext(t *testing.T) {
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }
 
-func TestTagRedaction(t *testing.T) {
+func TestTagRedactionInSafeDetails(t *testing.T) {
 	tt := testutils.T{T: t}
 
 	// Create an example context with decoration.
@@ -105,10 +106,13 @@ func TestTagRedaction(t *testing.T) {
 	ctx2 = logtags.AddTag(ctx2, "planet1", "universe")
 	ctx2 = logtags.AddTag(ctx2, "planet2", errors.Safe("universe"))
 
-	// This will be our reference expected value.
+	// rm is what's left over after redaction.
+	rm := string(redact.RedactableBytes(redact.RedactedMarker()).StripMarkers())
+
+	// This will be our reference expected value in "safe details" strings.
 	refStrings := [][]string{
-		[]string{"planet1=string:<redacted>", "planet2=universe"},
-		[]string{"foo1=int:<redacted>", "xint:<redacted>", "bar1", "foo2=123", "y456", "bar2"},
+		[]string{"planet1=" + rm, "planet2=universe"},
+		[]string{"foo1=" + rm, "x" + rm, "bar1", "foo2=123", "y456", "bar2"},
 	}
 
 	// Construct the error object.

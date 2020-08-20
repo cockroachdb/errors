@@ -26,6 +26,8 @@ import (
 	"github.com/cockroachdb/errors/testutils"
 )
 
+// TestFormat checks edge cases of the utilities in this package.
+// More tests are exercised in the "fmttests" package.
 func TestFormat(t *testing.T) {
 	tt := testutils.T{t}
 
@@ -35,42 +37,12 @@ func TestFormat(t *testing.T) {
 		expFmtSimple  string
 		expFmtVerbose string
 	}{
-		{"fmt wrap + local msg + fmt leaf",
-			&werrFmt{
-				errutil.WithMessage(
-					goErr.New("woo"), "waa"),
-				"wuu"},
-			`wuu: waa: woo`, `
-wuu: waa: woo
-(1) wuu
-  | -- this is wuu's
-  | multi-line payload
-Wraps: (2) waa
-Wraps: (3) woo
-Error types: (1) *errutil_test.werrFmt (2) *errutil.withMessage (3) *errors.errorString`,
-		},
-
-		{"newf",
-			errutil.Newf("waa: %s", "hello"),
-			`waa: hello`, `
-waa: hello
-(1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
-  | <tab><path>
-  | testing.tRunner
-  | <tab><path>
-  | runtime.goexit
-  | <tab><path>
-Wraps: (2) 2 safe details enclosed
-Wraps: (3) waa: hello
-Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errors.errorString`,
-		},
-
 		{"newf-empty",
 			errutil.Newf(emptyString),
 			``, `
 
 (1) attached stack trace
+  -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
@@ -78,40 +50,23 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erro
   | runtime.goexit
   | <tab><path>
 Wraps: (2)
-Error types: (1) *withstack.withStack (2) *errors.errorString`,
+Error types: (1) *withstack.withStack (2) *errutil.leafError`,
 		},
 
 		{"newf-empty-arg",
 			errutil.Newf(emptyString, 123),
-			`%!(EXTRA int=123)`, `
-%!(EXTRA int=123)
+			`%!(EXTRA *redact.escapeArg=123)`, `
+%!(EXTRA *redact.escapeArg=123)
 (1) attached stack trace
+  -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (2) 2 safe details enclosed
-Wraps: (3) %!(EXTRA int=123)
-Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errors.errorString`,
-		},
-
-		{"wrapf",
-			errutil.Wrapf(goErr.New("woo"), "waa: %s", "hello"),
-			`waa: hello: woo`, `
-waa: hello: woo
-(1) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
-  | <tab><path>
-  | testing.tRunner
-  | <tab><path>
-  | runtime.goexit
-  | <tab><path>
-Wraps: (2) 2 safe details enclosed
-Wraps: (3) waa: hello
-Wraps: (4) woo
-Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *errors.errorString`,
+Wraps: (2) %!(EXTRA *redact.escapeArg=123)
+Error types: (1) *withstack.withStack (2) *errutil.leafError`,
 		},
 
 		{"wrapf-empty",
@@ -119,6 +74,7 @@ Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *erru
 			`woo`, `
 woo
 (1) attached stack trace
+  -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
@@ -131,43 +87,19 @@ Error types: (1) *withstack.withStack (2) *errors.errorString`,
 
 		{"wrapf-empty-arg",
 			errutil.Wrapf(goErr.New("woo"), emptyString, 123),
-			`%!(EXTRA int=123): woo`, `
-%!(EXTRA int=123): woo
+			`%!(EXTRA *redact.escapeArg=123): woo`, `
+%!(EXTRA *redact.escapeArg=123): woo
 (1) attached stack trace
+  -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (2) 2 safe details enclosed
-Wraps: (3) %!(EXTRA int=123)
-Wraps: (4) woo
-Error types: (1) *withstack.withStack (2) *safedetails.withSafeDetails (3) *errutil.withMessage (4) *errors.errorString`,
-		},
-
-		{"handled assert",
-			errutil.HandleAsAssertionFailure(&werrFmt{goErr.New("woo"), "wuu"}),
-			`wuu: woo`,
-			`
-wuu: woo
-(1) assertion failure
-Wraps: (2) attached stack trace
-  | github.com/cockroachdb/errors/errutil_test.TestFormat
-  | <tab><path>
-  | testing.tRunner
-  | <tab><path>
-  | runtime.goexit
-  | <tab><path>
-Wraps: (3) wuu: woo
-  | -- cause hidden behind barrier
-  | wuu: woo
-  | (1) wuu
-  |   | -- this is wuu's
-  |   | multi-line payload
-  | Wraps: (2) woo
-  | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError`,
+Wraps: (2) %!(EXTRA *redact.escapeArg=123)
+Wraps: (3) woo
+Error types: (1) *withstack.withStack (2) *errutil.withPrefix (3) *errors.errorString`,
 		},
 
 		{"assert + wrap",
@@ -176,15 +108,15 @@ Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barr
 waa: hello: wuu: woo
 (1) assertion failure
 Wraps: (2) attached stack trace
+  -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (3) 2 safe details enclosed
-Wraps: (4) waa: hello
-Wraps: (5) wuu: woo
+Wraps: (3) waa: hello
+Wraps: (4) wuu: woo
   | -- cause hidden behind barrier
   | wuu: woo
   | (1) wuu
@@ -192,7 +124,7 @@ Wraps: (5) wuu: woo
   |   | multi-line payload
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safedetails.withSafeDetails (4) *errutil.withMessage (5) *barriers.barrierError`,
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierError`,
 		},
 
 		{"assert + wrap empty",
@@ -201,6 +133,7 @@ Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safe
 wuu: woo
 (1) assertion failure
 Wraps: (2) attached stack trace
+  -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
@@ -220,19 +153,19 @@ Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barr
 
 		{"assert + wrap empty+arg",
 			errutil.NewAssertionErrorWithWrappedErrf(&werrFmt{goErr.New("woo"), "wuu"}, emptyString, 123),
-			`%!(EXTRA int=123): wuu: woo`, `
-%!(EXTRA int=123): wuu: woo
+			`%!(EXTRA *redact.escapeArg=123): wuu: woo`, `
+%!(EXTRA *redact.escapeArg=123): wuu: woo
 (1) assertion failure
 Wraps: (2) attached stack trace
+  -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
   | <tab><path>
   | testing.tRunner
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (3) 2 safe details enclosed
-Wraps: (4) %!(EXTRA int=123)
-Wraps: (5) wuu: woo
+Wraps: (3) %!(EXTRA *redact.escapeArg=123)
+Wraps: (4) wuu: woo
   | -- cause hidden behind barrier
   | wuu: woo
   | (1) wuu
@@ -240,7 +173,7 @@ Wraps: (5) wuu: woo
   |   | multi-line payload
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *safedetails.withSafeDetails (4) *errutil.withMessage (5) *barriers.barrierError`,
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierError`,
 		},
 	}
 

@@ -23,9 +23,11 @@ import (
 	"testing"
 
 	"github.com/cockroachdb/errors/errbase"
+	_ "github.com/cockroachdb/errors/errutil"
 	"github.com/cockroachdb/errors/markers"
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/testutils"
+	"github.com/cockroachdb/redact"
 )
 
 func TestDetailCapture(t *testing.T) {
@@ -74,6 +76,9 @@ func TestFormat(t *testing.T) {
 	baseErr := errors.New("woo")
 	const woo = `woo`
 	const waawoo = `waa: woo`
+	// rm is what's left over after redaction.
+	rm := string(redact.RedactableBytes(redact.RedactedMarker()).StripMarkers())
+
 	testCases := []struct {
 		name          string
 		err           error
@@ -110,7 +115,7 @@ payload 1
 `},
 
 		{"safe nofmt+onearg",
-			safedetails.WithSafeDetails(baseErr, "", 123),
+			safedetails.WithSafeDetails(baseErr, "%v", 123),
 			woo, `
 woo
 (1) 2 safe details enclosed
@@ -118,13 +123,14 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-  (1) -- arg 1: int:<redacted>
+  (0) ` + rm + `
+  (1) -- arg 1 (int): ` + rm + `
 payload 1
   (empty)
 `},
 
 		{"safe err",
-			safedetails.WithSafeDetails(baseErr, "a %v",
+			safedetails.WithSafeDetails(baseErr, "prefix: %v",
 				&os.PathError{
 					Op:   "open",
 					Path: "/hidden",
@@ -137,9 +143,11 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-  (0) format: "a %v"
-  (1) -- arg 1 (error): *errors.errorString: file does not exist
-    *os.PathError: open
+  (0) prefix: open ` + rm + `: file does not exist
+  (1) -- arg 1 (*os.PathError): open ` + rm + `: file does not exist
+    (1) open ` + rm + `
+    Wraps: (2) file does not exist
+    Error types: (1) *os.PathError (2) *errors.errorString
 payload 1
   (empty)
 `},
@@ -153,9 +161,9 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-  (0) format: "a %s %s"
-  (1) -- arg 1: string:<redacted>
-  (2) -- arg 2: c
+  (0) a ` + rm + ` c
+  (1) -- arg 1 (string): ` + rm + `
+  (2) -- arg 2 (redact.safeWrapper): c
 payload 1
   (empty)
 `},
@@ -167,14 +175,14 @@ waa: woo
 (1) 3 safe details enclosed
 Wraps: (2) waa
   | -- this is waa's
-  | multi-line payload
+  | multi-line safe payload
 Wraps: (3) woo
 Error types: (1) *safedetails.withSafeDetails (2) *safedetails_test.werrFmt (3) *errors.errorString`,
 			// Payload
 			`payload 0
-  (0) format: "a %s %s"
-  (1) -- arg 1: string:<redacted>
-  (2) -- arg 2: c
+  (0) a ` + rm + ` c
+  (1) -- arg 1 (string): ` + rm + `
+  (2) -- arg 2 (redact.safeWrapper): c
 payload 1
   (empty)
 payload 2
@@ -187,7 +195,7 @@ payload 2
 waa: woo
 (1) waa
   | -- this is waa's
-  | multi-line payload
+  | multi-line safe payload
 Wraps: (2) 3 safe details enclosed
 Wraps: (3) woo
 Error types: (1) *safedetails_test.werrFmt (2) *safedetails.withSafeDetails (3) *errors.errorString`,
@@ -195,9 +203,9 @@ Error types: (1) *safedetails_test.werrFmt (2) *safedetails.withSafeDetails (3) 
 			`payload 0
   (empty)
 payload 1
-  (0) format: "a %s %s"
-  (1) -- arg 1: string:<redacted>
-  (2) -- arg 2: c
+  (0) a ` + rm + ` c
+  (1) -- arg 1 (string): ` + rm + `
+  (2) -- arg 2 (redact.safeWrapper): c
 payload 2
   (empty)
 `},
@@ -213,9 +221,13 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-  (0) format: "a %v"
-  (1) -- arg 1 (error): *errors.errorString: <redacted>
-    *safedetails_test.werrFmt: <redacted>
+  (0) a ` + rm + `: ` + rm + `
+  (1) -- arg 1 (*safedetails_test.werrFmt): ` + rm + `: ` + rm + `
+    (1) ` + rm + `
+      | -- this is ` + rm + `'s
+      | multi-line safe payload
+    Wraps: (2) ` + rm + `
+    Error types: (1) *safedetails_test.werrFmt (2) *errors.errorString
 payload 1
   (empty)
 `},
@@ -233,11 +245,11 @@ Wraps: (3) woo
 Error types: (1) *safedetails.withSafeDetails (2) *safedetails.withSafeDetails (3) *errors.errorString`,
 			// Payload
 			`payload 0
-  (0) format: "delicious %s"
-  (1) -- arg 1: coffee
+  (0) delicious coffee
+  (1) -- arg 1 (redact.safeWrapper): coffee
 payload 1
-  (0) format: "hello %s"
-  (1) -- arg 1: world
+  (0) hello world
+  (1) -- arg 1 (redact.safeWrapper): world
 payload 2
   (empty)
 `},
@@ -247,7 +259,8 @@ payload 2
 				/* this error is an argument */
 				safedetails.WithSafeDetails(
 					errors.New("wuu"),
-					"b %v\nmulti line", safedetails.Safe("waa\nmulti line"))),
+					"b %v\nmulti line",
+					safedetails.Safe("waa\nmulti line"))),
 			woo,
 			`
 woo
@@ -256,12 +269,11 @@ Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
-  (0) format: "a %v"
-  (1) -- arg 1 (error): *errors.errorString: <redacted>
-    *safedetails.withSafeDetails: format: "b %v\nmulti line"
-      (more details:)
-      -- arg 1: waa
-      multi line
+  (0) a ` + rm + `
+  (1) -- arg 1 (*safedetails.withSafeDetails): ` + rm + `
+    (1) 2 safe details enclosed
+    Wraps: (2) ` + rm + `
+    Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString
 payload 1
   (empty)
 `},
@@ -312,15 +324,15 @@ type werrFmt struct {
 	msg   string
 }
 
-var _ errbase.Formatter = (*werrFmt)(nil)
+var _ errbase.SafeFormatter = (*werrFmt)(nil)
 
 func (e *werrFmt) Error() string                 { return fmt.Sprintf("%s: %v", e.msg, e.cause) }
 func (e *werrFmt) Unwrap() error                 { return e.cause }
 func (e *werrFmt) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
-func (e *werrFmt) FormatError(p errbase.Printer) error {
+func (e *werrFmt) SafeFormatError(p errbase.Printer) error {
 	p.Print(e.msg)
 	if p.Detail() {
-		p.Printf("-- this is %s's\nmulti-line payload", e.msg)
+		p.Printf("-- this is %s's\nmulti-line safe payload", e.msg)
 	}
 	return e.cause
 }

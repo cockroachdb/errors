@@ -12,11 +12,10 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-package errbase_test
+package fmttests
 
 import (
 	"context"
-	goErr "errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -24,90 +23,13 @@ import (
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/testutils"
+	"github.com/gogo/protobuf/proto"
 	pkgErr "github.com/pkg/errors"
 )
-
-func TestSimplifyStacks(t *testing.T) {
-	leaf := func() error {
-		return pkgErr.New("hello world")
-	}
-	wrapper := func() error {
-		err := leaf()
-		return pkgErr.WithStack(err)
-	}
-	errWrapper := wrapper()
-	t.Logf("error: %+v", errWrapper)
-
-	t.Run("low level API", func(t *testing.T) {
-		tt := testutils.T{t}
-		// Extract the stack trace from the leaf.
-		errLeaf := errbase.UnwrapOnce(errWrapper)
-		leafP, ok := errLeaf.(errbase.StackTraceProvider)
-		if !ok {
-			t.Fatal("leaf error does not provide stack trace")
-		}
-		leafT := leafP.StackTrace()
-		spv := fmtClean(leafT)
-		t.Logf("-- leaf trace --%+v", spv)
-		if !strings.Contains(spv, "TestSimplifyStacks") {
-			t.Fatalf("expected test function in trace, got:%v", spv)
-		}
-		leafLines := strings.Split(spv, "\n")
-
-		// Extract the stack trace from the wrapper.
-		wrapperP, ok := errWrapper.(errbase.StackTraceProvider)
-		if !ok {
-			t.Fatal("wrapper error does not provide stack trace")
-		}
-		wrapperT := wrapperP.StackTrace()
-		spv = fmtClean(wrapperT)
-		t.Logf("-- wrapper trace --%+v", spv)
-		wrapperLines := strings.Split(spv, "\n")
-
-		// Sanity check before we verify the result.
-		tt.Check(len(wrapperLines) > 0)
-		tt.CheckDeepEqual(wrapperLines[3:], leafLines[5:])
-
-		// Elide the suffix and verify that we arrive to the same result.
-		simplified, hasElided := errbase.ElideSharedStackTraceSuffix(leafT, wrapperT)
-		spv = fmtClean(simplified)
-		t.Logf("-- simplified (%v) --%+v", hasElided, spv)
-		simplifiedLines := strings.Split(spv, "\n")
-		tt.CheckDeepEqual(simplifiedLines, wrapperLines[0:3])
-	})
-
-	t.Run("high level API", func(t *testing.T) {
-		tt := testutils.T{t}
-
-		spv := fmtClean(&errFormatter{errWrapper})
-		tt.CheckStringEqual(spv, `hello world
-(1)
-  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func2
-  | <tab><path>:<lineno>
-  | [...repeated from below...]
-Wraps: (2) hello world
-  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func1
-  | <tab><path>:<lineno>
-  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks.func2
-  | <tab><path>:<lineno>
-  | github.com/cockroachdb/errors/errbase_test.TestSimplifyStacks
-  | <tab><path>:<lineno>
-  | testing.tRunner
-  | <tab><path>:<lineno>
-  | runtime.goexit
-  | <tab><path>:<lineno>
-Error types: (1) *errors.withStack (2) *errors.fundamental`)
-	})
-}
-
-type errFormatter struct{ err error }
-
-func (f *errFormatter) Format(s fmt.State, verb rune) { errbase.FormatError(f.err, s, verb) }
 
 func TestFormat(t *testing.T) {
 	tt := testutils.T{t}
 
-	ctx := context.Background()
 	const woo = `woo`
 	const waa = `waa`
 	const mwoo = "woo\nother"
@@ -125,210 +47,6 @@ func TestFormat(t *testing.T) {
 		// specific case.
 		expFmtQuote string
 	}{
-		{"nofmt leaf", &errNoFmt{woo}, woo, woo, ``},
-		{"nofmt leaf multiline", &errNoFmt{mwoo}, mwoo, mwoo, ``},
-
-		{"fmt-old leaf", &errFmto{woo}, woo, `
-woo
--- this is woo's
-multi-line payload`, ``,
-		},
-
-		{"fmt-old leaf multiline", &errFmto{mwoo}, mwoo, `
-woo
-other
--- this is woo
-other's
-multi-line payload`, ``,
-		},
-
-		{"fmt-partial leaf",
-			&errFmtp{woo},
-			woo, `
-woo
-(1) woo
-Error types: (1) *errbase_test.errFmtp`, ``,
-		},
-
-		{"fmt-partial leaf multiline",
-			&errFmtp{mwoo},
-			mwoo, `
-woo
-(1) woo
-  | other
-Error types: (1) *errbase_test.errFmtp`, ``,
-		},
-
-		{"fmt leaf",
-			&errFmt{woo},
-			woo, `
-woo
-(1) woo
-  | -- this is woo's
-  | multi-line leaf payload
-Error types: (1) *errbase_test.errFmt`, ``,
-		},
-
-		{"fmt leaf multiline",
-			&errFmt{mwoo},
-			mwoo, `
-woo
-(1) woo
-  | other
-  | -- this is woo
-  | other's
-  | multi-line leaf payload
-Error types: (1) *errbase_test.errFmt`, ``,
-		},
-
-		{"nofmt leaf + nofmt wrap",
-			&werrNoFmt{&errNoFmt{woo}, waa},
-			waawoo, waawoo, ``},
-
-		{"nofmt leaf + fmt-old wrap",
-			&werrFmto{&errNoFmt{woo}, waa},
-			waawoo, `
-woo
--- this is waa's
-multi-line payload (fmt)`, ``,
-		},
-
-		{"nofmt leaf + fmt-partial wrap",
-			&werrFmtp{&errNoFmt{woo}, waa},
-			waawoo, `
-waa: woo
-(1) waa
-Wraps: (2) woo
-Error types: (1) *errbase_test.werrFmtp (2) *errbase_test.errNoFmt`, ``,
-		},
-
-		{"nofmt leaf + fmt wrap",
-			&werrFmt{&errNoFmt{woo}, waa},
-			waawoo, `
-waa: woo
-(1) waa
-  | -- this is waa's
-  | multi-line wrapper payload
-Wraps: (2) woo
-Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errNoFmt`, ``,
-		},
-
-		{"fmt-old leaf + nofmt wrap",
-			&werrNoFmt{&errFmto{woo}, waa},
-			waawoo, waawoo, ``},
-
-		{"fmt-old leaf + fmt-old wrap",
-			&werrFmto{&errFmto{woo}, waa},
-			waawoo, `
-woo
--- this is woo's
-multi-line payload
--- this is waa's
-multi-line payload (fmt)`, ``,
-		},
-
-		{"fmt-old leaf + fmt-partial wrap",
-			&werrFmtp{&errFmto{woo}, waa},
-			waawoo, `
-waa: woo
-(1) waa
-Wraps: (2) woo
-  | -- this is woo's
-  | multi-line payload
-Error types: (1) *errbase_test.werrFmtp (2) *errbase_test.errFmto`, ``,
-		},
-
-		{"fmt-old leaf + fmt wrap",
-			&werrFmt{&errFmto{woo}, waa},
-			waawoo, `
-waa: woo
-(1) waa
-  | -- this is waa's
-  | multi-line wrapper payload
-Wraps: (2) woo
-  | -- this is woo's
-  | multi-line payload
-Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errFmto`, ``,
-		},
-
-		{"fmt-partial leaf + nofmt wrap",
-			&werrNoFmt{&errFmtp{woo}, waa},
-			waawoo, waawoo, ``},
-
-		{"fmt-partial leaf + fmt-old wrap",
-			&werrFmto{&errFmtp{woo}, waa},
-			waawoo, `
-woo
-(1) woo
-Error types: (1) *errbase_test.errFmtp
--- this is waa's
-multi-line payload (fmt)`, ``,
-		},
-
-		{"fmt-partial leaf + fmt-partial wrap",
-			&werrFmtp{&errFmtp{woo}, waa},
-			waawoo, `
-waa: woo
-(1) waa
-Wraps: (2) woo
-  | (1) woo
-  | Error types: (1) *errbase_test.errFmtp
-Error types: (1) *errbase_test.werrFmtp (2) *errbase_test.errFmtp`, ``,
-		},
-
-		{"fmt-partial leaf + fmt wrap",
-			&werrFmt{&errFmtp{woo}, waa},
-			waawoo, `
-waa: woo
-(1) waa
-  | -- this is waa's
-  | multi-line wrapper payload
-Wraps: (2) woo
-  | (1) woo
-  | Error types: (1) *errbase_test.errFmtp
-Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errFmtp`, ``,
-		},
-
-		{"fmt leaf + nofmt wrap",
-			&werrNoFmt{&errFmt{woo}, waa},
-			waawoo, waawoo, ``},
-
-		{"fmt leaf + fmt-old wrap",
-			&werrFmto{&errFmt{woo}, waa},
-			waawoo, `
-woo
-(1) woo
-  | -- this is woo's
-  | multi-line leaf payload
-Error types: (1) *errbase_test.errFmt
--- this is waa's
-multi-line payload (fmt)`, ``,
-		},
-
-		{"fmt leaf + fmt-partial wrap",
-			&werrFmtp{&errFmt{woo}, waa},
-			waawoo, `
-waa: woo
-(1) waa
-Wraps: (2) woo
-  | -- this is woo's
-  | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmtp (2) *errbase_test.errFmt`, ``,
-		},
-
-		{"fmt leaf + fmt wrap",
-			&werrFmt{&errFmt{woo}, waa},
-			waawoo, `
-waa: woo
-(1) waa
-  | -- this is waa's
-  | multi-line wrapper payload
-Wraps: (2) woo
-  | -- this is woo's
-  | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errFmt`, ``,
-		},
-
 		{"nofmt wrap in + nofmt wrap out",
 			&werrNoFmt{&werrNoFmt{&errFmt{woo}, waa}, "wuu"},
 			wuuwaawoo, wuuwaawoo, ``},
@@ -352,7 +70,7 @@ Wraps: (2) waa
 Wraps: (3) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmt (2) *errbase_test.werrNoFmt (3) *errbase_test.errFmt`, ``,
+Error types: (1) *fmttests.werrFmt (2) *fmttests.werrNoFmt (3) *fmttests.errFmt`, ``,
 		},
 
 		{"fmt-old wrap in + nofmt wrap out",
@@ -366,7 +84,7 @@ woo
 (1) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.errFmt
+Error types: (1) *fmttests.errFmt
 -- this is waa's
 multi-line payload (fmt)
 -- this is wuu's
@@ -384,7 +102,7 @@ Wraps: (2) waa
 Wraps: (3) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmt (2) *errbase_test.werrFmto (3) *errbase_test.errFmt`, ``,
+Error types: (1) *fmttests.werrFmt (2) *fmttests.werrFmto (3) *fmttests.errFmt`, ``,
 		},
 
 		{"fmt wrap in + nofmt wrap out",
@@ -401,7 +119,7 @@ waa: woo
 Wraps: (2) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmt (2) *errbase_test.errFmt
+Error types: (1) *fmttests.werrFmt (2) *fmttests.errFmt
 -- this is wuu's
 multi-line payload (fmt)`, ``,
 		},
@@ -419,61 +137,10 @@ Wraps: (2) waa
 Wraps: (3) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmt (2) *errbase_test.werrFmt (3) *errbase_test.errFmt`, ``,
+Error types: (1) *fmttests.werrFmt (2) *fmttests.werrFmt (3) *fmttests.errFmt`, ``,
 		},
-
-		// Opaque leaf.
-		{"opaque leaf",
-			errbase.DecodeError(ctx, errbase.EncodeError(ctx, &errNoFmt{woo})),
-			woo, `
-woo
-(1) woo
-  |
-  | (opaque error leaf)
-  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.errNoFmt
-Error types: (1) *errbase.opaqueLeaf`, ``},
-
-		// Opaque wrapper.
-		{"opaque wrapper",
-			errbase.DecodeError(ctx, errbase.EncodeError(ctx, &werrNoFmt{goErr.New(woo), waa})),
-			waawoo, `
-waa: woo
-(1) waa
-  |
-  | (opaque error wrapper)
-  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
-Wraps: (2) woo
-Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString`, ``},
-
-		{"opaque wrapper+wrapper",
-			errbase.DecodeError(ctx, errbase.EncodeError(ctx, &werrNoFmt{&werrNoFmt{goErr.New(woo), waa}, "wuu"})),
-			wuuwaawoo, `
-wuu: waa: woo
-(1) wuu
-  |
-  | (opaque error wrapper)
-  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
-Wraps: (2) waa
-  |
-  | (opaque error wrapper)
-  | type name: github.com/cockroachdb/errors/errbase_test/*errbase_test.werrNoFmt
-Wraps: (3) woo
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errors.errorString`, ``},
 
 		// Compatibility with github.com/pkg/errors.
-
-		{"pkg msg + fmt leaf",
-			pkgErr.WithMessage(&errFmt{woo}, waa),
-			waawoo, `
-woo
-(1) woo
-  | -- this is woo's
-  | multi-line leaf payload
-Error types: (1) *errbase_test.errFmt
-waa`,
-			// The implementation of (*pkgErr.withMessage).Format() is wrong for %q. Oh well...
-			`waa: woo`,
-		},
 
 		{"fmt wrap + pkg msg + fmt leaf",
 			&werrFmt{pkgErr.WithMessage(&errFmt{woo}, waa), "wuu"},
@@ -486,7 +153,7 @@ Wraps: (2) waa
 Wraps: (3) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmt (2) *errors.withMessage (3) *errbase_test.errFmt`, ``,
+Error types: (1) *fmttests.werrFmt (2) *errors.withMessage (3) *fmttests.errFmt`, ``,
 		},
 
 		{"fmt wrap + pkg msg1 + pkg.msg2 + fmt leaf",
@@ -506,7 +173,7 @@ Wraps: (3) waa2
 Wraps: (4) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmt (2) *errors.withMessage (3) *errors.withMessage (4) *errbase_test.errFmt`, ``,
+Error types: (1) *fmttests.werrFmt (2) *errors.withMessage (3) *errors.withMessage (4) *fmttests.errFmt`, ``,
 		},
 
 		{"fmt wrap + pkg stack + fmt leaf",
@@ -517,7 +184,8 @@ waa: woo
   | -- this is waa's
   | multi-line wrapper payload
 Wraps: (2)
-  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.TestFormat
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>
@@ -526,28 +194,19 @@ Wraps: (2)
 Wraps: (3) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrFmt (2) *errors.withStack (3) *errbase_test.errFmt`, ``,
-		},
-
-		{"delegating wrap",
-			&werrDelegate{&errNoFmt{woo}}, "prefix: woo", `
-prefix: woo
-(1) prefix
-  | -- multi-line
-  | wrapper payload
-Wraps: (2) woo
-Error types: (1) *errbase_test.werrDelegate (2) *errbase_test.errNoFmt`, ``,
+Error types: (1) *fmttests.werrFmt (2) *errors.withStack (3) *fmttests.errFmt`, ``,
 		},
 
 		{"delegating wrap + pkg stack + fmt leaf",
-			&werrDelegate{pkgErr.WithStack(&errFmt{woo})},
+			&werrDelegate{pkgErr.WithStack(&errFmt{woo}), "prefix"},
 			"prefix: woo", `
 prefix: woo
 (1) prefix
   | -- multi-line
   | wrapper payload
 Wraps: (2)
-  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.TestFormat
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>
@@ -556,15 +215,7 @@ Wraps: (2)
 Wraps: (3) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrDelegate (2) *errors.withStack (3) *errbase_test.errFmt`, ``,
-		},
-
-		{"empty wrap",
-			&werrEmpty{&errNoFmt{woo}}, woo, `
-woo
-(1)
-Wraps: (2) woo
-Error types: (1) *errbase_test.werrEmpty (2) *errbase_test.errNoFmt`, ``,
+Error types: (1) *fmttests.werrDelegate (2) *errors.withStack (3) *fmttests.errFmt`, ``,
 		},
 
 		{"empty wrap + pkg stack + fmt leaf",
@@ -573,7 +224,8 @@ Error types: (1) *errbase_test.werrEmpty (2) *errbase_test.errNoFmt`, ``,
 woo
 (1)
 Wraps: (2)
-  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.TestFormat
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>
@@ -582,15 +234,7 @@ Wraps: (2)
 Wraps: (3) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrEmpty (2) *errors.withStack (3) *errbase_test.errFmt`, ``,
-		},
-
-		{"empty delegate wrap",
-			&werrDelegateEmpty{&errNoFmt{woo}}, woo, `
-woo
-(1)
-Wraps: (2) woo
-Error types: (1) *errbase_test.werrDelegateEmpty (2) *errbase_test.errNoFmt`, ``,
+Error types: (1) *fmttests.werrEmpty (2) *errors.withStack (3) *fmttests.errFmt`, ``,
 		},
 
 		{"empty delegate wrap + pkg stack + fmt leaf",
@@ -599,7 +243,8 @@ Error types: (1) *errbase_test.werrDelegateEmpty (2) *errbase_test.errNoFmt`, ``
 woo
 (1)
 Wraps: (2)
-  | github.com/cockroachdb/errors/errbase_test.TestFormat
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.TestFormat
   | <tab><path>:<lineno>
   | testing.tRunner
   | <tab><path>:<lineno>
@@ -608,23 +253,8 @@ Wraps: (2)
 Wraps: (3) woo
   | -- this is woo's
   | multi-line leaf payload
-Error types: (1) *errbase_test.werrDelegateEmpty (2) *errors.withStack (3) *errbase_test.errFmt`, ``,
+Error types: (1) *fmttests.werrDelegateEmpty (2) *errors.withStack (3) *fmttests.errFmt`, ``,
 		},
-
-		{"delegating wrap noprefix + details",
-			&werrDelegateNoPrefix{&errNoFmt{woo}}, woo, `
-woo
-(1) detail
-Wraps: (2) woo
-Error types: (1) *errbase_test.werrDelegateNoPrefix (2) *errbase_test.errNoFmt`, ``,
-		},
-
-		{"wrapper with truncated short msg",
-			&werrWithElidedCause{&errNoFmt{woo}},
-			"overridden message", `overridden message
-(1) overridden message
-Wraps: (2) woo
-Error types: (1) *errbase_test.werrWithElidedCause (2) *errbase_test.errNoFmt`, ``},
 	}
 
 	for _, test := range testCases {
@@ -646,20 +276,33 @@ Error types: (1) *errbase_test.werrWithElidedCause (2) *errbase_test.errNoFmt`, 
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
-			spv := fmtClean(err)
+			spv := fmtClean(fmt.Sprintf("%+v", err))
 			tt.CheckStringEqual(spv, refV)
 		})
 	}
 }
 
-func fmtClean(x interface{}) string {
-	spv := fmt.Sprintf("%+v", x)
+func fmtClean(spv string) string {
 	spv = fileref.ReplaceAllString(spv, "<path>:<lineno>")
+	spv = libref.ReplaceAllString(spv, "<path>")
+	spv = stackref.ReplaceAllString(spv, `&stack{...}`)
+	spv = hexref.ReplaceAllString(spv, "0xAAAABBBB")
 	spv = strings.ReplaceAll(spv, "\t", "<tab>")
 	return spv
 }
 
-var fileref = regexp.MustCompile(`([a-zA-Z0-9\._/@-]*\.(?:go|s):\d+)`)
+var stackref = regexp.MustCompile(`(&(?:errors\.stack|withstack\.stack)\{[^}]*\})`)
+var fileref = regexp.MustCompile(`(` +
+	// Any path ending with .{go,s}:NNN:
+	`[a-zA-Z0-9\._/@-]+\.(?:go|s):\d+` +
+	`)`)
+var libref = regexp.MustCompile(
+	// Any path containing the error library:
+	`((/[a-zA-Z0-9\._/@-]+)+` +
+		`/github.com/cockroachdb/errors` +
+		`(/[a-zA-Z0-9\._/@-]+)*` +
+		`)`)
+var hexref = regexp.MustCompile(`(0x[a-f0-9]{4,})`)
 
 // errNoFmt does neither implement Format() nor FormatError().
 type errNoFmt struct{ msg string }
@@ -692,7 +335,7 @@ func (e *errFmto) Format(s fmt.State, verb rune) {
 			return
 		}
 		fallthrough
-	case 's', 'q':
+	default:
 		fmt.Fprintf(s, fmt.Sprintf("%%%s%c", flags(s), verb), e.msg)
 	}
 }
@@ -711,7 +354,7 @@ func (e *errFmtoDelegate) Format(s fmt.State, verb rune) {
 			return
 		}
 		fallthrough
-	case 's', 'q':
+	default:
 		fmt.Fprintf(s, fmt.Sprintf("%%%s%c", flags(s), verb), e.msg)
 	}
 }
@@ -733,7 +376,7 @@ func (e *werrFmto) Format(s fmt.State, verb rune) {
 			return
 		}
 		fallthrough
-	case 's', 'q':
+	default:
 		fmt.Fprintf(s, fmt.Sprintf("%%%s%c", flags(s), verb), e.Error())
 	}
 }
@@ -751,11 +394,11 @@ func (e *werrFmtoDelegate) Format(s fmt.State, verb rune) {
 	case 'v':
 		if s.Flag('+') {
 			fmt.Fprintf(s, "%+v", e.cause)
-			fmt.Fprint(s, "\n-- multi-line\npayload (fmt)")
+			fmt.Fprintf(s, "\n-- this is %s's\nmulti-line wrapper payload", e.msg)
 			return
 		}
 		fallthrough
-	case 's', 'q':
+	default:
 		fmts := fmt.Sprintf("%%%s%c", flags(s), verb)
 		fmt.Fprintf(s, fmts, e.msg+": "+e.cause.Error())
 	}
@@ -832,7 +475,7 @@ func TestDelegateProtocol(t *testing.T) {
 	tt := testutils.T{t}
 
 	var err error
-	err = &werrDelegate{&errNoFmt{"woo"}}
+	err = &werrDelegate{&errNoFmt{"woo"}, "prefix"}
 	tt.CheckStringEqual(fmt.Sprintf("%v", err), "prefix: woo")
 
 	err = &werrDelegateNoPrefix{&errNoFmt{"woo"}}
@@ -842,6 +485,7 @@ func TestDelegateProtocol(t *testing.T) {
 // werrDelegate delegates its Error() behavior to FormatError().
 type werrDelegate struct {
 	wrapped error
+	msg     string
 }
 
 var _ fmt.Formatter = (*werrDelegate)(nil)
@@ -851,7 +495,7 @@ func (e *werrDelegate) Error() string                 { return fmt.Sprintf("%v",
 func (e *werrDelegate) Cause() error                  { return e.wrapped }
 func (e *werrDelegate) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
 func (e *werrDelegate) FormatError(p errbase.Printer) error {
-	p.Print("prefix")
+	p.Print(e.msg)
 	if p.Detail() {
 		p.Print("-- multi-line\nwrapper payload")
 	}
@@ -878,6 +522,8 @@ func (e *werrDelegateNoPrefix) FormatError(p errbase.Printer) error {
 	return e.wrapped
 }
 
+// werrDelegateEmpty implements Error via fmt.Formatter using FormatError,
+// and has no message nor detail of its own.
 type werrDelegateEmpty struct {
 	wrapped error
 }
@@ -908,12 +554,45 @@ func (e *werrEmpty) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, v
 // short message.
 type werrWithElidedCause struct {
 	wrapped error
+	msg     string
 }
 
 func (e *werrWithElidedCause) Error() string                 { return fmt.Sprintf("%v", e) }
 func (e *werrWithElidedCause) Cause() error                  { return e.wrapped }
 func (e *werrWithElidedCause) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
 func (e *werrWithElidedCause) FormatError(p errbase.Printer) error {
-	p.Print("overridden message")
+	p.Print(e.msg)
 	return nil
+}
+
+// Preserve the type over the network, otherwise the opaqueWrapper
+// takes over, and that does not respect the elision.
+func encodeWithElidedCause(
+	_ context.Context, err error,
+) (prefix string, _ []string, _ proto.Message) {
+	m := err.(*werrWithElidedCause)
+	return m.msg, nil, nil
+}
+
+func decodeWithElidedCause(
+	_ context.Context, cause error, msg string, _ []string, _ proto.Message,
+) error {
+	return &werrWithElidedCause{cause, msg}
+}
+
+func init() {
+	errbase.RegisterWrapperEncoder(errbase.GetTypeKey(&werrWithElidedCause{}), encodeWithElidedCause)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&werrWithElidedCause{}), decodeWithElidedCause)
+}
+
+type werrMigrated struct {
+	cause error
+}
+
+func (w *werrMigrated) Error() string                 { return w.cause.Error() }
+func (w *werrMigrated) Cause() error                  { return w.cause }
+func (w *werrMigrated) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+func init() {
+	errbase.RegisterTypeMigration("some/previous/path", "prevpkg.prevType", (*werrMigrated)(nil))
 }

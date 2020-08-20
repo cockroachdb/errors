@@ -15,11 +15,13 @@
 package errutil
 
 import (
-	goErr "errors"
 	"fmt"
+	"regexp"
 
 	"github.com/cockroachdb/errors/safedetails"
+	"github.com/cockroachdb/errors/secondary"
 	"github.com/cockroachdb/errors/withstack"
+	"github.com/cockroachdb/redact"
 )
 
 // New creates an error with a simple error message.
@@ -43,10 +45,7 @@ func New(msg string) error {
 // trace is configurable.
 // See the doc of `New()` for more details.
 func NewWithDepth(depth int, msg string) error {
-	err := goErr.New(msg)
-	if len(msg) > 0 {
-		err = safedetails.WithSafeDetails(err, msg)
-	}
+	err := error(&leafError{redact.Sprint(redact.Safe(msg))})
 	err = withstack.WithStackDepth(err, 1+depth)
 	return err
 }
@@ -68,13 +67,59 @@ func Newf(format string, args ...interface{}) error {
 // trace is configurable.
 // See the doc of `New()` for more details.
 func NewWithDepthf(depth int, format string, args ...interface{}) error {
-	err := fmt.Errorf(format, args...)
-	if format != "" || len(args) > 0 {
+	// If there's the verb %w in here, shortcut to fmt.Errorf()
+	// and store the safe details as extra payload. That's
+	// because we don't want to re-implement the error wrapping
+	// logic from 'fmt' in there.
+	var err error
+	var errRefs []error
+	for _, a := range args {
+		if e, ok := a.(error); ok {
+			errRefs = append(errRefs, e)
+		}
+	}
+	if hasVerbW.MatchString(format) {
+		err = fmt.Errorf(format, args...)
 		err = safedetails.WithSafeDetails(err, format, args...)
+	} else {
+		err = error(&leafError{redact.Sprintf(format, args...)})
+	}
+	for _, e := range errRefs {
+		err = secondary.WithSecondaryError(err, e)
 	}
 	err = withstack.WithStackDepth(err, 1+depth)
 	return err
 }
+
+var hasVerbW = regexp.MustCompile(
+	`^` +
+		// Ignore any non-%w format directives and other characters:
+		`([^%]+|%` +
+		// A format directive starts with some flags.
+		`[-#0+ ]*` +
+		// Followed by an optional argument number [n].
+		`(\[[0-9]+\])?` +
+		// Followed by an optional width.
+		`(\*|[0-9]+)?` +
+		// followed by an optional precision.
+		`(\.(\*|[0-9]))?` +
+		// We're only interested in non-w verbs here.
+		`[^w]` +
+		// zero or more times.
+		`)*` +
+		// Followed with at least one occurrence of a format directive
+		// with the 'w' verb. We replicate the rules above.
+		`%` +
+		// A format directive starts with some flags.
+		`[-#0+ ]*` +
+		// Followed by an optional argument number [n].
+		`(\[[0-9]+\])?` +
+		// Followed by an optional width.
+		`(\*|[0-9]+)?` +
+		// followed by an optional precision.
+		`(\.(\*|[0-9]))?` +
+		// Just the verb 'w'.
+		`w`)
 
 // Wrap wraps an error with a message prefix.
 // A stack trace is retained.
@@ -97,9 +142,11 @@ func Wrap(err error, msg string) error {
 // trace is configurable.
 // The the doc of `Wrap()` for more details.
 func WrapWithDepth(depth int, err error, msg string) error {
+	if err == nil {
+		return nil
+	}
 	if msg != "" {
 		err = WithMessage(err, msg)
-		err = safedetails.WithSafeDetails(err, msg)
 	}
 	err = withstack.WithStackDepth(err, depth+1)
 	return err
@@ -127,9 +174,20 @@ func Wrapf(err error, format string, args ...interface{}) error {
 // trace is configurable.
 // The the doc of `Wrapf()` for more details.
 func WrapWithDepthf(depth int, err error, format string, args ...interface{}) error {
+	if err == nil {
+		return nil
+	}
+	var errRefs []error
+	for _, a := range args {
+		if e, ok := a.(error); ok {
+			errRefs = append(errRefs, e)
+		}
+	}
 	if format != "" || len(args) > 0 {
 		err = WithMessagef(err, format, args...)
-		err = safedetails.WithSafeDetails(err, format, args...)
+	}
+	for _, e := range errRefs {
+		err = secondary.WithSecondaryError(err, e)
 	}
 	err = withstack.WithStackDepth(err, depth+1)
 	return err

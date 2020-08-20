@@ -63,7 +63,12 @@ func (w *withHTTPCode) Unwrap() error { return w.cause }
 
 // it knows how to format itself.
 func (w *withHTTPCode) Format(s fmt.State, verb rune) { errors.FormatError(w, s, verb) }
-func (w *withHTTPCode) FormatError(p errors.Printer) (next error) {
+
+// SafeFormatter implements errors.SafeFormatter.
+// Note: see the documentat ion of errbase.SafeFormatter for details
+// on how to implement this. In particular beware of not emitting
+// unsafe strings.
+func (w *withHTTPCode) SafeFormatError(p errors.Printer) (next error) {
 	if p.Detail() {
 		p.Printf("http code: %d", w.code)
 	}

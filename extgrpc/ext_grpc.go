@@ -23,8 +23,8 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
+	"github.com/cockroachdb/redact"
 	"github.com/gogo/protobuf/proto"
-
 	"google.golang.org/grpc/codes"
 )
 
@@ -70,9 +70,14 @@ func (w *withGrpcCode) Unwrap() error { return w.cause }
 
 // it knows how to format itself.
 func (w *withGrpcCode) Format(s fmt.State, verb rune) { errors.FormatError(w, s, verb) }
-func (w *withGrpcCode) FormatError(p errors.Printer) (next error) {
+
+// SafeFormatter implements errors.SafeFormatter.
+// Note: see the documentat ion of errbase.SafeFormatter for details
+// on how to implement this. In particular beware of not emitting
+// unsafe strings.
+func (w *withGrpcCode) SafeFormatError(p errors.Printer) (next error) {
 	if p.Detail() {
-		p.Printf("gRPC code: %s", w.code.String())
+		p.Printf("gRPC code: %s", redact.Safe(w.code))
 	}
 	return w.cause
 }

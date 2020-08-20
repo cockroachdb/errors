@@ -17,8 +17,10 @@ package telemetrykeys
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/cockroachdb/errors/errbase"
+	"github.com/cockroachdb/redact"
 	"github.com/gogo/protobuf/proto"
 )
 
@@ -42,7 +44,7 @@ func (w *withTelemetry) Format(s fmt.State, verb rune) { errbase.FormatError(w, 
 
 func (w *withTelemetry) FormatError(p errbase.Printer) (next error) {
 	if p.Detail() {
-		p.Printf("keys: %+v", w.keys)
+		p.Printf("keys: [%s]", redact.Safe(strings.Join(w.keys, " ")))
 	}
 	return w.cause
 }

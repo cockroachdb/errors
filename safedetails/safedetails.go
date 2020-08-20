@@ -14,7 +14,12 @@
 
 package safedetails
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+
+	"github.com/cockroachdb/redact"
+)
 
 // WithSafeDetails annotates an error with the given reportable details.
 // The format is made available as a PII-free string, alongside
@@ -33,60 +38,33 @@ func WithSafeDetails(err error, format string, args ...interface{}) error {
 
 	details := make([]string, 1, 1+len(args))
 	details[0] = format
-	if len(format) > 0 && len(args) > 0 {
-		// Call out that this string was a formatting string.
-		details[0] = fmt.Sprintf("format: %q", details[0])
-	}
 	for i, a := range args {
-		what := ""
-		if _, ok := a.(error); ok {
-			// Call out that this argument was an error, to facilitate
-			// interpretation of subsequent lines.
-			what = " (error)"
-		}
-		details = append(details, fmt.Sprintf("-- arg %d%s: %s", i+1, what, Redact(a)))
+		details = append(details,
+			fmt.Sprintf("-- arg %d (%T): %s", i+1, a,
+				redact.Sprintf("%+v", a).Redact().StripMarkers()))
+	}
+	if len(format) > 0 {
+		// Re-format using the redact library. This makes the first line
+		// pretty.  We do this at the end because redact.Sprintf writes
+		// into its vararg array.
+		details[0] = redact.Sprintf(format, args...).Redact().StripMarkers()
 	}
 	return &withSafeDetails{cause: err, safeDetails: details}
 }
 
-// SafeMessager is implemented by objects which have a way of representing
-// themselves suitably redacted for anonymized reporting.
-type SafeMessager interface {
-	SafeMessage() string
-}
+var refSafeType = reflect.TypeOf(redact.Safe(""))
+
+// SafeMessager is implemented by objects which have a way of
+// representing themselves suitably redacted for anonymized reporting.
+//
+// NB: this interface is obsolete. Use redact.SafeFormatter instead.
+type SafeMessager = redact.SafeMessager
 
 // Safe wraps the given object into an opaque struct that implements
 // SafeMessager: its contents can be included as-is in PII-free
 // strings in error objects and reports.
-func Safe(v interface{}) SafeMessager {
-	return safeType{V: v}
-}
-
-// A safeType panic can be reported verbatim, i.e. does not leak
-// information. A nil `*safeType` is not valid for use and may cause
-// panics.
-type safeType struct {
-	V interface{}
-}
-
-var _ SafeMessager = safeType{}
-
-// SafeMessage implements SafeMessager.
-func (st safeType) SafeMessage() string {
-	return fmt.Sprintf("%+v", st.V)
-}
-
-// safeType implements fmt.Stringer as a convenience.
-func (st safeType) String() string {
-	return st.SafeMessage()
-}
-
-// Format implements fmt.Formatter.
-func (st safeType) Format(s fmt.State, verb rune) {
-	flags := ""
-	if s.Flag('+') {
-		flags += "+"
-	}
-	fmtString := fmt.Sprintf("%%%s%c", flags, verb)
-	fmt.Fprintf(s, fmtString, st.V)
+//
+// NB: this is obsolete. Use redact.Safe instead.
+func Safe(v interface{}) redact.SafeValue {
+	return redact.Safe(v)
 }
