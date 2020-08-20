@@ -244,13 +244,14 @@ return errors.Wrap(foo(), "foo")
 
 The library support PII-free strings essentially as follows:
 
-- by default, strings included in an error object are considered to be
-  PII-unsafe, and are stripped out when building a Sentry report.
-- some fields in the library are whitelisted by default.
+- by default, many strings included in an error object are considered
+  to be PII-unsafe, and are stripped out when building a Sentry
+  report.
+- some fields in the library are assumed to be PII-safe by default.
 - you can opt additional strings in to Sentry reports.
 
-The following strings from this library are "whitelisted" upfront,
-considered to be PII-free, and thus included in Sentry reports automatically:
+The following strings from this library are considered to be PII-free,
+and thus included in Sentry reports automatically:
 
 - the *type* of error objects,
 - stack traces (containing only file paths, line numbers, function names - arguments are not included),
