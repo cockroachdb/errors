@@ -56,7 +56,10 @@ Error types: (1) *errbase.errorFormatter (2) *errors.errorString`
 	// Regression test.
 	f := &fmtWrap{err}
 	tt.CheckEqual(string(redact.Sprintf("%v", f)), sm+`hello`+em)
-	tt.CheckEqual(string(redact.Sprintf("%+v", f)), sm+`hello`+em)
+	expected = sm + `hello` + em + `
+` + sm + `(1) hello` + em + `
+` + sm + `Error types: (1) *errors.errorString` + em
+	tt.CheckEqual(string(redact.Sprintf("%+v", f)), expected)
 
 	// Regression test 2.
 	f2 := &fmter{}
