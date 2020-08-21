@@ -828,9 +828,16 @@ func (s *safePrinter) enhanceArgs(args []interface{}) {
 type errorFormatter struct{ err error }
 
 // Format implements the fmt.Formatter interface.
-func (ef *errorFormatter) Format(s fmt.State, verb rune) {
-	FormatError(ef.err, s, verb)
-}
+func (ef *errorFormatter) Format(s fmt.State, verb rune) { FormatError(ef.err, s, verb) }
+
+// Error implements error, so that `redact` knows what to do with it.
+func (ef *errorFormatter) Error() string { return ef.err.Error() }
+
+// Unwrap makes it a wrapper.
+func (ef *errorFormatter) Unwrap() error { return ef.err }
+
+// Cause makes it a wrapper.
+func (ef *errorFormatter) Cause() error { return ef.err }
 
 // ElideSharedStackTraceSuffix removes the suffix of newStack that's already
 // present in prevStack. The function returns true if some entries

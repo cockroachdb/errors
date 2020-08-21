@@ -16,16 +16,65 @@ package fmttests
 
 import (
 	"context"
+	goErr "errors"
 	"fmt"
 	"regexp"
 	"strings"
 	"testing"
 
 	"github.com/cockroachdb/errors/errbase"
+	"github.com/cockroachdb/errors/errutil"
 	"github.com/cockroachdb/errors/testutils"
+	"github.com/cockroachdb/redact"
 	"github.com/gogo/protobuf/proto"
 	pkgErr "github.com/pkg/errors"
 )
+
+func TestFormatViaRedact(t *testing.T) {
+	tt := testutils.T{t}
+
+	sm := string(redact.StartMarker())
+	em := string(redact.EndMarker())
+
+	err := errutil.Newf("hello %s", "world")
+
+	tt.CheckEqual(string(redact.Sprintf("%v", err)), `hello `+sm+`world`+em)
+	tt.CheckEqual(string(redact.Sprintf("%v", errbase.Formattable(err))), `hello `+sm+`world`+em)
+
+	err = goErr.New("hello")
+	expected := sm + `hello` + em + `
+(1) ` + sm + `hello` + em + `
+Error types: (1) *errors.errorString`
+	tt.CheckEqual(string(redact.Sprintf("%+v", err)), expected)
+
+	expected = sm + `hello` + em + `
+(1)
+Wraps: (2) ` + sm + `hello` + em + `
+Error types: (1) *errbase.errorFormatter (2) *errors.errorString`
+	tt.CheckEqual(string(redact.Sprintf("%+v", errbase.Formattable(err))), expected)
+
+	// Regression test.
+	f := &fmtWrap{err}
+	tt.CheckEqual(string(redact.Sprintf("%v", f)), sm+`hello`+em)
+	tt.CheckEqual(string(redact.Sprintf("%+v", f)), sm+`hello`+em)
+
+	// Regression test 2.
+	f2 := &fmter{}
+	tt.CheckEqual(string(redact.Sprintf("%v", f2)), sm+`hello`+em)
+	tt.CheckEqual(string(redact.Sprintf("%+v", f2)), sm+`hello`+em)
+}
+
+type fmtWrap struct {
+	err error
+}
+
+// Format implements the fmt.Formatter interface.
+func (ef *fmtWrap) Format(s fmt.State, verb rune) { errbase.FormatError(ef.err, s, verb) }
+
+type fmter struct{}
+
+// Format implements the fmt.Formatter interface.
+func (ef *fmter) Format(s fmt.State, verb rune) { _, _ = s.Write([]byte("hello")) }
 
 func TestFormat(t *testing.T) {
 	tt := testutils.T{t}
