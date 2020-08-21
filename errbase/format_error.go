@@ -36,6 +36,8 @@ import (
 )
 
 // FormatError formats an error according to s and verb.
+// This is a helper meant for use when implementing the fmt.Formatter
+// interface on custom error objects.
 //
 // If the error implements errors.Formatter, FormatError calls its
 // FormatError method of f with an errors.Printer configured according

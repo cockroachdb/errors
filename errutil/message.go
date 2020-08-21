@@ -18,6 +18,8 @@ import "github.com/cockroachdb/redact"
 
 // WithMessage annotates err with a new message.
 // If err is nil, WithMessage returns nil.
+// The message is considered safe for reporting
+// and is included in Sentry reports.
 func WithMessage(err error, message string) error {
 	if err == nil {
 		return nil
@@ -30,6 +32,8 @@ func WithMessage(err error, message string) error {
 
 // WithMessagef annotates err with the format specifier.
 // If err is nil, WithMessagef returns nil.
+// The message is formatted as per redact.Sprintf,
+// to separate safe and unsafe strings for Sentry reporting.
 func WithMessagef(err error, format string, args ...interface{}) error {
 	if err == nil {
 		return nil

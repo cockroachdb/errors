@@ -98,7 +98,8 @@ func getInterfaceType(context string, referenceInterface interface{}) reflect.Ty
 	return typ.Elem()
 }
 
-// If returns a predicate's return value the first time the predicate returns true.
+// If iterates on the error's causal chain and returns a predicate's
+// return value the first time the predicate returns true.
 //
 // Note: if any of the error types has been migrated from a previous
 // package location or a different type, ensure that

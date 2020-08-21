@@ -144,7 +144,7 @@ func PackageDomain() Domain {
 }
 
 // PackageDomainAtDepth returns an error domain that describes the
-// package at the given depth.
+// package at the given call depth.
 func PackageDomainAtDepth(depth int) Domain {
 	_, f, _, _ := runtime.Caller(1 + depth)
 	return Domain("error domain: pkg " + filepath.Dir(f))

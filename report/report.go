@@ -357,7 +357,10 @@ func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]
 var redactedMarker = redact.RedactableString(redact.RedactedMarker())
 
 // ReportError reports the given error to Sentry. The caller is responsible for
-// checking whether telemetry is enabled.
+// checking whether telemetry is enabled, and calling the sentry.Flush()
+// function to wait for the report to be uploaded. (By default,
+// Sentry submits reports asynchronously.)
+//
 // Note: an empty 'eventID' can be returned which signifies that the error was
 // not reported. This can occur when Sentry client hasn't been properly
 // configured or Sentry client decided to not report the error (due to
