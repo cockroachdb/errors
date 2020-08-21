@@ -55,6 +55,7 @@ func (e *withSafeDetails) SafeFormatError(p errbase.Printer) error {
 		// during Sentry reporting.
 		for _, s := range e.safeDetails {
 			p.Printf("%s%s", comma, redact.Safe(s))
+			comma = "\n"
 		}
 	}
 	return e.cause
