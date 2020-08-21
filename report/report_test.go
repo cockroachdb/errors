@@ -114,9 +114,6 @@ github.com/cockroachdb/errors/report_test/*report_test.myWrapper (some/previous/
 		tt.CheckEqual(types, expectedTypes)
 
 		expectedDetail := `universe 123 multi
-   line
--- arg 1 (redact.safeWrapper): 123
--- arg 2 (redact.safeWrapper): multi
    line`
 		detail := fmt.Sprintf("%s", e.Extra["1: details"])
 		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)

@@ -4541,7 +4541,7 @@ require (?s)
         msg:   "innerone\ninnertwo",
         stack: &stack{...},
     },
-    safeDetails: {"safe ×\n×", "-- arg 1 (string): ×\n×"},
+    safeDetails: {"safe ×\n×"},
 }
 =====
 ===== non-redactable formats
@@ -4552,7 +4552,7 @@ require (?s)
         msg:   "innerone\ninnertwo",
         stack: &stack{...},
     },
-    safeDetails: {"safe ×\n×", "-- arg 1 (string): ×\n×"},
+    safeDetails: {"safe ×\n×"},
 }
 == Error()
 innerone
@@ -4564,7 +4564,8 @@ innertwo
 == %X = HEX Error(), good
 == %+v
 innerone
-(1) 2 safe details enclosed
+(1) safe ×
+  | ×
 Wraps: (2) innerone
   | innertwo
   | github.com/cockroachdb/errors/fmttests.glob..func9
@@ -4610,7 +4611,8 @@ innertwo›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
-(1) 2 safe details enclosed
+(1) safe ×
+  | ×
 Wraps: (2) ‹innerone›‹
   | innertwo
   | github.com/cockroachdb/errors/fmttests.glob..func9
@@ -4647,8 +4649,6 @@ Error types: (1) *safedetails.withSafeDetails (2) *errors.fundamental
 (check the extra data payloads)
 == Extra "1: details"
 safe ×
-   ×
--- arg 1 (string): ×
    ×
 == Extra "error types"
 github.com/pkg/errors/*errors.fundamental (*::)

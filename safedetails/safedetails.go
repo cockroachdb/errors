@@ -15,7 +15,6 @@
 package safedetails
 
 import (
-	"fmt"
 	"reflect"
 
 	"github.com/cockroachdb/redact"
@@ -27,6 +26,9 @@ import (
 // Arguments can be reported as-is (without redaction) by wrapping
 // them using the Safe() function.
 //
+// If the format is empty and there are no arguments, the
+// error argument is returned unchanged.
+//
 // Detail is shown:
 // - via `errors.GetSafeDetails()`
 // - when formatting with `%+v`.
@@ -35,19 +37,11 @@ func WithSafeDetails(err error, format string, args ...interface{}) error {
 	if err == nil {
 		return nil
 	}
-
-	details := make([]string, 1, 1+len(args))
-	details[0] = format
-	for i, a := range args {
-		details = append(details,
-			fmt.Sprintf("-- arg %d (%T): %s", i+1, a,
-				redact.Sprintf("%+v", a).Redact().StripMarkers()))
+	if len(format) == 0 && len(args) == 0 {
+		return err
 	}
-	if len(format) > 0 {
-		// Re-format using the redact library. This makes the first line
-		// pretty.  We do this at the end because redact.Sprintf writes
-		// into its vararg array.
-		details[0] = redact.Sprintf(format, args...).Redact().StripMarkers()
+	details := []string{
+		redact.Sprintf(format, args...).Redact().StripMarkers(),
 	}
 	return &withSafeDetails{cause: err, safeDetails: details}
 }

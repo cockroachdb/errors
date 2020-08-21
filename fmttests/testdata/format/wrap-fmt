@@ -2540,7 +2540,7 @@ require (?s)
 ----
 &safedetails.withSafeDetails{
     cause:       &fmttests.errFmt{msg:"innerone\ninnertwo"},
-    safeDetails: {"safe ×\n×", "-- arg 1 (string): ×\n×"},
+    safeDetails: {"safe ×\n×"},
 }
 =====
 ===== non-redactable formats
@@ -2548,7 +2548,7 @@ require (?s)
 == %#v
 &safedetails.withSafeDetails{
     cause:       &fmttests.errFmt{msg:"innerone\ninnertwo"},
-    safeDetails: {"safe ×\n×", "-- arg 1 (string): ×\n×"},
+    safeDetails: {"safe ×\n×"},
 }
 == Error()
 innerone
@@ -2560,7 +2560,8 @@ innertwo
 == %X = HEX Error(), good
 == %+v
 innerone
-(1) 2 safe details enclosed
+(1) safe ×
+  | ×
 Wraps: (2) innerone
   | innertwo
   | -- this is innerone
@@ -2585,7 +2586,8 @@ innertwo›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
-(1) 2 safe details enclosed
+(1) safe ×
+  | ×
 Wraps: (2) ‹innerone›‹
   | innertwo
   | -- this is innerone
@@ -2601,8 +2603,6 @@ Error types: (1) *safedetails.withSafeDetails (2) *fmttests.errFmt
 (check the extra data payloads)
 == Extra "1: details"
 safe ×
-   ×
--- arg 1 (string): ×
    ×
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)

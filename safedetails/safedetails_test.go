@@ -33,7 +33,8 @@ import (
 func TestDetailCapture(t *testing.T) {
 	origErr := errors.New("hello world")
 
-	err := safedetails.WithSafeDetails(origErr, "bye %s %s", safedetails.Safe("planet"), "and universe")
+	err := safedetails.WithSafeDetails(origErr,
+		"bye %s %s", safedetails.Safe("planet"), "and universe")
 
 	t.Logf("here's the error:\n%+v", err)
 
@@ -49,11 +50,7 @@ func TestDetailCapture(t *testing.T) {
 		// The detail strings are hidden.
 		errV := fmt.Sprintf("%+v", err)
 		tt.Check(!strings.Contains(errV, "and universe"))
-		tt.Check(!strings.Contains(errV, "planet"))
-		tt.Check(!strings.Contains(errV, "bye %s %s"))
-
-		// The fact there are details is preserved.
-		tt.Check(strings.Contains(errV, "3 safe details enclosed"))
+		tt.Check(strings.Contains(errV, "bye planet"))
 	}
 
 	// Check the error properties locally.
@@ -90,7 +87,7 @@ func TestFormat(t *testing.T) {
 			safedetails.WithSafeDetails(baseErr, "a"),
 			woo, `
 woo
-(1) 1 safe detail enclosed
+(1) a
 Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
@@ -104,13 +101,10 @@ payload 1
 			safedetails.WithSafeDetails(baseErr, ""),
 			woo, `
 woo
-(1) 1 safe detail enclosed
-Wraps: (2) woo
-Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
+(1) woo
+Error types: (1) *errors.errorString`,
 			// Payload
 			`payload 0
-  (empty)
-payload 1
   (empty)
 `},
 
@@ -118,13 +112,12 @@ payload 1
 			safedetails.WithSafeDetails(baseErr, "%v", 123),
 			woo, `
 woo
-(1) 2 safe details enclosed
+(1) ` + rm + `
 Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
   (0) ` + rm + `
-  (1) -- arg 1 (int): ` + rm + `
 payload 1
   (empty)
 `},
@@ -138,16 +131,12 @@ payload 1
 				}),
 			woo, `
 woo
-(1) 2 safe details enclosed
+(1) prefix: open ` + rm + `: file does not exist
 Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
   (0) prefix: open ` + rm + `: file does not exist
-  (1) -- arg 1 (*os.PathError): open ` + rm + `: file does not exist
-    (1) open ` + rm + `
-    Wraps: (2) file does not exist
-    Error types: (1) *os.PathError (2) *errors.errorString
 payload 1
   (empty)
 `},
@@ -156,14 +145,12 @@ payload 1
 			safedetails.WithSafeDetails(baseErr, "a %s %s", "b", safedetails.Safe("c")),
 			woo, `
 woo
-(1) 3 safe details enclosed
+(1) a ` + rm + ` c
 Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
   (0) a ` + rm + ` c
-  (1) -- arg 1 (string): ` + rm + `
-  (2) -- arg 2 (redact.safeWrapper): c
 payload 1
   (empty)
 `},
@@ -172,7 +159,7 @@ payload 1
 			safedetails.WithSafeDetails(&werrFmt{baseErr, "waa"}, "a %s %s", "b", safedetails.Safe("c")),
 			waawoo, `
 waa: woo
-(1) 3 safe details enclosed
+(1) a ` + rm + ` c
 Wraps: (2) waa
   | -- this is waa's
   | multi-line safe payload
@@ -181,8 +168,6 @@ Error types: (1) *safedetails.withSafeDetails (2) *safedetails_test.werrFmt (3) 
 			// Payload
 			`payload 0
   (0) a ` + rm + ` c
-  (1) -- arg 1 (string): ` + rm + `
-  (2) -- arg 2 (redact.safeWrapper): c
 payload 1
   (empty)
 payload 2
@@ -196,7 +181,7 @@ waa: woo
 (1) waa
   | -- this is waa's
   | multi-line safe payload
-Wraps: (2) 3 safe details enclosed
+Wraps: (2) a ` + rm + ` c
 Wraps: (3) woo
 Error types: (1) *safedetails_test.werrFmt (2) *safedetails.withSafeDetails (3) *errors.errorString`,
 			// Payload
@@ -204,8 +189,6 @@ Error types: (1) *safedetails_test.werrFmt (2) *safedetails.withSafeDetails (3) 
   (empty)
 payload 1
   (0) a ` + rm + ` c
-  (1) -- arg 1 (string): ` + rm + `
-  (2) -- arg 2 (redact.safeWrapper): c
 payload 2
   (empty)
 `},
@@ -216,18 +199,12 @@ payload 2
 			woo,
 			`
 woo
-(1) 2 safe details enclosed
+(1) a ` + rm + `: ` + rm + `
 Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
   (0) a ` + rm + `: ` + rm + `
-  (1) -- arg 1 (*safedetails_test.werrFmt): ` + rm + `: ` + rm + `
-    (1) ` + rm + `
-      | -- this is ` + rm + `'s
-      | multi-line safe payload
-    Wraps: (2) ` + rm + `
-    Error types: (1) *safedetails_test.werrFmt (2) *errors.errorString
 payload 1
   (empty)
 `},
@@ -239,17 +216,15 @@ payload 1
 			woo,
 			`
 woo
-(1) 2 safe details enclosed
-Wraps: (2) 2 safe details enclosed
+(1) delicious coffee
+Wraps: (2) hello world
 Wraps: (3) woo
 Error types: (1) *safedetails.withSafeDetails (2) *safedetails.withSafeDetails (3) *errors.errorString`,
 			// Payload
 			`payload 0
   (0) delicious coffee
-  (1) -- arg 1 (redact.safeWrapper): coffee
 payload 1
   (0) hello world
-  (1) -- arg 1 (redact.safeWrapper): world
 payload 2
   (empty)
 `},
@@ -264,16 +239,12 @@ payload 2
 			woo,
 			`
 woo
-(1) 2 safe details enclosed
+(1) a ` + rm + `
 Wraps: (2) woo
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString`,
 			// Payload
 			`payload 0
   (0) a ` + rm + `
-  (1) -- arg 1 (*safedetails.withSafeDetails): ` + rm + `
-    (1) 2 safe details enclosed
-    Wraps: (2) ` + rm + `
-    Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString
 payload 1
   (empty)
 `},
@@ -295,7 +266,7 @@ payload 1
 
 			// %+v is the verbose mode.
 			refV := strings.TrimPrefix(test.expFmtVerbose, "\n")
-			spv := fmt.Sprintf("%+v", err)
+			spv := fmt.Sprintf("%+v", errbase.Formattable(err))
 			tt.CheckStringEqual(spv, refV)
 
 			// Check the actual details produced.

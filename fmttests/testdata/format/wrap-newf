@@ -4851,7 +4851,7 @@ require (?s)
         cause: &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
         stack: &stack{...},
     },
-    safeDetails: {"safe ×\n×", "-- arg 1 (string): ×\n×"},
+    safeDetails: {"safe ×\n×"},
 }
 =====
 ===== non-redactable formats
@@ -4862,7 +4862,7 @@ require (?s)
         cause: &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
         stack: &stack{...},
     },
-    safeDetails: {"safe ×\n×", "-- arg 1 (string): ×\n×"},
+    safeDetails: {"safe ×\n×"},
 }
 == Error()
 new-style innerone
@@ -4874,7 +4874,8 @@ innertwo
 == %X = HEX Error(), good
 == %+v
 new-style innerone
-(1) 2 safe details enclosed
+(1) safe ×
+  | ×
 Wraps: (2) attached stack trace
   -- stack trace:
   | github.com/cockroachdb/errors/fmttests.glob..func15
@@ -4922,7 +4923,8 @@ new-style ‹innerone›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 new-style ‹innerone›
-(1) 2 safe details enclosed
+(1) safe ×
+  | ×
 Wraps: (2) attached stack trace
   -- stack trace:
   | github.com/cockroachdb/errors/fmttests.glob..func15
@@ -4968,8 +4970,6 @@ new-style ×
    ×
 == Extra "2: details"
 safe ×
-   ×
--- arg 1 (string): ×
    ×
 == Extra "error types"
 github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)

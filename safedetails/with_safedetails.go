@@ -42,16 +42,20 @@ func (e *withSafeDetails) Format(s fmt.State, verb rune) { errbase.FormatError(e
 // SafeFormatError implements errbase.SafeFormatter.
 func (e *withSafeDetails) SafeFormatError(p errbase.Printer) error {
 	if p.Detail() {
-		plural := redact.SafeString("s")
-		if len(e.safeDetails) == 1 {
-			plural = ""
+		comma := redact.SafeString("")
+		if len(e.safeDetails) != 1 {
+			plural := redact.SafeString("s")
+			if len(e.safeDetails) == 1 {
+				plural = ""
+			}
+			p.Printf("%d safe detail%s enclosed", redact.Safe(len(e.safeDetails)), plural)
+			comma = "\n"
 		}
-		p.Printf("%d safe detail%s enclosed", redact.Safe(len(e.safeDetails)), plural)
 		// We hide the details from %+v; they are included
 		// during Sentry reporting.
-		// for i, s := range e.safeDetails {
-		//   p.Printf("\n(%d) %s", redact.Safe(i+1), redact.Safe(s))
-		// }
+		for _, s := range e.safeDetails {
+			p.Printf("%s%s", comma, redact.Safe(s))
+		}
 	}
 	return e.cause
 }

@@ -6218,7 +6218,7 @@ require (?s)innerone.*innertwo
             XXX_sizecache:        0,
         },
     },
-    safeDetails: {"safe ×\n×", "-- arg 1 (string): ×\n×"},
+    safeDetails: {"safe ×\n×"},
 }
 =====
 ===== non-redactable formats
@@ -6242,7 +6242,7 @@ require (?s)innerone.*innertwo
             XXX_sizecache:        0,
         },
     },
-    safeDetails: {"safe ×\n×", "-- arg 1 (string): ×\n×"},
+    safeDetails: {"safe ×\n×"},
 }
 == Error()
 new-style innerone
@@ -6254,7 +6254,8 @@ innertwo
 == %X = HEX Error(), good
 == %+v
 new-style innerone
-(1) 2 safe details enclosed
+(1) safe ×
+  | ×
 Wraps: (2)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
@@ -6305,7 +6306,8 @@ new-style ‹innerone›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 new-style ‹innerone›
-(1) 2 safe details enclosed
+(1) safe ×
+  | ×
 Wraps: (2)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
@@ -6354,8 +6356,6 @@ new-style ×
    ×
 == Extra "2: details"
 safe ×
-   ×
--- arg 1 (string): ×
    ×
 == Extra "error types"
 github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
