@@ -15,10 +15,6 @@
 package errutil
 
 import (
-	"fmt"
-	"regexp"
-
-	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/secondary"
 	"github.com/cockroachdb/errors/withstack"
 	"github.com/cockroachdb/redact"
@@ -78,11 +74,11 @@ func NewWithDepthf(depth int, format string, args ...interface{}) error {
 			errRefs = append(errRefs, e)
 		}
 	}
-	if hasVerbW.MatchString(format) {
-		err = fmt.Errorf(format, args...)
-		err = safedetails.WithSafeDetails(err, format, args...)
+	redactable, wrappedErr := redact.HelperForErrorf(format, args...)
+	if wrappedErr != nil {
+		err = &withNewMessage{cause: wrappedErr, message: redactable}
 	} else {
-		err = error(&leafError{redact.Sprintf(format, args...)})
+		err = &leafError{redactable}
 	}
 	for _, e := range errRefs {
 		err = secondary.WithSecondaryError(err, e)
@@ -90,36 +86,6 @@ func NewWithDepthf(depth int, format string, args ...interface{}) error {
 	err = withstack.WithStackDepth(err, 1+depth)
 	return err
 }
-
-var hasVerbW = regexp.MustCompile(
-	`^` +
-		// Ignore any non-%w format directives and other characters:
-		`([^%]+|%` +
-		// A format directive starts with some flags.
-		`[-#0+ ]*` +
-		// Followed by an optional argument number [n].
-		`(\[[0-9]+\])?` +
-		// Followed by an optional width.
-		`(\*|[0-9]+)?` +
-		// followed by an optional precision.
-		`(\.(\*|[0-9]))?` +
-		// We're only interested in non-w verbs here.
-		`[^w]` +
-		// zero or more times.
-		`)*` +
-		// Followed with at least one occurrence of a format directive
-		// with the 'w' verb. We replicate the rules above.
-		`%` +
-		// A format directive starts with some flags.
-		`[-#0+ ]*` +
-		// Followed by an optional argument number [n].
-		`(\[[0-9]+\])?` +
-		// Followed by an optional width.
-		`(\*|[0-9]+)?` +
-		// followed by an optional precision.
-		`(\.(\*|[0-9]))?` +
-		// Just the verb 'w'.
-		`w`)
 
 // Wrap wraps an error with a message prefix.
 // A stack trace is retained.

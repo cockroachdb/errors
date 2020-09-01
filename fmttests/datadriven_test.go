@@ -197,6 +197,9 @@ var wrapCommands = map[string]commandFn{
 	// FormatError() method.
 	"msg": func(err error, args []arg) error { return errutil.WithMessage(err, strfy(args)) },
 
+	// newfw is errors.Newf("%w") which is the fmt-standard way to wrap an error.
+	"newfw": func(err error, args []arg) error { return errutil.Newf("new-style (%s) :: %w ::", strfy(args), err) },
+
 	// errutil.Wrap implements multi-layer wrappers.
 	"wrapf": func(err error, args []arg) error { return errutil.Wrapf(err, "new-stylew %s", strfy(args)) },
 	// assertions mask their cause from the barriers, but otherwise format as-is.

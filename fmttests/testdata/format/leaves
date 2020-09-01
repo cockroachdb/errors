@@ -297,8 +297,8 @@ Error types: (1) *fmttests.errFmt
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹oneline
-twoline›
+‹oneline›
+‹twoline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -306,22 +306,25 @@ twoline›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹oneline›
-(1) ‹oneline›‹
-  | twoline
-  | -- this is oneline
-  | twoline's
-  | multi-line leaf payload›
+(1) ‹oneline›‹›
+‹  | twoline›
+‹  | -- this is oneline›
+‹  | twoline's›
+‹  | multi-line leaf payload›
 Error types: (1) *fmttests.errFmt
 =====
 ===== Sentry reporting
 =====
 == Message payload
+×
+×
+--
 *fmttests.errFmt
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: ""
+Title: "×\n×"
 (NO STACKTRACE)
 
 run
@@ -366,8 +369,8 @@ Error types: (1) *fmttests.errFmto
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹oneline
-twoline›
+‹oneline›
+‹twoline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -375,19 +378,22 @@ twoline›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹
-  | twoline›
+(1) ‹oneline›‹›
+‹  | twoline›
 Error types: (1) *fmttests.errFmto
 =====
 ===== Sentry reporting
 =====
 == Message payload
+×
+×
+--
 *fmttests.errFmto
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmto (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmto"
-Title: ""
+Title: "×\n×"
 (NO STACKTRACE)
 
 run
@@ -432,8 +438,8 @@ Error types: (1) *fmttests.errFmtoDelegate
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹oneline
-twoline›
+‹oneline›
+‹twoline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -441,19 +447,22 @@ twoline›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹
-  | twoline›
+(1) ‹oneline›‹›
+‹  | twoline›
 Error types: (1) *fmttests.errFmtoDelegate
 =====
 ===== Sentry reporting
 =====
 == Message payload
+×
+×
+--
 *fmttests.errFmtoDelegate
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmtoDelegate"
-Title: ""
+Title: "×\n×"
 (NO STACKTRACE)
 
 run
@@ -489,8 +498,8 @@ Error types: (1) *fmttests.errFmtp
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹oneline
-twoline›
+‹oneline›
+‹twoline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -498,19 +507,22 @@ twoline›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹oneline›
-(1) ‹oneline›‹
-  | twoline›
+(1) ‹oneline›‹›
+‹  | twoline›
 Error types: (1) *fmttests.errFmtp
 =====
 ===== Sentry reporting
 =====
 == Message payload
+×
+×
+--
 *fmttests.errFmtp
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmtp"
-Title: ""
+Title: "×\n×"
 (NO STACKTRACE)
 
 run
@@ -549,8 +561,8 @@ Error types: (1) *errors.errorString
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹oneline
-twoline›
+‹oneline›
+‹twoline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -558,19 +570,22 @@ twoline›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹
-  | twoline›
+(1) ‹oneline›‹›
+‹  | twoline›
 Error types: (1) *errors.errorString
 =====
 ===== Sentry reporting
 =====
 == Message payload
+×
+×
+--
 *errors.errorString
 == Extra "error types"
 errors/*errors.errorString (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*errors.errorString"
-Title: ""
+Title: "×\n×"
 (NO STACKTRACE)
 
 run
@@ -1006,8 +1021,8 @@ Error types: (1) *fmttests.errNoFmt
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹oneline
-twoline›
+‹oneline›
+‹twoline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -1015,19 +1030,22 @@ twoline›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹
-  | twoline›
+(1) ‹oneline›‹›
+‹  | twoline›
 Error types: (1) *fmttests.errNoFmt
 =====
 ===== Sentry reporting
 =====
 == Message payload
+×
+×
+--
 *fmttests.errNoFmt
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errNoFmt"
-Title: ""
+Title: "×\n×"
 (NO STACKTRACE)
 
 run
@@ -1398,8 +1416,8 @@ Error types: (1) *errors.fundamental
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹oneline
-twoline›
+‹oneline›
+‹twoline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -1407,8 +1425,8 @@ twoline›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹
-  | twoline›
+(1) ‹oneline›‹›
+‹  | twoline›
   -- stack trace:
   | github.com/cockroachdb/errors/fmttests.glob..func9
   | <tab><path>:<lineno>
@@ -1439,12 +1457,15 @@ Error types: (1) *errors.fundamental
 ===== Sentry reporting
 =====
 == Message payload
+<path>:<lineno>: ×
+×
+--
 <path>:<lineno>: *errors.fundamental (top exception)
 == Extra "error types"
 github.com/pkg/errors/*errors.fundamental (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func9)"
-Title: "*errors.fundamental"
+Title: "*errors.fundamental: ×\n×"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
