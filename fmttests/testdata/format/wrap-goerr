@@ -3159,8 +3159,8 @@ Error types: (1) *telemetrykeys.withTelemetry (2) *errors.errorString
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
-(1) ‹keys: [somekey outerthree›
-‹  | outerfour]›
+(1) keys: [somekey outerthree
+  | outerfour]
 Wraps: (2) ‹innerone›‹›
 ‹  | innertwo›
 Error types: (1) *telemetrykeys.withTelemetry (2) *errors.errorString

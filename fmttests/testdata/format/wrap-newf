@@ -6087,8 +6087,8 @@ new-style ‹innerone›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 new-style ‹innerone›
-(1) ‹keys: [somekey outerthree›
-‹  | outerfour]›
+(1) keys: [somekey outerthree
+  | outerfour]
 Wraps: (2) attached stack trace
   -- stack trace:
   | github.com/cockroachdb/errors/fmttests.glob..func15
