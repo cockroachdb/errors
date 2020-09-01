@@ -87,13 +87,13 @@ func TestPrintEntryRedactable(t *testing.T) {
 		// characters; they get enclosed in redaction markers in the final output.
 		{formatEntry{}, ""},
 		{formatEntry{head: b("abc")}, " " + q("abc")},
-		{formatEntry{head: b("abc\nxyz")}, " " + q("abc\nxyz")},
+		{formatEntry{head: b("abc\nxyz")}, " " + q("abc") + "\n" + q("xyz")},
 		{formatEntry{details: b("def")}, " " + q("def")},
-		{formatEntry{details: b("def\nxyz")}, " " + q("def\nxyz")},
+		{formatEntry{details: b("def\nxyz")}, " " + q("def") + "\n" + q("xyz")},
 		{formatEntry{head: b("abc"), details: b("def")}, " " + q("abc") + q("def")},
-		{formatEntry{head: b("abc\nxyz"), details: b("def")}, " " + q("abc\nxyz") + q("def")},
-		{formatEntry{head: b("abc"), details: b("def\n  | xyz")}, " " + q("abc") + q("def\n  | xyz")},
-		{formatEntry{head: b("abc\nxyz"), details: b("def\n  | xyz")}, " " + q("abc\nxyz") + q("def\n  | xyz")},
+		{formatEntry{head: b("abc\nxyz"), details: b("def")}, " " + q("abc") + "\n" + q("xyz") + q("def")},
+		{formatEntry{head: b("abc"), details: b("def\n  | xyz")}, " " + q("abc") + q("def") + "\n" + q("  | xyz")},
+		{formatEntry{head: b("abc\nxyz"), details: b("def\n  | xyz")}, " " + q("abc") + "\n" + q("xyz") + q("def") + "\n" + q("  | xyz")},
 		// If there were markers in the entry, they get escaped in the output.
 		{formatEntry{head: b("abc" + em + sm), details: b("def" + em + sm)}, " " + q("abc"+esc+esc) + q("def"+esc+esc)},
 
@@ -141,7 +141,7 @@ func TestFormatSingleLineOutputRedactable(t *testing.T) {
 		{[]formatEntry{{head: b(`a`)}, {}}, q(`a`)},
 		{[]formatEntry{{head: b(`a`)}, {}, {head: b(`c`)}}, q(`c`) + ": " + q(`a`)},
 		{[]formatEntry{{head: b(`a`), elideShort: true}, {head: b(`b`)}}, q(`b`)},
-		{[]formatEntry{{head: b("abc\ndef")}, {head: b("ghi\nklm")}}, q("ghi\nklm") + ": " + q("abc\ndef")},
+		{[]formatEntry{{head: b("abc\ndef")}, {head: b("ghi\nklm")}}, q("ghi") + "\n" + q("klm") + ": " + q("abc") + "\n" + q("def")},
 
 		// If some entries are redactable but not others, then
 		// only those that are redactable are passed through.
@@ -157,8 +157,8 @@ func TestFormatSingleLineOutputRedactable(t *testing.T) {
 		{[]formatEntry{{head: b(`a`)}, {}, {head: b(`c`)}}, q(`c`) + `: ` + q(`a`)},
 		{[]formatEntry{{head: b(`a`)}, {redactable: true}, {head: b(`c`)}}, q(`c`) + `: ` + q(`a`)},
 		{[]formatEntry{{head: b(`a`), elideShort: true, redactable: true}, {head: b(`b`)}}, q(`b`)},
-		{[]formatEntry{{redactable: true, head: b("abc\ndef")}, {head: b("ghi\nklm")}}, q("ghi\nklm") + ": abc\ndef"},
-		{[]formatEntry{{head: b("abc\ndef")}, {redactable: true, head: b("ghi\nklm")}}, "ghi\nklm: " + q("abc\ndef")},
+		{[]formatEntry{{redactable: true, head: b("abc\ndef")}, {head: b("ghi\nklm")}}, q("ghi") + "\n" + q("klm") + ": abc\ndef"},
+		{[]formatEntry{{head: b("abc\ndef")}, {redactable: true, head: b("ghi\nklm")}}, "ghi\nklm: " + q("abc") + "\n" + q("def")},
 		// Entry already contains some markers.
 		{[]formatEntry{{redactable: true, head: b(`a` + q(" b"))}, {redactable: true, head: b(`c ` + q("d"))}}, `c ` + q(`d`) + `: a` + q(` b`)},
 	}

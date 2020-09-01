@@ -757,8 +757,8 @@ Error types: (1) *errors.errorString
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹oneline
-twoline›
+‹oneline›
+‹twoline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -766,19 +766,22 @@ twoline›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹
-  | twoline›
+(1) ‹oneline›‹›
+‹  | twoline›
 Error types: (1) *errors.errorString
 =====
 ===== Sentry reporting
 =====
 == Message payload
+×
+×
+--
 *errors.errorString
 == Extra "error types"
 errors/*errors.errorString (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*errors.errorString"
-Title: ""
+Title: "×\n×"
 (NO STACKTRACE)
 
 run

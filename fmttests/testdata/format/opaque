@@ -171,8 +171,8 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueLeaf
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹outer
-outer2ndline›: ‹inner›
+‹outer›
+‹outer2ndline›: ‹inner›
 ‹inner2ndline›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
@@ -181,11 +181,11 @@ outer2ndline›: ‹inner›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outer›: ‹inner›
-(1) ‹outer›‹
-  | outer2ndline
-  | -- this is outer
-  | outer2ndline's
-  | multi-line wrapper payload›
+(1) ‹outer›‹›
+‹  | outer2ndline›
+‹  | -- this is outer›
+‹  | outer2ndline's›
+‹  | multi-line wrapper payload›
 Wraps: (2) ‹inner›
   | ‹inner2ndline›
   |
@@ -196,6 +196,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
+×
 ×: ×
 ×
 --
@@ -206,7 +207,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errNoFmt"
-Title: "×: ×\n×"
+Title: "×\n×: ×\n×"
 (NO STACKTRACE)
 
 run
@@ -469,8 +470,8 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueWrapper (3) *errbase.opaqu
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹outer
-outer2ndline›: ‹middle›
+‹outer›
+‹outer2ndline›: ‹middle›
 ‹middle2ndline›: ‹inner›
 ‹inner2ndline›
 == printed via redact Printf() %v = Print(), good
@@ -480,11 +481,11 @@ outer2ndline›: ‹middle›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outer›: ‹middle›: ‹inner›
-(1) ‹outer›‹
-  | outer2ndline
-  | -- this is outer
-  | outer2ndline's
-  | multi-line wrapper payload›
+(1) ‹outer›‹›
+‹  | outer2ndline›
+‹  | -- this is outer›
+‹  | outer2ndline's›
+‹  | multi-line wrapper payload›
 Wraps: (2) ‹middle›
   | ‹middle2ndline›
   |
@@ -500,6 +501,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueWrapper (3) *errbase.opaqu
 ===== Sentry reporting
 =====
 == Message payload
+×
 ×: ×
 ×: ×
 ×
@@ -513,7 +515,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errNoFmt"
-Title: "×: ×\n×: ×\n×"
+Title: "×\n×: ×\n×: ×\n×"
 (NO STACKTRACE)
 
 run
@@ -863,8 +865,8 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueWrapper (3) *errbase.opaqu
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹extern
-extern2ndline›: ‹outer›
+‹extern›
+‹extern2ndline›: ‹outer›
 ‹outer2ndline›: ‹middle›
 ‹middle2ndline›: ‹inner›
 ‹inner2ndline›
@@ -875,11 +877,11 @@ extern2ndline›: ‹outer›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹extern›: ‹outer›: ‹middle›: ‹inner›
-(1) ‹extern›‹
-  | extern2ndline
-  | -- this is extern
-  | extern2ndline's
-  | multi-line wrapper payload›
+(1) ‹extern›‹›
+‹  | extern2ndline›
+‹  | -- this is extern›
+‹  | extern2ndline's›
+‹  | multi-line wrapper payload›
 Wraps: (2) ‹outer›
   | ‹outer2ndline›
   |
@@ -900,6 +902,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueWrapper (3) *errbase.opaqu
 ===== Sentry reporting
 =====
 == Message payload
+×
 ×: ×
 ×: ×
 ×: ×
@@ -916,5 +919,5 @@ github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errNoFmt"
-Title: "×: ×\n×: ×\n×: ×\n×"
+Title: "×\n×: ×\n×: ×\n×: ×\n×"
 (NO STACKTRACE)

@@ -334,6 +334,25 @@ Error types: (1) *fmttests.werrDelegateEmpty (2) *errors.withStack (3) *fmttests
 	}
 }
 
+func TestHelperForErrorf(t *testing.T) {
+	origErr := goErr.New("small\nuniverse")
+	s, e := redact.HelperForErrorf("hello %s", origErr)
+	if actual, expected := string(s), "hello ‹small›\n‹universe›"; actual != expected {
+		t.Errorf("expected %q, got %q", expected, actual)
+	}
+	if e != nil {
+		t.Errorf("expected no error, got %v", e)
+	}
+
+	s, e = redact.HelperForErrorf("hello %w", origErr)
+	if actual, expected := string(s), "hello ‹small›\n‹universe›"; actual != expected {
+		t.Errorf("expected %q, got %q", expected, actual)
+	}
+	if e != origErr {
+		t.Errorf("expected error %v, got %v (%T)", origErr, e, e)
+	}
+}
+
 func fmtClean(spv string) string {
 	spv = fileref.ReplaceAllString(spv, "<path>:<lineno>")
 	spv = libref.ReplaceAllString(spv, "<path>")

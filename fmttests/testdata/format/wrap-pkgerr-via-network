@@ -36,7 +36,7 @@ require (?s)innerone.*innertwo
                 XXX_NoUnkeyedLiteral: struct {}{},
                 XXX_sizecache:        0,
             },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func40\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func41\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:          (*types.Any)(nil),
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -77,7 +77,7 @@ require (?s)innerone.*innertwo
                 XXX_NoUnkeyedLiteral: struct {}{},
                 XXX_sizecache:        0,
             },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func40\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func41\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:          (*types.Any)(nil),
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -100,7 +100,7 @@ Wraps: (2)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   | reportable 0:
   |
-  | github.com/cockroachdb/errors/fmttests.glob..func40
+  | github.com/cockroachdb/errors/fmttests.glob..func41
   | <tab><path>:<lineno>
   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   | <tab><path>:<lineno>
@@ -185,7 +185,7 @@ Wraps: (2)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   | reportable 0:
   |
-  | github.com/cockroachdb/errors/fmttests.glob..func40
+  | github.com/cockroachdb/errors/fmttests.glob..func41
   | <tab><path>:<lineno>
   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   | <tab><path>:<lineno>
@@ -289,7 +289,7 @@ github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/assert/*assert.withAssertionFailure (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "<path>:<lineno> (func40)"
+Type: "<path>:<lineno> (func41)"
 Title: "*barriers.barrierError: ×\n×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
@@ -314,7 +314,7 @@ Title: "*barriers.barrierError: ×\n×\nvia *withstack.withStack"
 <path>:<lineno>:
    (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
 <path>:<lineno>:
-   (github.com/cockroachdb/errors/fmttests.glob.) func40()
+   (github.com/cockroachdb/errors/fmttests.glob.) func41()
 ----
 ----
 
@@ -359,7 +359,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 XXX_NoUnkeyedLiteral: struct {}{},
                 XXX_sizecache:        0,
             },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func41\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func42\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:          (*types.Any)(nil),
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -403,7 +403,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 XXX_NoUnkeyedLiteral: struct {}{},
                 XXX_sizecache:        0,
             },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func41\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func42\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:          (*types.Any)(nil),
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -427,7 +427,7 @@ Wraps: (2)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   | reportable 0:
   |
-  | github.com/cockroachdb/errors/fmttests.glob..func41
+  | github.com/cockroachdb/errors/fmttests.glob..func42
   | <tab><path>:<lineno>
   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   | <tab><path>:<lineno>
@@ -515,7 +515,7 @@ Wraps: (2)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   | reportable 0:
   |
-  | github.com/cockroachdb/errors/fmttests.glob..func41
+  | github.com/cockroachdb/errors/fmttests.glob..func42
   | <tab><path>:<lineno>
   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   | <tab><path>:<lineno>
@@ -627,7 +627,7 @@ github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/assert/*assert.withAssertionFailure (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "<path>:<lineno> (func41)"
+Type: "<path>:<lineno> (func42)"
 Title: "*barriers.barrierError: assertmsg: ×\n×: ×\n×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
@@ -652,7 +652,7 @@ Title: "*barriers.barrierError: assertmsg: ×\n×: ×\n×\nvia *withstack.withSt
 <path>:<lineno>:
    (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
 <path>:<lineno>:
-   (github.com/cockroachdb/errors/fmttests.glob.) func41()
+   (github.com/cockroachdb/errors/fmttests.glob.) func42()
 ----
 ----
 
@@ -1610,8 +1610,8 @@ Error types: (1) *hintdetail.withDetail (2) *errbase.opaqueLeaf
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
-(1) ‹outerthree
-  | outerfour›
+(1) ‹outerthree›
+‹  | outerfour›
 Wraps: (2) ‹innerone›
   | ‹innertwo›
   |
@@ -1972,8 +1972,8 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *errbase.opaqueLeaf
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹outerthree
-outerfour›
+‹outerthree›
+‹outerfour›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
@@ -1981,8 +1981,8 @@ outerfour›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›
-(1) ‹outerthree›‹
-  | outerfour›
+(1) ‹outerthree›‹›
+‹  | outerfour›
 Wraps: (2) ‹innerone›
   | ‹innertwo›
   |
@@ -2019,6 +2019,9 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
+<path>:<lineno>: ×
+×
+--
 <path>:<lineno>: *errors.fundamental (top exception)
 *fmttests.werrWithElidedCause
 == Extra "error types"
@@ -2026,7 +2029,7 @@ github.com/pkg/errors/*errors.fundamental (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrWithElidedCause (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func9)"
-Title: "*errors.fundamental"
+Title: "*errors.fundamental: ×\n×"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -3694,8 +3697,8 @@ Error types: (1) *hintdetail.withHint (2) *errbase.opaqueLeaf
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
-(1) ‹outerthree
-  | outerfour›
+(1) ‹outerthree›
+‹  | outerfour›
 Wraps: (2) ‹innerone›
   | ‹innertwo›
   |
@@ -4364,6 +4367,456 @@ Title: "*errors.fundamental: outerthree\nouterfour: ×\n×"
    (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
 <path>:<lineno>:
    (github.com/cockroachdb/errors/fmttests.glob.) func9()
+
+run
+pkgerr innerone innertwo
+newfw outerthree outerfour
+opaque
+
+require (?s)outerthree.*outerfour.*innerone.*innertwo
+----
+----
+&errbase.opaqueWrapper{
+    cause: &secondary.withSecondaryError{
+        cause: &errutil.withNewMessage{
+            cause: &errbase.opaqueLeaf{
+                msg:     "innerone\ninnertwo",
+                details: errorspb.EncodedErrorDetails{
+                    OriginalTypeName: "github.com/pkg/errors/*errors.fundamental",
+                    ErrorTypeMark:    errorspb.ErrorTypeMark{
+                        FamilyName:           "github.com/pkg/errors/*errors.fundamental",
+                        Extension:            "",
+                        XXX_NoUnkeyedLiteral: struct {}{},
+                        XXX_sizecache:        0,
+                    },
+                    ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func9\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                    FullDetails:          (*types.Any)(nil),
+                    XXX_NoUnkeyedLiteral: struct {}{},
+                    XXX_sizecache:        0,
+                },
+            },
+            message: "new-style (‹outerthree›\n‹outerfour›) :: ‹innerone›\n‹innertwo› ::",
+        },
+        secondaryError: &errbase.opaqueLeaf{
+            msg:     "innerone\ninnertwo",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName: "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:    errorspb.ErrorTypeMark{
+                    FamilyName:           "github.com/pkg/errors/*errors.fundamental",
+                    Extension:            "",
+                    XXX_NoUnkeyedLiteral: struct {}{},
+                    XXX_sizecache:        0,
+                },
+                ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func9\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:          (*types.Any)(nil),
+                XXX_NoUnkeyedLiteral: struct {}{},
+                XXX_sizecache:        0,
+            },
+        },
+    },
+    prefix:  "",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    errorspb.ErrorTypeMark{
+            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:            "",
+            XXX_NoUnkeyedLiteral: struct {}{},
+            XXX_sizecache:        0,
+        },
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func39\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        FullDetails:          (*types.Any)(nil),
+        XXX_NoUnkeyedLiteral: struct {}{},
+        XXX_sizecache:        0,
+    },
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&errbase.opaqueWrapper{
+    cause: &secondary.withSecondaryError{
+        cause: &errutil.withNewMessage{
+            cause: &errbase.opaqueLeaf{
+                msg:     "innerone\ninnertwo",
+                details: errorspb.EncodedErrorDetails{
+                    OriginalTypeName: "github.com/pkg/errors/*errors.fundamental",
+                    ErrorTypeMark:    errorspb.ErrorTypeMark{
+                        FamilyName:           "github.com/pkg/errors/*errors.fundamental",
+                        Extension:            "",
+                        XXX_NoUnkeyedLiteral: struct {}{},
+                        XXX_sizecache:        0,
+                    },
+                    ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func9\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                    FullDetails:          (*types.Any)(nil),
+                    XXX_NoUnkeyedLiteral: struct {}{},
+                    XXX_sizecache:        0,
+                },
+            },
+            message: "new-style (‹outerthree›\n‹outerfour›) :: ‹innerone›\n‹innertwo› ::",
+        },
+        secondaryError: &errbase.opaqueLeaf{
+            msg:     "innerone\ninnertwo",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName: "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:    errorspb.ErrorTypeMark{
+                    FamilyName:           "github.com/pkg/errors/*errors.fundamental",
+                    Extension:            "",
+                    XXX_NoUnkeyedLiteral: struct {}{},
+                    XXX_sizecache:        0,
+                },
+                ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func9\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:          (*types.Any)(nil),
+                XXX_NoUnkeyedLiteral: struct {}{},
+                XXX_sizecache:        0,
+            },
+        },
+    },
+    prefix:  "",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    errorspb.ErrorTypeMark{
+            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:            "",
+            XXX_NoUnkeyedLiteral: struct {}{},
+            XXX_sizecache:        0,
+        },
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func39\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        FullDetails:          (*types.Any)(nil),
+        XXX_NoUnkeyedLiteral: struct {}{},
+        XXX_sizecache:        0,
+    },
+}
+== Error()
+new-style (outerthree
+outerfour) :: innerone
+innertwo ::
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+new-style (outerthree
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob..func39
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) secondary error attachment
+  | innerone
+  | (1) innerone
+  |   | innertwo
+  |   |
+  |   | (opaque error leaf)
+  |   | type name: github.com/pkg/errors/*errors.fundamental
+  |   | reportable 0:
+  |   |
+  |   | github.com/cockroachdb/errors/fmttests.glob..func9
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirective.func1
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirective
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runTestInternal
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.RunTest
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.Walk
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.Walk.func1
+  |   | <tab><path>:<lineno>
+  |   | testing.tRunner
+  |   | <tab><path>:<lineno>
+  |   | runtime.goexit
+  |   | <tab><path>:<lineno>
+  | Error types: (1) *errbase.opaqueLeaf
+Wraps: (3) new-style (outerthree
+  | outerfour) :: innerone
+  | innertwo ::
+Wraps: (4) innerone
+  | innertwo
+  |
+  | (opaque error leaf)
+  | type name: github.com/pkg/errors/*errors.fundamental
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob..func9
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *errutil.withNewMessage (4) *errbase.opaqueLeaf
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+new-style (‹outerthree›
+‹outerfour›) :: ‹innerone›
+‹innertwo› ::
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+new-style (‹outerthree›
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob..func39
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) secondary error attachment
+  | ‹innerone›
+  | (1) ‹innerone›
+  |   | ‹innertwo›
+  |   |
+  |   | (opaque error leaf)
+  |   | type name: github.com/pkg/errors/*errors.fundamental
+  |   | reportable 0:
+  |   |
+  |   | github.com/cockroachdb/errors/fmttests.glob..func9
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirective.func1
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirective
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runTestInternal
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.RunTest
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.Walk
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.Walk.func1
+  |   | <tab><path>:<lineno>
+  |   | testing.tRunner
+  |   | <tab><path>:<lineno>
+  |   | runtime.goexit
+  |   | <tab><path>:<lineno>
+  | Error types: (1) *errbase.opaqueLeaf
+Wraps: (3) new-style (‹outerthree›
+  | ‹outerfour›) :: ‹innerone›
+  | ‹innertwo› ::
+Wraps: (4) ‹innerone›
+  | ‹innertwo›
+  |
+  | (opaque error leaf)
+  | type name: github.com/pkg/errors/*errors.fundamental
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob..func9
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *errutil.withNewMessage (4) *errbase.opaqueLeaf
+=====
+===== Sentry reporting
+=====
+== Message payload
+<path>:<lineno>: new-style (×
+×) :: ×
+× ::
+--
+<path>:<lineno>: *errors.fundamental (top exception)
+*errutil.withNewMessage: new-style (× (1)
+*secondary.withSecondaryError: details for github.com/pkg/errors/*errors.fundamental::: (2)
+<path>:<lineno>: *withstack.withStack (3)
+(check the extra data payloads)
+== Extra "1: details"
+new-style (×
+   ×) :: ×
+   × ::
+== Extra "2: details"
+details for github.com/pkg/errors/*errors.fundamental:::
+  
+   github.com/cockroachdb/errors/fmttests.glob..func9
+   <tab><path>:<lineno>
+   github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+   <tab><path>:<lineno>
+   github.com/cockroachdb/datadriven.runDirective.func1
+   <tab><path>:<lineno>
+   github.com/cockroachdb/datadriven.runDirective
+   <tab><path>:<lineno>
+   github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+   <tab><path>:<lineno>
+   github.com/cockroachdb/datadriven.runTestInternal
+   <tab><path>:<lineno>
+   github.com/cockroachdb/datadriven.RunTest
+   <tab><path>:<lineno>
+   github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+   <tab><path>:<lineno>
+   github.com/cockroachdb/datadriven.Walk
+   <tab><path>:<lineno>
+   github.com/cockroachdb/datadriven.Walk.func1
+   <tab><path>:<lineno>
+   testing.tRunner
+   <tab><path>:<lineno>
+   runtime.goexit
+   <tab><path>:<lineno>
+== Extra "error types"
+github.com/pkg/errors/*errors.fundamental (*::)
+github.com/cockroachdb/errors/errutil/*errutil.withNewMessage (*::)
+github.com/cockroachdb/errors/secondary/*secondary.withSecondaryError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "(3) <path>:<lineno> (func39)"
+Title: "*withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk) func1()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven) func2()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective) func1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.) func39()
+== Exception 2 (Module: "error domain: <none>")
+Type: "<path>:<lineno> (func9)"
+Title: "*errors.fundamental: new-style (×\n×) :: ×\n× ::"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk) func1()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven) func2()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective) func1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.) func9()
+----
+----
 
 run
 pkgerr innerone innertwo
@@ -5611,8 +6064,8 @@ Error types: (1) *errors.withMessage (2) *errbase.opaqueLeaf
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹outerthree
-outerfour›: ‹innerone›
+‹outerthree›
+‹outerfour›: ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
@@ -5621,8 +6074,8 @@ outerfour›: ‹innerone›
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹
-  | outerfour›
+(1) ‹outerthree›‹›
+‹  | outerfour›
 Wraps: (2) ‹innerone›
   | ‹innertwo›
   |
@@ -5659,7 +6112,8 @@ Error types: (1) *errors.withMessage (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: ×: ×
+<path>:<lineno>: ×
+×: ×
 ×
 --
 <path>:<lineno>: *errors.fundamental (top exception)
@@ -5669,7 +6123,7 @@ github.com/pkg/errors/*errors.fundamental (*::)
 github.com/pkg/errors/*errors.withMessage (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func9)"
-Title: "*errors.fundamental: ×: ×\n×"
+Title: "*errors.fundamental: ×\n×: ×\n×"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -6218,7 +6672,7 @@ require (?s)innerone.*innertwo
                 XXX_NoUnkeyedLiteral: struct {}{},
                 XXX_sizecache:        0,
             },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func49\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func50\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:          (*types.Any)(nil),
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -6257,7 +6711,7 @@ require (?s)innerone.*innertwo
                 XXX_NoUnkeyedLiteral: struct {}{},
                 XXX_sizecache:        0,
             },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func49\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func50\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:          (*types.Any)(nil),
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -6281,7 +6735,7 @@ innerone
   |   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   |   | reportable 0:
   |   |
-  |   | github.com/cockroachdb/errors/fmttests.glob..func49
+  |   | github.com/cockroachdb/errors/fmttests.glob..func50
   |   | <tab><path>:<lineno>
   |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   |   | <tab><path>:<lineno>
@@ -6365,7 +6819,7 @@ Error types: (1) *secondary.withSecondaryError (2) *errbase.opaqueLeaf
   |   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   |   | reportable 0:
   |   |
-  |   | github.com/cockroachdb/errors/fmttests.glob..func49
+  |   | github.com/cockroachdb/errors/fmttests.glob..func50
   |   | <tab><path>:<lineno>
   |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   |   | <tab><path>:<lineno>
@@ -6437,7 +6891,7 @@ Error types: (1) *secondary.withSecondaryError (2) *errbase.opaqueLeaf
 == Extra "1: details"
 details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
   
-   github.com/cockroachdb/errors/fmttests.glob..func49
+   github.com/cockroachdb/errors/fmttests.glob..func50
    <tab><path>:<lineno>
    github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
    <tab><path>:<lineno>
@@ -7136,8 +7590,8 @@ Error types: (1) *telemetrykeys.withTelemetry (2) *errbase.opaqueLeaf
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
-(1) ‹keys: [somekey outerthree
-  | outerfour]›
+(1) keys: [somekey outerthree
+  | outerfour]
 Wraps: (2) ‹innerone›
   | ‹innertwo›
   |
@@ -7251,7 +7705,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func39\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func40\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:          (*types.Any)(nil),
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
@@ -7290,7 +7744,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func39\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func40\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:          (*types.Any)(nil),
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
@@ -7312,7 +7766,7 @@ new-stylew outerthree: innerone
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   | reportable 0:
   |
-  | github.com/cockroachdb/errors/fmttests.glob..func39
+  | github.com/cockroachdb/errors/fmttests.glob..func40
   | <tab><path>:<lineno>
   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   | <tab><path>:<lineno>
@@ -7394,7 +7848,7 @@ new-stylew ‹outerthree›: ‹innerone›
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   | reportable 0:
   |
-  | github.com/cockroachdb/errors/fmttests.glob..func39
+  | github.com/cockroachdb/errors/fmttests.glob..func40
   | <tab><path>:<lineno>
   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   | <tab><path>:<lineno>
@@ -7472,7 +7926,7 @@ github.com/pkg/errors/*errors.fundamental (*::)
 github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "(2) <path>:<lineno> (func39)"
+Type: "(2) <path>:<lineno> (func40)"
 Title: "*withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
@@ -7497,7 +7951,7 @@ Title: "*withstack.withStack"
 <path>:<lineno>:
    (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
 <path>:<lineno>:
-   (github.com/cockroachdb/errors/fmttests.glob.) func39()
+   (github.com/cockroachdb/errors/fmttests.glob.) func40()
 == Exception 2 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func9)"
 Title: "*errors.fundamental: new-stylew ×\n×: ×\n×"
@@ -7566,7 +8020,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                     XXX_NoUnkeyedLiteral: struct {}{},
                     XXX_sizecache:        0,
                 },
-                ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func50\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func51\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
                 FullDetails:          (*types.Any)(nil),
                 XXX_NoUnkeyedLiteral: struct {}{},
                 XXX_sizecache:        0,
@@ -7582,7 +8036,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func50\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func51\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:          (*types.Any)(nil),
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
@@ -7624,7 +8078,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                     XXX_NoUnkeyedLiteral: struct {}{},
                     XXX_sizecache:        0,
                 },
-                ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func50\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func51\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
                 FullDetails:          (*types.Any)(nil),
                 XXX_NoUnkeyedLiteral: struct {}{},
                 XXX_sizecache:        0,
@@ -7640,7 +8094,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func50\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func51\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:          (*types.Any)(nil),
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
@@ -7662,7 +8116,7 @@ new-style outerthree: innerone
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   | reportable 0:
   |
-  | github.com/cockroachdb/errors/fmttests.glob..func50
+  | github.com/cockroachdb/errors/fmttests.glob..func51
   | <tab><path>:<lineno>
   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   | <tab><path>:<lineno>
@@ -7693,7 +8147,7 @@ Wraps: (2) secondary error attachment
   |   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   |   | reportable 0:
   |   |
-  |   | github.com/cockroachdb/errors/fmttests.glob..func50
+  |   | github.com/cockroachdb/errors/fmttests.glob..func51
   |   | <tab><path>:<lineno>
   |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   |   | <tab><path>:<lineno>
@@ -7777,7 +8231,7 @@ new-style ‹outerthree›: ‹innerone›
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   | reportable 0:
   |
-  | github.com/cockroachdb/errors/fmttests.glob..func50
+  | github.com/cockroachdb/errors/fmttests.glob..func51
   | <tab><path>:<lineno>
   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   | <tab><path>:<lineno>
@@ -7808,7 +8262,7 @@ Wraps: (2) secondary error attachment
   |   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
   |   | reportable 0:
   |   |
-  |   | github.com/cockroachdb/errors/fmttests.glob..func50
+  |   | github.com/cockroachdb/errors/fmttests.glob..func51
   |   | <tab><path>:<lineno>
   |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
   |   | <tab><path>:<lineno>
@@ -7887,7 +8341,7 @@ new-style ×
 == Extra "2: details"
 details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
   
-   github.com/cockroachdb/errors/fmttests.glob..func50
+   github.com/cockroachdb/errors/fmttests.glob..func51
    <tab><path>:<lineno>
    github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
    <tab><path>:<lineno>
@@ -7919,7 +8373,7 @@ github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
 github.com/cockroachdb/errors/secondary/*secondary.withSecondaryError (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "(3) <path>:<lineno> (func50)"
+Type: "(3) <path>:<lineno> (func51)"
 Title: "*withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
@@ -7944,7 +8398,7 @@ Title: "*withstack.withStack"
 <path>:<lineno>:
    (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
 <path>:<lineno>:
-   (github.com/cockroachdb/errors/fmttests.glob.) func50()
+   (github.com/cockroachdb/errors/fmttests.glob.) func51()
 == Exception 2 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func9)"
 Title: "*errors.fundamental: new-style ×\n× (payload): ×\n×"

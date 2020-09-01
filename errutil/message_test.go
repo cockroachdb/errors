@@ -55,8 +55,8 @@ Error types: (1) *withstack.withStack (2) *errutil.leafError`,
 
 		{"newf-empty-arg",
 			errutil.Newf(emptyString, 123),
-			`%!(EXTRA *redact.escapeArg=123)`, `
-%!(EXTRA *redact.escapeArg=123)
+			`%!(EXTRA int=123)`, `
+%!(EXTRA int=123)
 (1) attached stack trace
   -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
@@ -65,7 +65,7 @@ Error types: (1) *withstack.withStack (2) *errutil.leafError`,
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (2) %!(EXTRA *redact.escapeArg=123)
+Wraps: (2) %!(EXTRA int=123)
 Error types: (1) *withstack.withStack (2) *errutil.leafError`,
 		},
 
@@ -87,8 +87,8 @@ Error types: (1) *withstack.withStack (2) *errors.errorString`,
 
 		{"wrapf-empty-arg",
 			errutil.Wrapf(goErr.New("woo"), emptyString, 123),
-			`%!(EXTRA *redact.escapeArg=123): woo`, `
-%!(EXTRA *redact.escapeArg=123): woo
+			`%!(EXTRA int=123): woo`, `
+%!(EXTRA int=123): woo
 (1) attached stack trace
   -- stack trace:
   | github.com/cockroachdb/errors/errutil_test.TestFormat
@@ -97,7 +97,7 @@ Error types: (1) *withstack.withStack (2) *errors.errorString`,
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (2) %!(EXTRA *redact.escapeArg=123)
+Wraps: (2) %!(EXTRA int=123)
 Wraps: (3) woo
 Error types: (1) *withstack.withStack (2) *errutil.withPrefix (3) *errors.errorString`,
 		},
@@ -153,8 +153,8 @@ Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barr
 
 		{"assert + wrap empty+arg",
 			errutil.NewAssertionErrorWithWrappedErrf(&werrFmt{goErr.New("woo"), "wuu"}, emptyString, 123),
-			`%!(EXTRA *redact.escapeArg=123): wuu: woo`, `
-%!(EXTRA *redact.escapeArg=123): wuu: woo
+			`%!(EXTRA int=123): wuu: woo`, `
+%!(EXTRA int=123): wuu: woo
 (1) assertion failure
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -164,7 +164,7 @@ Wraps: (2) attached stack trace
   | <tab><path>
   | runtime.goexit
   | <tab><path>
-Wraps: (3) %!(EXTRA *redact.escapeArg=123)
+Wraps: (3) %!(EXTRA int=123)
 Wraps: (4) wuu: woo
   | -- cause hidden behind barrier
   | wuu: woo

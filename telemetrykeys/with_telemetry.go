@@ -32,7 +32,7 @@ type withTelemetry struct {
 var _ error = (*withTelemetry)(nil)
 var _ errbase.SafeDetailer = (*withTelemetry)(nil)
 var _ fmt.Formatter = (*withTelemetry)(nil)
-var _ errbase.Formatter = (*withTelemetry)(nil)
+var _ errbase.SafeFormatter = (*withTelemetry)(nil)
 
 func (w *withTelemetry) Error() string { return w.cause.Error() }
 func (w *withTelemetry) Cause() error  { return w.cause }
@@ -42,7 +42,7 @@ func (w *withTelemetry) SafeDetails() []string { return w.keys }
 
 func (w *withTelemetry) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
 
-func (w *withTelemetry) FormatError(p errbase.Printer) (next error) {
+func (w *withTelemetry) SafeFormatError(p errbase.Printer) (next error) {
 	if p.Detail() {
 		p.Printf("keys: [%s]", redact.Safe(strings.Join(w.keys, " ")))
 	}

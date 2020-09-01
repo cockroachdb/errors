@@ -108,3 +108,56 @@ func init() {
 	errbase.RegisterWrapperEncoder(errbase.GetTypeKey((*withPrefix)(nil)), encodeWithPrefix)
 	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withPrefix)(nil)), decodeWithPrefix)
 }
+
+// withNewMessage is like withPrefix but the message completely
+// overrides that of the underlying error.
+type withNewMessage struct {
+	cause   error
+	message redact.RedactableString
+}
+
+var _ error = (*withNewMessage)(nil)
+var _ fmt.Formatter = (*withNewMessage)(nil)
+var _ errbase.SafeFormatter = (*withNewMessage)(nil)
+var _ errbase.SafeDetailer = (*withNewMessage)(nil)
+
+func (l *withNewMessage) Error() string {
+	return l.message.StripMarkers()
+}
+
+func (l *withNewMessage) Cause() error  { return l.cause }
+func (l *withNewMessage) Unwrap() error { return l.cause }
+
+func (l *withNewMessage) Format(s fmt.State, verb rune) { errbase.FormatError(l, s, verb) }
+func (l *withNewMessage) SafeFormatError(p errbase.Printer) (next error) {
+	p.Print(l.message)
+	return nil /* nil here overrides the cause's message */
+}
+
+func (l *withNewMessage) SafeDetails() []string {
+	return []string{l.message.Redact().StripMarkers()}
+}
+
+func encodeWithNewMessage(_ context.Context, err error) (string, []string, proto.Message) {
+	l := err.(*withNewMessage)
+	return l.Error(), l.SafeDetails(), &errorspb.StringPayload{Msg: string(l.message)}
+}
+
+func decodeWithNewMessage(
+	_ context.Context, cause error, _ string, _ []string, payload proto.Message,
+) error {
+	m, ok := payload.(*errorspb.StringPayload)
+	if !ok {
+		// If this ever happens, this means some version of the library
+		// (presumably future) changed the payload type, and we're
+		// receiving this here. In this case, give up and let
+		// DecodeError use the opaque type.
+		return nil
+	}
+	return &withNewMessage{cause: cause, message: redact.RedactableString(m.Msg)}
+}
+
+func init() {
+	errbase.RegisterWrapperEncoder(errbase.GetTypeKey((*withNewMessage)(nil)), encodeWithNewMessage)
+	errbase.RegisterWrapperDecoder(errbase.GetTypeKey((*withNewMessage)(nil)), decodeWithNewMessage)
+}
