@@ -36,10 +36,11 @@ func TestFormatViaRedact(t *testing.T) {
 	sm := string(redact.StartMarker())
 	em := string(redact.EndMarker())
 
-	err := errutil.Newf("hello %s", "world")
+	var nilErr error
+	err := errutil.Newf("hello %s %v", "world", nilErr)
 
-	tt.CheckEqual(string(redact.Sprintf("%v", err)), `hello `+sm+`world`+em)
-	tt.CheckEqual(string(redact.Sprintf("%v", errbase.Formattable(err))), `hello `+sm+`world`+em)
+	tt.CheckEqual(string(redact.Sprintf("%v", err)), `hello `+sm+`world`+em+` <nil>`)
+	tt.CheckEqual(string(redact.Sprintf("%v", errbase.Formattable(err))), `hello `+sm+`world`+em+` <nil>`)
 
 	err = goErr.New("hello")
 	expected := sm + `hello` + em + `

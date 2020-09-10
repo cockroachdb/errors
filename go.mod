@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/cockroachdb/datadriven v1.0.0
 	github.com/cockroachdb/logtags v0.0.0-20190617123548-eb05cc24525f
-	github.com/cockroachdb/redact v1.0.5
+	github.com/cockroachdb/redact v1.0.6
 	github.com/cockroachdb/sentry-go v0.6.1-cockroachdb.2
 	github.com/gogo/protobuf v1.3.1
 	github.com/gogo/status v1.1.0
