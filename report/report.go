@@ -381,7 +381,7 @@ func ReportError(err error) (eventID string) {
 		"report_type": "error",
 	}
 	for key, value := range tags {
-		event.Tags[key] = tags[value]
+		event.Tags[key] = value
 	}
 
 	res := sentry.CaptureEvent(event)
