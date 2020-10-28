@@ -57,7 +57,7 @@ func decodeWithHint(
 ) error {
 	m, ok := payload.(*errorspb.StringPayload)
 	if !ok {
-		//aa If this ever happens, this means some version of the library
+		// If this ever happens, this means some version of the library
 		// (presumably future) changed the payload type, and we're
 		// receiving this here. In this case, give up and let
 		// DecodeError use the opaque type.
