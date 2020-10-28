@@ -47,6 +47,7 @@ Table of contents:
 | wrappers to attach [`logtags`](https://github.com/cockroachdb/logtags) details from `context.Context` |                     |                         |                            | ✔                    |
 | `errors.FormatError()`, `Formatter`, `Printer`                                                        |                     |                         | (under construction)       | ✔                    |
 | `errors.SafeFormatError()`, `SafeFormatter`                                                           |                     |                         |                            | ✔                    |
+| wrapper-aware `IsPermission()`, `IsTimeout()`, `IsExist()`, `IsNotExist()`                            |                     |                         |                            | ✔                    |
 
 "Forward compatibility" above refers to the ability of this library to
 recognize and properly handle network communication of error types it
@@ -61,6 +62,8 @@ older version of the package.
 - test error identity with `errors.Is()` as usual.
   **Unique in this library**: this works even if the error has traversed the network!
   Also, `errors.IsAny()` to recognize two or more reference errors.
+- replace uses of `os.IsPermission()`, `os.IsTimeout()`, `os.IsExist()` and `os.IsNotExist()` by their analog in sub-package `oserror` so
+  that they can peek through layers of wrapping.
 - access error causes with `errors.UnwrapOnce()` / `errors.UnwrapAll()` (note: `errors.Cause()` and `errors.Unwrap()` also provided for compatibility with other error packages).
 - encode/decode errors to protobuf with `errors.EncodeError()` / `errors.DecodeError()`.
 - extract **PII-free safe details** with `errors.GetSafeDetails()`.
