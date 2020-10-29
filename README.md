@@ -495,7 +495,7 @@ proposal](https://go.googlesource.com/proposal/+/master/design/29934-error-value
   printing out error details, and knows how to present a chain of
   causes in a semi-structured format upon formatting with `%+v`.
 
-### Ensuring `errors.Is` works when packages are renamed
+### Ensuring `errors.Is` works when errors/packages are renamed
 
 If a Go package containing a custom error type is renamed, or the
 error type itself is renamed, and errors of this type are transported
