@@ -495,6 +495,28 @@ proposal](https://go.googlesource.com/proposal/+/master/design/29934-error-value
   printing out error details, and knows how to present a chain of
   causes in a semi-structured format upon formatting with `%+v`.
 
+### Ensuring `errors.Is` works when packages are renamed
+
+If a Go package containing a custom error type is renamed, or the
+error type itself is renamed, and errors of this type are transported
+over the network, then another system with a different code layout
+(e.g. running a different version of the software) may not be able to
+recognize the error any more via `errors.Is`.
+
+To ensure that network portability continues to work across multiple
+software versions, in the case error types get renamed or Go packages
+get moved / renamed / etc, the server code must call
+`errors.RegisterTypeMigration()` from e.g. an `init()` function.
+
+Example use:
+
+```go
+ previousPath := "github.com/old/path/to/error/package"
+ previousTypeName := "oldpackage.oldErrorName"
+ newErrorInstance := &newTypeName{...}
+ errors.RegisterTypeMigration(previousPath, previousTypeName, newErrorInstance)
+```
+
 ## Error composition (summary)
 
 | Constructor                        | Composes                                                                          |
@@ -551,6 +573,9 @@ type LeafEncoder = func(ctx context.Context, err error) (msg string, safeDetails
 type LeafDecoder = func(ctx context.Context, msg string, safeDetails []string, payload proto.Message) error
 type WrapperEncoder = func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message)
 type WrapperDecoder = func(ctx context.Context, cause error, msgPrefix string, safeDetails []string, payload proto.Message) error
+
+// Registering package renames for custom error types.
+func RegisterTypeMigration(previousPkgPath, previousTypeName string, newType error)
 
 // Sentry reports.
 func BuildSentryReport(err error) (*sentry.Event, map[string]interface{})

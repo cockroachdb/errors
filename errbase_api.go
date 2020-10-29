@@ -177,3 +177,27 @@ func FormatError(err error, s fmt.State, verb rune) { errbase.FormatError(err, s
 // will provide "smart" formatting even if the outer layer
 // of the error does not implement the Formatter interface.
 func Formattable(err error) fmt.Formatter { return errbase.Formattable(err) }
+
+// RegisterTypeMigration tells the library that the type of the error
+// given as 3rd argument was previously known with type
+// previousTypeName, located at previousPkgPath.
+//
+// The value of previousTypeName must be the result of calling
+// reflect.TypeOf(err).String() on the original error object.
+// This is usually composed as follows:
+//     [*]<shortpackage>.<errortype>
+//
+// For example, Go's standard error type has name "*errors.errorString".
+// The asterisk indicates that `errorString` implements the `error`
+// interface via pointer receiver.
+//
+// Meanwhile, the singleton error type context.DeadlineExceeded
+// has name "context.deadlineExceededError", without asterisk
+// because the type implements `error` by value.
+//
+// Remember that the short package name inside the error type name and
+// the last component of the package path can be different. This is
+// why they must be specified separately.
+func RegisterTypeMigration(previousPkgPath, previousTypeName string, newType error) {
+	errbase.RegisterTypeMigration(previousPkgPath, previousTypeName, newType)
+}
