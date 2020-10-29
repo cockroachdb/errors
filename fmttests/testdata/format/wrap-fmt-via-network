@@ -3285,8 +3285,11 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueLeaf{
+&os.LinkError{
+    Op:  "link",
+    Old: "/path/to/file",
+    New: "/path/to/newfile",
+    Err: &errbase.opaqueLeaf{
         msg:     "innerone\ninnertwo",
         details: errorspb.EncodedErrorDetails{
             OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
@@ -3301,48 +3304,18 @@ require (?s)innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-    },
-    prefix:  "link /path/to/file /path/to/newfile",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.LinkError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.LinkError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
     },
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueLeaf{
-        msg:     "innerone\ninnertwo",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-            ErrorTypeMark:    errorspb.ErrorTypeMark{
-                FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-                Extension:            "",
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
-            },
-            ReportablePayload:    nil,
-            FullDetails:          (*types.Any)(nil),
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-    },
-    prefix:  "link /path/to/file /path/to/newfile",
+&os.LinkError{Op:"link", Old:"/path/to/file", New:"/path/to/newfile", Err:&errbase.opaqueLeaf{
+    msg:     "innerone\ninnertwo",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.LinkError",
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
         ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.LinkError",
+            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
             Extension:            "",
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -3352,7 +3325,7 @@ require (?s)innerone.*innertwo
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
     },
-}
+}}
 == Error()
 link /path/to/file /path/to/newfile: innerone
 innertwo
@@ -3361,51 +3334,66 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.LinkError{
+    Op:  "link",
+    Old: "/path/to/file",
+    New: "/path/to/newfile",
+    Err: &errbase.opaqueLeaf{
+        msg:     "innerone\ninnertwo",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
+            ErrorTypeMark:    errorspb.ErrorTypeMark{
+                FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
+                Extension:            "",
+                XXX_NoUnkeyedLiteral: struct {}{},
+                XXX_sizecache:        0,
+            },
+            ReportablePayload:    nil,
+            FullDetails:          (*types.Any)(nil),
+            XXX_NoUnkeyedLiteral: struct {}{},
+            XXX_sizecache:        0,
+        },
+    },
+}
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
 link /path/to/file /path/to/newfile: innerone
 (1) link /path/to/file /path/to/newfile
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.LinkError
 Wraps: (2) innerone
   | innertwo
   |
   | (opaque error leaf)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
-== %#v via Formattable() = %#v, good
-== %v via Formattable() = Error(), good
-== %s via Formattable() = %v via Formattable(), good
-== %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+Error types: (1) *os.LinkError (2) *errbase.opaqueLeaf
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹link /path/to/file /path/to/newfile›: ‹innerone›
+link ‹/path/to/file› ‹/path/to/newfile›: ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹link /path/to/file /path/to/newfile›: ‹innerone›
-(1) ‹link /path/to/file /path/to/newfile›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.LinkError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+link ‹/path/to/file› ‹/path/to/newfile›: ‹innerone›
+(1) link ‹/path/to/file› ‹/path/to/newfile›
 Wraps: (2) ‹innerone›
   | ‹innertwo›
   |
   | (opaque error leaf)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+Error types: (1) *os.LinkError (2) *errbase.opaqueLeaf
 =====
 ===== Sentry reporting
 =====
 == Message payload
-×: ×
+link × ×: ×
 ×
 --
 *fmttests.errFmt
@@ -3415,7 +3403,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 os/*os.LinkError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×: ×\n×"
+Title: "link × ×: ×\n×"
 (NO STACKTRACE)
 
 run
@@ -3571,8 +3559,10 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueLeaf{
+&os.PathError{
+    Op:   "link",
+    Path: "/path/to/file",
+    Err:  &errbase.opaqueLeaf{
         msg:     "innerone\ninnertwo",
         details: errorspb.EncodedErrorDetails{
             OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
@@ -3587,48 +3577,18 @@ require (?s)innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-    },
-    prefix:  "link /path/to/file",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.PathError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.PathError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
     },
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueLeaf{
-        msg:     "innerone\ninnertwo",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-            ErrorTypeMark:    errorspb.ErrorTypeMark{
-                FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-                Extension:            "",
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
-            },
-            ReportablePayload:    nil,
-            FullDetails:          (*types.Any)(nil),
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-    },
-    prefix:  "link /path/to/file",
+&os.PathError{Op:"link", Path:"/path/to/file", Err:&errbase.opaqueLeaf{
+    msg:     "innerone\ninnertwo",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.PathError",
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
         ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.PathError",
+            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
             Extension:            "",
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -3638,7 +3598,7 @@ require (?s)innerone.*innertwo
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
     },
-}
+}}
 == Error()
 link /path/to/file: innerone
 innertwo
@@ -3647,51 +3607,65 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.PathError{
+    Op:   "link",
+    Path: "/path/to/file",
+    Err:  &errbase.opaqueLeaf{
+        msg:     "innerone\ninnertwo",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
+            ErrorTypeMark:    errorspb.ErrorTypeMark{
+                FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
+                Extension:            "",
+                XXX_NoUnkeyedLiteral: struct {}{},
+                XXX_sizecache:        0,
+            },
+            ReportablePayload:    nil,
+            FullDetails:          (*types.Any)(nil),
+            XXX_NoUnkeyedLiteral: struct {}{},
+            XXX_sizecache:        0,
+        },
+    },
+}
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
 link /path/to/file: innerone
 (1) link /path/to/file
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.PathError
 Wraps: (2) innerone
   | innertwo
   |
   | (opaque error leaf)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
-== %#v via Formattable() = %#v, good
-== %v via Formattable() = Error(), good
-== %s via Formattable() = %v via Formattable(), good
-== %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+Error types: (1) *os.PathError (2) *errbase.opaqueLeaf
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹link /path/to/file›: ‹innerone›
+link ‹/path/to/file›: ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹link /path/to/file›: ‹innerone›
-(1) ‹link /path/to/file›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.PathError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+link ‹/path/to/file›: ‹innerone›
+(1) link ‹/path/to/file›
 Wraps: (2) ‹innerone›
   | ‹innertwo›
   |
   | (opaque error leaf)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+Error types: (1) *os.PathError (2) *errbase.opaqueLeaf
 =====
 ===== Sentry reporting
 =====
 == Message payload
-×: ×
+link ×: ×
 ×
 --
 *fmttests.errFmt
@@ -3701,7 +3675,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 os/*os.PathError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×: ×\n×"
+Title: "link ×: ×\n×"
 (NO STACKTRACE)
 
 run
@@ -3714,8 +3688,9 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueLeaf{
+&os.SyscallError{
+    Syscall: "open",
+    Err:     &errbase.opaqueLeaf{
         msg:     "innerone\ninnertwo",
         details: errorspb.EncodedErrorDetails{
             OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
@@ -3730,48 +3705,18 @@ require (?s)innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-    },
-    prefix:  "open",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.SyscallError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.SyscallError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
     },
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueLeaf{
-        msg:     "innerone\ninnertwo",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-            ErrorTypeMark:    errorspb.ErrorTypeMark{
-                FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-                Extension:            "",
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
-            },
-            ReportablePayload:    nil,
-            FullDetails:          (*types.Any)(nil),
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-    },
-    prefix:  "open",
+&os.SyscallError{Syscall:"open", Err:&errbase.opaqueLeaf{
+    msg:     "innerone\ninnertwo",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.SyscallError",
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
         ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.SyscallError",
+            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
             Extension:            "",
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
@@ -3781,7 +3726,7 @@ require (?s)innerone.*innertwo
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
     },
-}
+}}
 == Error()
 open: innerone
 innertwo
@@ -3790,51 +3735,64 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.SyscallError{
+    Syscall: "open",
+    Err:     &errbase.opaqueLeaf{
+        msg:     "innerone\ninnertwo",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
+            ErrorTypeMark:    errorspb.ErrorTypeMark{
+                FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
+                Extension:            "",
+                XXX_NoUnkeyedLiteral: struct {}{},
+                XXX_sizecache:        0,
+            },
+            ReportablePayload:    nil,
+            FullDetails:          (*types.Any)(nil),
+            XXX_NoUnkeyedLiteral: struct {}{},
+            XXX_sizecache:        0,
+        },
+    },
+}
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
 open: innerone
 (1) open
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.SyscallError
 Wraps: (2) innerone
   | innertwo
   |
   | (opaque error leaf)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
-== %#v via Formattable() = %#v, good
-== %v via Formattable() = Error(), good
-== %s via Formattable() = %v via Formattable(), good
-== %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+Error types: (1) *os.SyscallError (2) *errbase.opaqueLeaf
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹open›: ‹innerone›
+open: ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹open›: ‹innerone›
-(1) ‹open›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.SyscallError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+open: ‹innerone›
+(1) open
 Wraps: (2) ‹innerone›
   | ‹innertwo›
   |
   | (opaque error leaf)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+Error types: (1) *os.SyscallError (2) *errbase.opaqueLeaf
 =====
 ===== Sentry reporting
 =====
 == Message payload
-×: ×
+open: ×
 ×
 --
 *fmttests.errFmt
@@ -3844,7 +3802,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 os/*os.SyscallError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×: ×\n×"
+Title: "open: ×\n×"
 (NO STACKTRACE)
 
 run

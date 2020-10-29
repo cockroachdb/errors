@@ -5216,8 +5216,11 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueWrapper{
+&os.LinkError{
+    Op:  "link",
+    Old: "/path/to/file",
+    New: "/path/to/newfile",
+    Err: &errbase.opaqueWrapper{
         cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
         prefix:  "",
         details: errorspb.EncodedErrorDetails{
@@ -5233,59 +5236,29 @@ require (?s)innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-    },
-    prefix:  "link /path/to/file /path/to/newfile",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.LinkError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.LinkError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
     },
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueWrapper{
-        cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
-        prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:    errorspb.ErrorTypeMark{
-                FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                Extension:            "",
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
-            },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:          (*types.Any)(nil),
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-    },
-    prefix:  "link /path/to/file /path/to/newfile",
+&os.LinkError{Op:"link", Old:"/path/to/file", New:"/path/to/newfile", Err:&errbase.opaqueWrapper{
+    cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
+    prefix:  "",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.LinkError",
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
         ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.LinkError",
+            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
             Extension:            "",
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-        ReportablePayload:    nil,
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:          (*types.Any)(nil),
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
     },
-}
+}}
 == Error()
 link /path/to/file /path/to/newfile: new-style innerone
 innertwo
@@ -5294,12 +5267,36 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.LinkError{
+    Op:  "link",
+    Old: "/path/to/file",
+    New: "/path/to/newfile",
+    Err: &errbase.opaqueWrapper{
+        cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
+        prefix:  "",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    errorspb.ErrorTypeMark{
+                FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:            "",
+                XXX_NoUnkeyedLiteral: struct {}{},
+                XXX_sizecache:        0,
+            },
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            FullDetails:          (*types.Any)(nil),
+            XXX_NoUnkeyedLiteral: struct {}{},
+            XXX_sizecache:        0,
+        },
+    },
+}
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
 link /path/to/file /path/to/newfile: new-style innerone
 (1) link /path/to/file /path/to/newfile
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.LinkError
 Wraps: (2)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
@@ -5331,29 +5328,21 @@ Wraps: (2)
   | <tab><path>:<lineno>
 Wraps: (3) new-style innerone
   | innertwo
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errutil.leafError
-== %#v via Formattable() = %#v, good
-== %v via Formattable() = Error(), good
-== %s via Formattable() = %v via Formattable(), good
-== %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+Error types: (1) *os.LinkError (2) *errbase.opaqueWrapper (3) *errutil.leafError
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹link /path/to/file /path/to/newfile›: new-style ‹innerone›
+link ‹/path/to/file› ‹/path/to/newfile›: new-style ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹link /path/to/file /path/to/newfile›: new-style ‹innerone›
-(1) ‹link /path/to/file /path/to/newfile›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.LinkError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+link ‹/path/to/file› ‹/path/to/newfile›: new-style ‹innerone›
+(1) link ‹/path/to/file› ‹/path/to/newfile›
 Wraps: (2)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
@@ -5385,12 +5374,12 @@ Wraps: (2)
   | <tab><path>:<lineno>
 Wraps: (3) new-style ‹innerone›
   | ‹innertwo›
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errutil.leafError
+Error types: (1) *os.LinkError (2) *errbase.opaqueWrapper (3) *errutil.leafError
 =====
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: ×: new-style ×
+<path>:<lineno>: link × ×: new-style ×
 ×
 --
 *errutil.leafError: new-style × (1)
@@ -5406,7 +5395,7 @@ github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 os/*os.LinkError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func15)"
-Title: "*errutil.leafError: ×: new-style ×\n×\nvia *withstack.withStack"
+Title: "*errutil.leafError: link × ×: new-style ×\n×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -5668,8 +5657,10 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueWrapper{
+&os.PathError{
+    Op:   "link",
+    Path: "/path/to/file",
+    Err:  &errbase.opaqueWrapper{
         cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
         prefix:  "",
         details: errorspb.EncodedErrorDetails{
@@ -5685,59 +5676,29 @@ require (?s)innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-    },
-    prefix:  "link /path/to/file",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.PathError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.PathError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
     },
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueWrapper{
-        cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
-        prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:    errorspb.ErrorTypeMark{
-                FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                Extension:            "",
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
-            },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:          (*types.Any)(nil),
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-    },
-    prefix:  "link /path/to/file",
+&os.PathError{Op:"link", Path:"/path/to/file", Err:&errbase.opaqueWrapper{
+    cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
+    prefix:  "",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.PathError",
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
         ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.PathError",
+            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
             Extension:            "",
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-        ReportablePayload:    nil,
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:          (*types.Any)(nil),
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
     },
-}
+}}
 == Error()
 link /path/to/file: new-style innerone
 innertwo
@@ -5746,12 +5707,35 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.PathError{
+    Op:   "link",
+    Path: "/path/to/file",
+    Err:  &errbase.opaqueWrapper{
+        cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
+        prefix:  "",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    errorspb.ErrorTypeMark{
+                FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:            "",
+                XXX_NoUnkeyedLiteral: struct {}{},
+                XXX_sizecache:        0,
+            },
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            FullDetails:          (*types.Any)(nil),
+            XXX_NoUnkeyedLiteral: struct {}{},
+            XXX_sizecache:        0,
+        },
+    },
+}
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
 link /path/to/file: new-style innerone
 (1) link /path/to/file
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.PathError
 Wraps: (2)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
@@ -5783,29 +5767,21 @@ Wraps: (2)
   | <tab><path>:<lineno>
 Wraps: (3) new-style innerone
   | innertwo
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errutil.leafError
-== %#v via Formattable() = %#v, good
-== %v via Formattable() = Error(), good
-== %s via Formattable() = %v via Formattable(), good
-== %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+Error types: (1) *os.PathError (2) *errbase.opaqueWrapper (3) *errutil.leafError
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹link /path/to/file›: new-style ‹innerone›
+link ‹/path/to/file›: new-style ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹link /path/to/file›: new-style ‹innerone›
-(1) ‹link /path/to/file›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.PathError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+link ‹/path/to/file›: new-style ‹innerone›
+(1) link ‹/path/to/file›
 Wraps: (2)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
@@ -5837,12 +5813,12 @@ Wraps: (2)
   | <tab><path>:<lineno>
 Wraps: (3) new-style ‹innerone›
   | ‹innertwo›
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errutil.leafError
+Error types: (1) *os.PathError (2) *errbase.opaqueWrapper (3) *errutil.leafError
 =====
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: ×: new-style ×
+<path>:<lineno>: link ×: new-style ×
 ×
 --
 *errutil.leafError: new-style × (1)
@@ -5858,7 +5834,7 @@ github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 os/*os.PathError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func15)"
-Title: "*errutil.leafError: ×: new-style ×\n×\nvia *withstack.withStack"
+Title: "*errutil.leafError: link ×: new-style ×\n×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -5894,8 +5870,9 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueWrapper{
+&os.SyscallError{
+    Syscall: "open",
+    Err:     &errbase.opaqueWrapper{
         cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
         prefix:  "",
         details: errorspb.EncodedErrorDetails{
@@ -5911,59 +5888,29 @@ require (?s)innerone.*innertwo
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-    },
-    prefix:  "open",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.SyscallError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.SyscallError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
     },
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause: &errbase.opaqueWrapper{
-        cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
-        prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:    errorspb.ErrorTypeMark{
-                FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                Extension:            "",
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
-            },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:          (*types.Any)(nil),
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-    },
-    prefix:  "open",
+&os.SyscallError{Syscall:"open", Err:&errbase.opaqueWrapper{
+    cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
+    prefix:  "",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.SyscallError",
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
         ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.SyscallError",
+            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
             Extension:            "",
             XXX_NoUnkeyedLiteral: struct {}{},
             XXX_sizecache:        0,
         },
-        ReportablePayload:    nil,
+        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:          (*types.Any)(nil),
         XXX_NoUnkeyedLiteral: struct {}{},
         XXX_sizecache:        0,
     },
-}
+}}
 == Error()
 open: new-style innerone
 innertwo
@@ -5972,12 +5919,34 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.SyscallError{
+    Syscall: "open",
+    Err:     &errbase.opaqueWrapper{
+        cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
+        prefix:  "",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    errorspb.ErrorTypeMark{
+                FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:            "",
+                XXX_NoUnkeyedLiteral: struct {}{},
+                XXX_sizecache:        0,
+            },
+            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            FullDetails:          (*types.Any)(nil),
+            XXX_NoUnkeyedLiteral: struct {}{},
+            XXX_sizecache:        0,
+        },
+    },
+}
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
 open: new-style innerone
 (1) open
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.SyscallError
 Wraps: (2)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
@@ -6009,29 +5978,21 @@ Wraps: (2)
   | <tab><path>:<lineno>
 Wraps: (3) new-style innerone
   | innertwo
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errutil.leafError
-== %#v via Formattable() = %#v, good
-== %v via Formattable() = Error(), good
-== %s via Formattable() = %v via Formattable(), good
-== %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+Error types: (1) *os.SyscallError (2) *errbase.opaqueWrapper (3) *errutil.leafError
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹open›: new-style ‹innerone›
+open: new-style ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹open›: new-style ‹innerone›
-(1) ‹open›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.SyscallError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+open: new-style ‹innerone›
+(1) open
 Wraps: (2)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
@@ -6063,12 +6024,12 @@ Wraps: (2)
   | <tab><path>:<lineno>
 Wraps: (3) new-style ‹innerone›
   | ‹innertwo›
-Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueWrapper (3) *errutil.leafError
+Error types: (1) *os.SyscallError (2) *errbase.opaqueWrapper (3) *errutil.leafError
 =====
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: ×: new-style ×
+<path>:<lineno>: open: new-style ×
 ×
 --
 *errutil.leafError: new-style × (1)
@@ -6084,7 +6045,7 @@ github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 os/*os.SyscallError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func15)"
-Title: "*errutil.leafError: ×: new-style ×\n×\nvia *withstack.withStack"
+Title: "*errutil.leafError: open: new-style ×\n×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:

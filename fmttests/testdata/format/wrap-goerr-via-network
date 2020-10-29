@@ -2457,44 +2457,17 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause:   &errors.errorString{s:"innerone\ninnertwo"},
-    prefix:  "link /path/to/file /path/to/newfile",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.LinkError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.LinkError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
-    },
+&os.LinkError{
+    Op:  "link",
+    Old: "/path/to/file",
+    New: "/path/to/newfile",
+    Err: &errors.errorString{s:"innerone\ninnertwo"},
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause:   &errors.errorString{s:"innerone\ninnertwo"},
-    prefix:  "link /path/to/file /path/to/newfile",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.LinkError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.LinkError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
-    },
-}
+&os.LinkError{Op:"link", Old:"/path/to/file", New:"/path/to/newfile", Err:(*errors.errorString)(0xAAAABBBB)}
 == Error()
 link /path/to/file /path/to/newfile: innerone
 innertwo
@@ -2503,45 +2476,45 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
-link /path/to/file /path/to/newfile: innerone
-(1) link /path/to/file /path/to/newfile
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.LinkError
-Wraps: (2) innerone
-  | innertwo
-Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
-== %#v via Formattable() = %#v, good
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.LinkError{
+    Op:  "link",
+    Old: "/path/to/file",
+    New: "/path/to/newfile",
+    Err: &errors.errorString{s:"innerone\ninnertwo"},
+}
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
 == %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
+link /path/to/file /path/to/newfile: innerone
+(1) link /path/to/file /path/to/newfile
+Wraps: (2) innerone
+  | innertwo
+Error types: (1) *os.LinkError (2) *errors.errorString
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹link /path/to/file /path/to/newfile›: ‹innerone›
+link ‹/path/to/file› ‹/path/to/newfile›: ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹link /path/to/file /path/to/newfile›: ‹innerone›
-(1) ‹link /path/to/file /path/to/newfile›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.LinkError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+link ‹/path/to/file› ‹/path/to/newfile›: ‹innerone›
+(1) link ‹/path/to/file› ‹/path/to/newfile›
 Wraps: (2) ‹innerone›‹›
 ‹  | innertwo›
-Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
+Error types: (1) *os.LinkError (2) *errors.errorString
 =====
 ===== Sentry reporting
 =====
 == Message payload
-×: ×
+link × ×: ×
 ×
 --
 *errors.errorString
@@ -2551,7 +2524,7 @@ errors/*errors.errorString (*::)
 os/*os.LinkError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*errors.errorString"
-Title: "×: ×\n×"
+Title: "link × ×: ×\n×"
 (NO STACKTRACE)
 
 run
@@ -2671,44 +2644,16 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause:   &errors.errorString{s:"innerone\ninnertwo"},
-    prefix:  "link /path/to/file",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.PathError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.PathError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
-    },
+&os.PathError{
+    Op:   "link",
+    Path: "/path/to/file",
+    Err:  &errors.errorString{s:"innerone\ninnertwo"},
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause:   &errors.errorString{s:"innerone\ninnertwo"},
-    prefix:  "link /path/to/file",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.PathError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.PathError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
-    },
-}
+&os.PathError{Op:"link", Path:"/path/to/file", Err:(*errors.errorString)(0xAAAABBBB)}
 == Error()
 link /path/to/file: innerone
 innertwo
@@ -2717,45 +2662,44 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
-link /path/to/file: innerone
-(1) link /path/to/file
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.PathError
-Wraps: (2) innerone
-  | innertwo
-Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
-== %#v via Formattable() = %#v, good
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.PathError{
+    Op:   "link",
+    Path: "/path/to/file",
+    Err:  &errors.errorString{s:"innerone\ninnertwo"},
+}
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
 == %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
+link /path/to/file: innerone
+(1) link /path/to/file
+Wraps: (2) innerone
+  | innertwo
+Error types: (1) *os.PathError (2) *errors.errorString
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹link /path/to/file›: ‹innerone›
+link ‹/path/to/file›: ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹link /path/to/file›: ‹innerone›
-(1) ‹link /path/to/file›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.PathError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+link ‹/path/to/file›: ‹innerone›
+(1) link ‹/path/to/file›
 Wraps: (2) ‹innerone›‹›
 ‹  | innertwo›
-Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
+Error types: (1) *os.PathError (2) *errors.errorString
 =====
 ===== Sentry reporting
 =====
 == Message payload
-×: ×
+link ×: ×
 ×
 --
 *errors.errorString
@@ -2765,7 +2709,7 @@ errors/*errors.errorString (*::)
 os/*os.PathError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*errors.errorString"
-Title: "×: ×\n×"
+Title: "link ×: ×\n×"
 (NO STACKTRACE)
 
 run
@@ -2778,44 +2722,15 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&errbase.opaqueWrapper{
-    cause:   &errors.errorString{s:"innerone\ninnertwo"},
-    prefix:  "open",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.SyscallError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.SyscallError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
-    },
+&os.SyscallError{
+    Syscall: "open",
+    Err:     &errors.errorString{s:"innerone\ninnertwo"},
 }
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueWrapper{
-    cause:   &errors.errorString{s:"innerone\ninnertwo"},
-    prefix:  "open",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "os/*os.SyscallError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "os/*os.SyscallError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
-    },
-}
+&os.SyscallError{Syscall:"open", Err:(*errors.errorString)(0xAAAABBBB)}
 == Error()
 open: innerone
 innertwo
@@ -2824,45 +2739,43 @@ innertwo
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
-open: innerone
-(1) open
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.SyscallError
-Wraps: (2) innerone
-  | innertwo
-Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
-== %#v via Formattable() = %#v, good
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&os.SyscallError{
+    Syscall: "open",
+    Err:     &errors.errorString{s:"innerone\ninnertwo"},
+}
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
 == %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
+open: innerone
+(1) open
+Wraps: (2) innerone
+  | innertwo
+Error types: (1) *os.SyscallError (2) *errors.errorString
 =====
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹open›: ‹innerone›
+open: ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
-‹open›: ‹innerone›
-(1) ‹open›
-  |
-  | (opaque error wrapper)
-  | type name: os/*os.SyscallError
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+open: ‹innerone›
+(1) open
 Wraps: (2) ‹innerone›‹›
 ‹  | innertwo›
-Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
+Error types: (1) *os.SyscallError (2) *errors.errorString
 =====
 ===== Sentry reporting
 =====
 == Message payload
-×: ×
+open: ×
 ×
 --
 *errors.errorString
@@ -2872,7 +2785,7 @@ errors/*errors.errorString (*::)
 os/*os.SyscallError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*errors.errorString"
-Title: "×: ×\n×"
+Title: "open: ×\n×"
 (NO STACKTRACE)
 
 run

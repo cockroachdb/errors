@@ -21,7 +21,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MarkPayload is the error payload for a forced marker.
 // See errors/markers/markers.go and the RFC on
@@ -44,7 +44,7 @@ func (m *MarkPayload) XXX_Unmarshal(b []byte) error {
 }
 func (m *MarkPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
-	n, err := m.MarshalTo(b)
+	n, err := m.MarshalToSizedBuffer(b)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ var fileDescriptor_5ac3bc232982be93 = []byte{
 func (m *MarkPayload) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
 	if err != nil {
 		return nil, err
 	}
@@ -98,39 +98,49 @@ func (m *MarkPayload) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *MarkPayload) MarshalTo(dAtA []byte) (int, error) {
-	var i int
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MarkPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Msg) > 0 {
-		dAtA[i] = 0xa
-		i++
-		i = encodeVarintMarkers(dAtA, i, uint64(len(m.Msg)))
-		i += copy(dAtA[i:], m.Msg)
-	}
 	if len(m.Types) > 0 {
-		for _, msg := range m.Types {
-			dAtA[i] = 0x12
-			i++
-			i = encodeVarintMarkers(dAtA, i, uint64(msg.Size()))
-			n, err := msg.MarshalTo(dAtA[i:])
-			if err != nil {
-				return 0, err
+		for iNdEx := len(m.Types) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Types[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintMarkers(dAtA, i, uint64(size))
 			}
-			i += n
+			i--
+			dAtA[i] = 0x12
 		}
 	}
-	return i, nil
+	if len(m.Msg) > 0 {
+		i -= len(m.Msg)
+		copy(dAtA[i:], m.Msg)
+		i = encodeVarintMarkers(dAtA, i, uint64(len(m.Msg)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
 }
 
 func encodeVarintMarkers(dAtA []byte, offset int, v uint64) int {
+	offset -= sovMarkers(v)
+	base := offset
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
 		v >>= 7
 		offset++
 	}
 	dAtA[offset] = uint8(v)
-	return offset + 1
+	return base
 }
 func (m *MarkPayload) Size() (n int) {
 	if m == nil {
@@ -279,6 +289,7 @@ func (m *MarkPayload) Unmarshal(dAtA []byte) error {
 func skipMarkers(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
+	depth := 0
 	for iNdEx < l {
 		var wire uint64
 		for shift := uint(0); ; shift += 7 {
@@ -310,10 +321,8 @@ func skipMarkers(dAtA []byte) (n int, err error) {
 					break
 				}
 			}
-			return iNdEx, nil
 		case 1:
 			iNdEx += 8
-			return iNdEx, nil
 		case 2:
 			var length int
 			for shift := uint(0); ; shift += 7 {
@@ -334,55 +343,30 @@ func skipMarkers(dAtA []byte) (n int, err error) {
 				return 0, ErrInvalidLengthMarkers
 			}
 			iNdEx += length
-			if iNdEx < 0 {
-				return 0, ErrInvalidLengthMarkers
-			}
-			return iNdEx, nil
 		case 3:
-			for {
-				var innerWire uint64
-				var start int = iNdEx
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return 0, ErrIntOverflowMarkers
-					}
-					if iNdEx >= l {
-						return 0, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					innerWire |= (uint64(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				innerWireType := int(innerWire & 0x7)
-				if innerWireType == 4 {
-					break
-				}
-				next, err := skipMarkers(dAtA[start:])
-				if err != nil {
-					return 0, err
-				}
-				iNdEx = start + next
-				if iNdEx < 0 {
-					return 0, ErrInvalidLengthMarkers
-				}
-			}
-			return iNdEx, nil
+			depth++
 		case 4:
-			return iNdEx, nil
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupMarkers
+			}
+			depth--
 		case 5:
 			iNdEx += 4
-			return iNdEx, nil
 		default:
 			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
 		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthMarkers
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
 	}
-	panic("unreachable")
+	return 0, io.ErrUnexpectedEOF
 }
 
 var (
-	ErrInvalidLengthMarkers = fmt.Errorf("proto: negative length found during unmarshaling")
-	ErrIntOverflowMarkers   = fmt.Errorf("proto: integer overflow")
+	ErrInvalidLengthMarkers        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowMarkers          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupMarkers = fmt.Errorf("proto: unexpected end of group")
 )
