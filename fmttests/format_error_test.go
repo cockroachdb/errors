@@ -66,6 +66,13 @@ Error types: (1) *errbase.errorFormatter (2) *errors.errorString`
 	f2 := &fmter{}
 	tt.CheckEqual(string(redact.Sprintf("%v", f2)), sm+`hello`+em)
 	tt.CheckEqual(string(redact.Sprintf("%+v", f2)), sm+`hello`+em)
+
+	// Another regression test.
+	// https://github.com/cockroachdb/redact/issues/12
+	var buf redact.StringBuilder
+	buf.Printf("safe %v", "unsafe")
+	e := errutil.Newf("%v", buf)
+	tt.CheckEqual(string(redact.Sprint(e)), `safe `+sm+`unsafe`+em)
 }
 
 type fmtWrap struct {
