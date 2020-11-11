@@ -9,17 +9,10 @@ require (?s)oneline.*twoline
         cause:   &errutil.leafError{msg:"assertmsg ‹oneline›\n‹twoline›"},
         prefix:  "",
         details: errorspb.EncodedErrorDetails{
-            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:    errorspb.ErrorTypeMark{
-                FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                Extension:            "",
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
-            },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func16\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:          (*types.Any)(nil),
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
+            OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+            ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func16\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            FullDetails:       (*types.Any)(nil),
         },
     },
 }
@@ -32,17 +25,10 @@ require (?s)oneline.*twoline
         cause:   &errutil.leafError{msg:"assertmsg ‹oneline›\n‹twoline›"},
         prefix:  "",
         details: errorspb.EncodedErrorDetails{
-            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:    errorspb.ErrorTypeMark{
-                FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                Extension:            "",
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
-            },
-            ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func16\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:          (*types.Any)(nil),
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
+            OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+            ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func16\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+            FullDetails:       (*types.Any)(nil),
         },
     },
 }
@@ -249,17 +235,10 @@ accept %\+v via Formattable.*IRREGULAR: not same as %\+v
 &errbase.opaqueLeaf{
     msg:     "context deadline exceeded",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "context/context.deadlineExceededError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "context/context.deadlineExceededError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "context/context.deadlineExceededError",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"context/context.deadlineExceededError", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -269,17 +248,10 @@ accept %\+v via Formattable.*IRREGULAR: not same as %\+v
 &errbase.opaqueLeaf{
     msg:     "context deadline exceeded",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "context/context.deadlineExceededError",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "context/context.deadlineExceededError",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "context/context.deadlineExceededError",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"context/context.deadlineExceededError", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
@@ -335,17 +307,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errFmt", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -355,17 +320,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errFmt", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
@@ -435,17 +393,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmto",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmto",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmto",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errFmto", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -455,17 +406,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmto",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmto",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmto",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errFmto", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
@@ -535,17 +479,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -555,17 +492,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errFmtoDelegate", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
@@ -632,17 +562,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -652,17 +575,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errFmtp", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
@@ -794,17 +710,10 @@ require (?s)oneline.*twoline
     cause:   &errutil.leafError{msg:"new-style ‹oneline›\n‹twoline›"},
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -815,17 +724,10 @@ require (?s)oneline.*twoline
     cause:   &errutil.leafError{msg:"new-style ‹oneline›\n‹twoline›"},
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func15\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
@@ -978,33 +880,19 @@ require (?s)oneline.*twoline
             cause:   &errutil.leafError{msg:"payload"},
             prefix:  "",
             details: errorspb.EncodedErrorDetails{
-                OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                ErrorTypeMark:    errorspb.ErrorTypeMark{
-                    FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                    Extension:            "",
-                    XXX_NoUnkeyedLiteral: struct {}{},
-                    XXX_sizecache:        0,
-                },
-                ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func17\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                FullDetails:          (*types.Any)(nil),
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
+                OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func17\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
             },
         },
     },
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func17\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func17\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -1018,33 +906,19 @@ require (?s)oneline.*twoline
             cause:   &errutil.leafError{msg:"payload"},
             prefix:  "",
             details: errorspb.EncodedErrorDetails{
-                OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                ErrorTypeMark:    errorspb.ErrorTypeMark{
-                    FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                    Extension:            "",
-                    XXX_NoUnkeyedLiteral: struct {}{},
-                    XXX_sizecache:        0,
-                },
-                ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func17\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                FullDetails:          (*types.Any)(nil),
-                XXX_NoUnkeyedLiteral: struct {}{},
-                XXX_sizecache:        0,
+                OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func17\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
             },
         },
     },
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func17\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func17\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
@@ -1291,17 +1165,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -1311,17 +1178,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    nil,
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
@@ -1667,17 +1527,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/pkg/errors/*errors.fundamental",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/pkg/errors/*errors.fundamental",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func9\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+        ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func9\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        FullDetails:       (*types.Any)(nil),
     },
 }
 =====
@@ -1687,17 +1540,10 @@ require (?s)oneline.*twoline
 &errbase.opaqueLeaf{
     msg:     "oneline\ntwoline",
     details: errorspb.EncodedErrorDetails{
-        OriginalTypeName: "github.com/pkg/errors/*errors.fundamental",
-        ErrorTypeMark:    errorspb.ErrorTypeMark{
-            FamilyName:           "github.com/pkg/errors/*errors.fundamental",
-            Extension:            "",
-            XXX_NoUnkeyedLiteral: struct {}{},
-            XXX_sizecache:        0,
-        },
-        ReportablePayload:    {"\ngithub.com/cockroachdb/errors/fmttests.glob..func9\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:          (*types.Any)(nil),
-        XXX_NoUnkeyedLiteral: struct {}{},
-        XXX_sizecache:        0,
+        OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+        ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob..func9\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+        FullDetails:       (*types.Any)(nil),
     },
 }
 == Error()
