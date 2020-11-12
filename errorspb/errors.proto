@@ -8,6 +8,8 @@ import "gogoproto/gogo.proto";
 // EncodedError is the wire-encodable representation
 // of an error (or error cause chain).
 message EncodedError {
+  option (gogoproto.equal) = true;
+
   oneof error {
     // This is used for leaf error objects.
     EncodedErrorLeaf leaf = 1;
@@ -19,6 +21,8 @@ message EncodedError {
 // EncodedErrorLeaf is the wire-encodable representation
 // of an error leaf.
 message EncodedErrorLeaf {
+  option (gogoproto.equal) = true;
+
   // The main error message (mandatory), that can be printed to human
   // users and may contain PII. This contains the value of the leaf
   // error's Error(), or using a registered encoder.
@@ -29,6 +33,8 @@ message EncodedErrorLeaf {
 }
 
 message EncodedErrorDetails {
+  option (gogoproto.equal) = true;
+
   // The original fully qualified error type name (mandatory).
   // This is primarily used to print out error details
   // in error reports and Format().
@@ -63,6 +69,8 @@ message EncodedErrorDetails {
 // EncodedWrapper is the wire-encodable representation
 // of an error wrapper.
 message EncodedWrapper {
+  option (gogoproto.equal) = true;
+
   // The cause error. Mandatory.
   EncodedError cause = 1 [(gogoproto.nullable) = false];
 
@@ -83,6 +91,8 @@ message EncodedWrapper {
 // ErrorTypeMark identifies an error type for the purpose of determining
 // error equivalences and looking up decoder functions.
 message ErrorTypeMark {
+  option (gogoproto.equal) = true;
+
   // The family name identifies the error type.
   // This is equal to original_type_name above in the common case, but
   // can be overridden when e.g. the package that defines the type
