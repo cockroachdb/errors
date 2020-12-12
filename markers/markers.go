@@ -42,6 +42,11 @@ func Is(err, reference error) bool {
 		if c == reference {
 			return true
 		}
+		// Compatibility with std go errors: if the error object itself
+		// implements Is(), try to use that.
+		if x, ok := c.(interface{ Is(error) bool }); ok && x.Is(reference) {
+			return true
+		}
 	}
 
 	if err == nil {
@@ -123,6 +128,11 @@ func IsAny(err error, references ...error) bool {
 	for c := err; ; c = errbase.UnwrapOnce(c) {
 		for _, refErr := range references {
 			if c == refErr {
+				return true
+			}
+			// Compatibility with std go errors: if the error object itself
+			// implements Is(), try to use that.
+			if x, ok := c.(interface{ Is(error) bool }); ok && x.Is(refErr) {
 				return true
 			}
 		}
