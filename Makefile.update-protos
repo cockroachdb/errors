@@ -33,11 +33,11 @@ all: $(PROTOS)
 	protoc \
 	   -I$$GOPATH/src/ \
 	   -I$$GOPATH/src/github.com \
+	   -I$$GOPATH/src/github.com/cockroachdb/errors \
 	   -I$$GOPATH/src/github.com/gogo/protobuf \
 	   -I$$GOPATH/src/github.com/gogo/protobuf/protobuf \
 	  --gogoroach_out=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,plugins=grpc,import_prefix=:. \
-	  $(PROTOS:%=$(GOPATH)/src/github.com/cockroachdb/errors/%)
-	mv -f github.com/cockroachdb/errors/errorspb/*.pb.go errorspb/
+	  $(PROTOS)
 	$(SED) $(SED_INPLACE) -E \
 		-e '/import _ /d' \
 		-e 's!import (fmt|math) "github.com/(fmt|math)"! !g' \
