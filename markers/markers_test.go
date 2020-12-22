@@ -569,3 +569,33 @@ type invalidError struct {
 
 func (e *invalidError) Error() string { return e.emptyRef.Error() }
 func (e *invalidError) Cause() error  { return e.emptyRef }
+
+func TestDelegateToIsMethod(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	efoo := &errWithIs{msg: "foo", seecret: "foo"}
+	efoo2 := &errWithIs{msg: "foo", seecret: "bar"}
+	ebar := &errWithIs{msg: "bar", seecret: "foo"}
+
+	tt.Check(markers.Is(efoo, efoo2))  // equality based on message
+	tt.Check(markers.Is(efoo, ebar))   // equality based on method
+	tt.Check(!markers.Is(efoo2, ebar)) // neither msg nor method
+
+	tt.Check(markers.IsAny(efoo, efoo2, ebar))
+	tt.Check(markers.IsAny(efoo2, ebar, efoo))
+	tt.Check(!markers.IsAny(efoo2, ebar, errors.New("other")))
+}
+
+type errWithIs struct {
+	msg     string
+	seecret string
+}
+
+func (e *errWithIs) Error() string { return e.msg }
+
+func (e *errWithIs) Is(o error) bool {
+	if ex, ok := o.(*errWithIs); ok {
+		return e.seecret == ex.seecret
+	}
+	return false
+}
