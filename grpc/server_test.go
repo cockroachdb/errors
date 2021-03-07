@@ -17,7 +17,7 @@ type EchoServer struct {
 }
 
 func (srv *EchoServer) Echo(ctx context.Context, req *EchoRequest) (*EchoReply, error) {
-	msg := req.GetText()
+	msg := req.Text
 	switch {
 	case msg == "noecho":
 		return nil, ErrCantEcho

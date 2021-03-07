@@ -19,7 +19,7 @@ func TestGrpc(t *testing.T) {
 	// A successful call should return the message, a nil error, and the status code should evaluate to codes.OK
 	resp, err := Client.Echo(context.Background(), &EchoRequest{Text: "hello"})
 	tt.Assert(err == nil)
-	tt.Assert(resp.GetReply() == "echoing: hello")
+	tt.Assert(resp.Reply == "echoing: hello")
 	tt.Assert(status.Code(err) == codes.OK)
 
 	// A sentinel error should be detectable across grpc boundaries
