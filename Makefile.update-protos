@@ -23,21 +23,33 @@
 #
 # 2. run `make -f Makefile.update-protos` with this PATH active.
 
-PROTOS := $(wildcard errorspb/*.proto)
+export SHELL := env PWD=$(CURDIR) bash
+
+PROTOS := $(wildcard \
+	errbase/internal/*.proto \
+	errorspb/*.proto \
+	extgrpc/*.proto \
+	exthttp/*.proto \
+	grpc/*.proto \
+	markers/internal/*.proto \
+)
 GO_SOURCES = $(PROTOS:.proto=.pb.go)
 
 SED = sed
 SED_INPLACE := $(shell $(SED) --version 2>&1 | grep -q GNU && echo -i || echo "-i ''")
 
 all: $(PROTOS)
-	protoc \
-	   -I$$GOPATH/src/ \
-	   -I$$GOPATH/src/github.com \
-	   -I$$GOPATH/src/github.com/cockroachdb/errors \
-	   -I$$GOPATH/src/github.com/gogo/protobuf \
-	   -I$$GOPATH/src/github.com/gogo/protobuf/protobuf \
-	  --gogoroach_out=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,plugins=grpc,import_prefix=:. \
-	  $(PROTOS)
+	set -e; for dir in $(sort $(dir $(PROTOS))); do \
+		protoc \
+			-I. \
+			-I$$GOPATH/src/ \
+			-I$$GOPATH/src/github.com \
+			-I$$GOPATH/src/github.com/cockroachdb/errors \
+			-I$$GOPATH/src/github.com/gogo/protobuf \
+			-I$$GOPATH/src/github.com/gogo/protobuf/protobuf \
+			--gogoroach_out=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,plugins=grpc,import_prefix=:. \
+			$$dir/*.proto; \
+	done
 	$(SED) $(SED_INPLACE) -E \
 		-e '/import _ /d' \
 		-e 's!import (fmt|math) "github.com/(fmt|math)"! !g' \

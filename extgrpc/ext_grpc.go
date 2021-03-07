@@ -14,8 +14,6 @@
 
 package extgrpc
 
-//go:generate protoc ext_grpc.proto --gogofaster_out=.
-
 import (
 	"context"
 	"fmt"
