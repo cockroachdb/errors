@@ -20,9 +20,16 @@ import (
 	"testing"
 
 	"github.com/cockroachdb/errors"
+	"github.com/cockroachdb/errors/errbase"
+	"github.com/cockroachdb/errors/errorspb"
 	"github.com/cockroachdb/errors/extgrpc"
 	"github.com/cockroachdb/errors/testutils"
+	"github.com/gogo/protobuf/proto"
+	gogostatus "github.com/gogo/status"
+	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
+	grpcstatus "google.golang.org/grpc/status"
+	"google.golang.org/protobuf/runtime/protoiface"
 )
 
 func TestGrpc(t *testing.T) {
@@ -56,4 +63,138 @@ Error types: (1) *extgrpc.withGrpcCode (2) *errors.errorString`)
 	// Checking the code of a nil error should be codes.OK
 	var noErr error
 	tt.Assert(extgrpc.GetGrpcCode(noErr) == codes.OK)
+}
+
+// dummyProto is a dummy Protobuf message which satisfies the proto.Message
+// interface but is not registered with either the standard Protobuf or GoGo
+// Protobuf type registries.
+type dummyProto struct {
+	value string
+}
+
+func (p *dummyProto) Reset()         {}
+func (p *dummyProto) String() string { return "" }
+func (p *dummyProto) ProtoMessage()  {}
+
+// statusIface is a thin interface for common gRPC and gogo Status functionality.
+type statusIface interface {
+	Code() codes.Code
+	Message() string
+	Details() []interface{}
+	Err() error
+}
+
+func TestEncodeDecodeStatus(t *testing.T) {
+	testcases := []struct {
+		desc          string
+		makeStatus    func(*testing.T, codes.Code, string, []proto.Message) statusIface
+		fromError     func(err error) statusIface
+		expectDetails []interface{} // nil elements signify errors
+	}{
+		{
+			desc: "gogo status",
+			makeStatus: func(t *testing.T, code codes.Code, msg string, details []proto.Message) statusIface {
+				s, err := gogostatus.New(code, msg).WithDetails(details...)
+				require.NoError(t, err)
+				return s
+			},
+			fromError: func(err error) statusIface {
+				return gogostatus.Convert(err)
+			},
+			expectDetails: []interface{}{
+				nil, // Protobuf decode fails
+				&errorspb.StringsPayload{Details: []string{"foo", "bar"}}, // gogoproto succeeds
+				nil, // dummy decode fails
+			},
+		},
+		{
+			desc: "grpc status",
+			makeStatus: func(t *testing.T, code codes.Code, msg string, details []proto.Message) statusIface {
+				s := grpcstatus.New(code, msg)
+				for _, detail := range details {
+					var err error
+					s, err = s.WithDetails(protoiface.MessageV1(detail))
+					require.NoError(t, err)
+				}
+				return s
+			},
+			fromError: func(err error) statusIface {
+				return grpcstatus.Convert(err)
+			},
+			expectDetails: []interface{}{
+				grpcstatus.New(codes.Internal, "status").Proto(), // Protobuf succeeds
+				nil, // gogoproto decode fails
+				nil, // dummy decode fails
+			},
+		},
+	}
+	for _, tc := range testcases {
+		tc := tc
+		t.Run(tc.desc, func(t *testing.T) {
+			ctx := context.Background()
+
+			// Create a Status, using statusIface to support gRPC and gogo variants.
+			status := tc.makeStatus(t, codes.NotFound, "message", []proto.Message{
+				grpcstatus.New(codes.Internal, "status").Proto(),          // standard Protobuf
+				&errorspb.StringsPayload{Details: []string{"foo", "bar"}}, // GoGo Protobuf
+				&dummyProto{value: "dummy"},                               // unregistered
+			})
+			require.Equal(t, codes.NotFound, status.Code())
+			require.Equal(t, "message", status.Message())
+
+			// Check the details. This varies by implementation, since different
+			// Protobuf decoders are used -- gRPC Status can only decode
+			// standard Protobufs, while gogo Status can only decode gogoproto
+			// Protobufs.
+			statusDetails := status.Details()
+			require.Equal(t, len(tc.expectDetails), len(statusDetails), "detail mismatch")
+			for i, expectDetail := range tc.expectDetails {
+				if expectDetail == nil {
+					require.Implements(t, (*error)(nil), statusDetails[i], "detail %v", i)
+				} else {
+					require.Equal(t, expectDetail, statusDetails[i], "detail %v", i)
+				}
+			}
+
+			// Encode the error and check some fields.
+			encodedError := errbase.EncodeError(ctx, status.Err())
+			leaf := encodedError.GetLeaf()
+			require.NotNil(t, leaf, "expected leaf")
+			require.Equal(t, status.Message(), leaf.Message)
+			require.Equal(t, []string{}, leaf.Details.ReportablePayload) // test this?
+			require.NotNil(t, leaf.Details.FullDetails, "expected full details")
+			require.Nil(t, encodedError.GetWrapper(), "unexpected wrapper")
+
+			// Marshal and unmarshal the error, checking that
+			// it equals the encoded error.
+			marshaledError, err := encodedError.Marshal()
+			require.NoError(t, err)
+			require.NotEmpty(t, marshaledError)
+
+			unmarshaledError := errorspb.EncodedError{}
+			err = proto.Unmarshal(marshaledError, &unmarshaledError)
+			require.NoError(t, err)
+			require.True(t, proto.Equal(&encodedError, &unmarshaledError),
+				"unmarshaled Protobuf differs")
+
+			// Decode the error.
+			decodedError := errbase.DecodeError(ctx, unmarshaledError)
+			require.Equal(t, status.Err().Error(), decodedError.Error())
+
+			// Convert the error into a status, and check its properties.
+			decodedStatus := tc.fromError(decodedError)
+			require.Equal(t, status.Code(), decodedStatus.Code())
+			require.Equal(t, status.Message(), decodedStatus.Message())
+
+			decodedDetails := decodedStatus.Details()
+			require.Equal(t, len(tc.expectDetails), len(decodedDetails), "detail mismatch")
+			for i, expectDetail := range tc.expectDetails {
+				if expectDetail == nil {
+					require.Implements(t, (*error)(nil), decodedDetails[i], "detail %v", i)
+				} else {
+					require.Equal(t, expectDetail, decodedDetails[i], "detail %v", i)
+				}
+			}
+		})
+	}
 }
