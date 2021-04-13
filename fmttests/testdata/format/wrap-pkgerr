@@ -4154,7 +4154,7 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)
 ----
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &errors.fundamental{
@@ -4166,7 +4166,7 @@ require (?s)
 ===== non-redactable formats
 =====
 == %#v
-&os.PathError{Op:"link", Path:"/path/to/file", Err:innerone
+&fs.PathError{Op:"link", Path:"/path/to/file", Err:innerone
 innertwo}
 == Error()
 link /path/to/file: innerone
@@ -4178,7 +4178,7 @@ innertwo
 == %X = HEX Error(), good
 == %+v = Error(), ok
 == %#v via Formattable() (IRREGULAR: not same as %#v)
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &errors.fundamental{
@@ -4218,7 +4218,7 @@ Wraps: (2) innerone
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Error types: (1) *os.PathError (2) *errors.fundamental
+Error types: (1) *fs.PathError (2) *errors.fundamental
 =====
 ===== redactable formats
 =====
@@ -4259,7 +4259,7 @@ Wraps: (2) ‹innerone›‹›
 ‹  | <tab><path>:<lineno>›
 ‹  | runtime.goexit›
 ‹  | <tab><path>:<lineno>›
-Error types: (1) *os.PathError (2) *errors.fundamental
+Error types: (1) *fs.PathError (2) *errors.fundamental
 =====
 ===== Sentry reporting
 =====
@@ -4268,10 +4268,10 @@ Error types: (1) *os.PathError (2) *errors.fundamental
 ×
 --
 <path>:<lineno>: *errors.fundamental (top exception)
-*os.PathError
+*fs.PathError
 == Extra "error types"
 github.com/pkg/errors/*errors.fundamental (*::)
-os/*os.PathError (*::)
+io/fs/*fs.PathError (os/*os.PathError::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func9)"
 Title: "*errors.fundamental: link ×: ×\n×"

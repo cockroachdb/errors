@@ -367,6 +367,15 @@ func fmtClean(spv string) string {
 	spv = stackref.ReplaceAllString(spv, `&stack{...}`)
 	spv = hexref.ReplaceAllString(spv, "0xAAAABBBB")
 	spv = strings.ReplaceAll(spv, "\t", "<tab>")
+
+	// When running the tests with a Go version before 1.16,
+	// the reference test output wrt fs.PathError will not match what the
+	// Go runtime thinks (os.PathError was a separate type).
+	//
+	// In that case, we translate the test output as per the old
+	// runtime into the shape expected in 1.16 or later.
+	spv = fakeGo116(spv)
+
 	return spv
 }
 
