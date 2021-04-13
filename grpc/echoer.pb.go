@@ -3,16 +3,17 @@
 
 package grpc
 
-import proto "github.com/gogo/protobuf/proto"
-import fmt "fmt"
-import math "math"
-
 import (
 	context "context"
+	fmt "fmt"
+	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
+	math "math"
+	math_bits "math/bits"
 )
-
-import io "io"
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
@@ -23,7 +24,7 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
+const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type EchoRequest struct {
 	Text string `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
@@ -33,21 +34,21 @@ func (m *EchoRequest) Reset()         { *m = EchoRequest{} }
 func (m *EchoRequest) String() string { return proto.CompactTextString(m) }
 func (*EchoRequest) ProtoMessage()    {}
 func (*EchoRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_echoer_7b9399546c2083c6, []int{0}
+	return fileDescriptor_020888ec1d9774f9, []int{0}
 }
 func (m *EchoRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
 func (m *EchoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
-	n, err := m.MarshalTo(b)
+	n, err := m.MarshalToSizedBuffer(b)
 	if err != nil {
 		return nil, err
 	}
 	return b[:n], nil
 }
-func (dst *EchoRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EchoRequest.Merge(dst, src)
+func (m *EchoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EchoRequest.Merge(m, src)
 }
 func (m *EchoRequest) XXX_Size() int {
 	return m.Size()
@@ -66,21 +67,21 @@ func (m *EchoReply) Reset()         { *m = EchoReply{} }
 func (m *EchoReply) String() string { return proto.CompactTextString(m) }
 func (*EchoReply) ProtoMessage()    {}
 func (*EchoReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_echoer_7b9399546c2083c6, []int{1}
+	return fileDescriptor_020888ec1d9774f9, []int{1}
 }
 func (m *EchoReply) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
 func (m *EchoReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
-	n, err := m.MarshalTo(b)
+	n, err := m.MarshalToSizedBuffer(b)
 	if err != nil {
 		return nil, err
 	}
 	return b[:n], nil
 }
-func (dst *EchoReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EchoReply.Merge(dst, src)
+func (m *EchoReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EchoReply.Merge(m, src)
 }
 func (m *EchoReply) XXX_Size() int {
 	return m.Size()
@@ -94,6 +95,23 @@ var xxx_messageInfo_EchoReply proto.InternalMessageInfo
 func init() {
 	proto.RegisterType((*EchoRequest)(nil), "grpc.EchoRequest")
 	proto.RegisterType((*EchoReply)(nil), "grpc.EchoReply")
+}
+
+func init() { proto.RegisterFile("grpc/echoer.proto", fileDescriptor_020888ec1d9774f9) }
+
+var fileDescriptor_020888ec1d9774f9 = []byte{
+	// 170 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x4c, 0x2f, 0x2a, 0x48,
+	0xd6, 0x4f, 0x4d, 0xce, 0xc8, 0x4f, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x01,
+	0x09, 0x29, 0x29, 0x72, 0x71, 0xbb, 0x26, 0x67, 0xe4, 0x07, 0xa5, 0x16, 0x96, 0xa6, 0x16, 0x97,
+	0x08, 0x09, 0x71, 0xb1, 0x94, 0xa4, 0x56, 0x94, 0x48, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x06, 0x81,
+	0xd9, 0x4a, 0x8a, 0x5c, 0x9c, 0x10, 0x25, 0x05, 0x39, 0x95, 0x42, 0x22, 0x5c, 0xac, 0x45, 0x20,
+	0x06, 0x54, 0x05, 0x84, 0x63, 0x64, 0xc6, 0xc5, 0xe6, 0x0a, 0x36, 0x5b, 0x48, 0x87, 0x8b, 0x05,
+	0xc4, 0x12, 0x12, 0xd4, 0x03, 0x19, 0xaf, 0x87, 0x64, 0xb6, 0x14, 0x3f, 0xb2, 0x50, 0x41, 0x4e,
+	0xa5, 0x12, 0x83, 0x93, 0xc2, 0x89, 0x87, 0x72, 0x0c, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24,
+	0xc7, 0x78, 0xe3, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78,
+	0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43, 0x12, 0x1b, 0xd8, 0xb1, 0xc6, 0x80, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0x5a, 0xcd, 0x52, 0xa6, 0xc1, 0x00, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -131,6 +149,14 @@ func (c *echoerClient) Echo(ctx context.Context, in *EchoRequest, opts ...grpc.C
 // EchoerServer is the server API for Echoer service.
 type EchoerServer interface {
 	Echo(context.Context, *EchoRequest) (*EchoReply, error)
+}
+
+// UnimplementedEchoerServer can be embedded to have forward compatible implementations.
+type UnimplementedEchoerServer struct {
+}
+
+func (*UnimplementedEchoerServer) Echo(ctx context.Context, req *EchoRequest) (*EchoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Echo not implemented")
 }
 
 func RegisterEchoerServer(s *grpc.Server, srv EchoerServer) {
@@ -171,7 +197,7 @@ var _Echoer_serviceDesc = grpc.ServiceDesc{
 func (m *EchoRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
 	if err != nil {
 		return nil, err
 	}
@@ -179,23 +205,29 @@ func (m *EchoRequest) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *EchoRequest) MarshalTo(dAtA []byte) (int, error) {
-	var i int
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *EchoRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	if len(m.Text) > 0 {
-		dAtA[i] = 0xa
-		i++
+		i -= len(m.Text)
+		copy(dAtA[i:], m.Text)
 		i = encodeVarintEchoer(dAtA, i, uint64(len(m.Text)))
-		i += copy(dAtA[i:], m.Text)
+		i--
+		dAtA[i] = 0xa
 	}
-	return i, nil
+	return len(dAtA) - i, nil
 }
 
 func (m *EchoReply) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
-	n, err := m.MarshalTo(dAtA)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
 	if err != nil {
 		return nil, err
 	}
@@ -203,27 +235,35 @@ func (m *EchoReply) Marshal() (dAtA []byte, err error) {
 }
 
 func (m *EchoReply) MarshalTo(dAtA []byte) (int, error) {
-	var i int
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *EchoReply) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	if len(m.Reply) > 0 {
-		dAtA[i] = 0xa
-		i++
+		i -= len(m.Reply)
+		copy(dAtA[i:], m.Reply)
 		i = encodeVarintEchoer(dAtA, i, uint64(len(m.Reply)))
-		i += copy(dAtA[i:], m.Reply)
+		i--
+		dAtA[i] = 0xa
 	}
-	return i, nil
+	return len(dAtA) - i, nil
 }
 
 func encodeVarintEchoer(dAtA []byte, offset int, v uint64) int {
+	offset -= sovEchoer(v)
+	base := offset
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
 		v >>= 7
 		offset++
 	}
 	dAtA[offset] = uint8(v)
-	return offset + 1
+	return base
 }
 func (m *EchoRequest) Size() (n int) {
 	if m == nil {
@@ -252,14 +292,7 @@ func (m *EchoReply) Size() (n int) {
 }
 
 func sovEchoer(x uint64) (n int) {
-	for {
-		n++
-		x >>= 7
-		if x == 0 {
-			break
-		}
-	}
-	return n
+	return (math_bits.Len64(x|1) + 6) / 7
 }
 func sozEchoer(x uint64) (n int) {
 	return sovEchoer(uint64((x << 1) ^ uint64((int64(x) >> 63))))
@@ -279,7 +312,7 @@ func (m *EchoRequest) Unmarshal(dAtA []byte) error {
 			}
 			b := dAtA[iNdEx]
 			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
+			wire |= uint64(b&0x7F) << shift
 			if b < 0x80 {
 				break
 			}
@@ -307,7 +340,7 @@ func (m *EchoRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -317,6 +350,9 @@ func (m *EchoRequest) Unmarshal(dAtA []byte) error {
 				return ErrInvalidLengthEchoer
 			}
 			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEchoer
+			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
@@ -358,7 +394,7 @@ func (m *EchoReply) Unmarshal(dAtA []byte) error {
 			}
 			b := dAtA[iNdEx]
 			iNdEx++
-			wire |= (uint64(b) & 0x7F) << shift
+			wire |= uint64(b&0x7F) << shift
 			if b < 0x80 {
 				break
 			}
@@ -386,7 +422,7 @@ func (m *EchoReply) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= (uint64(b) & 0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -396,6 +432,9 @@ func (m *EchoReply) Unmarshal(dAtA []byte) error {
 				return ErrInvalidLengthEchoer
 			}
 			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEchoer
+			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
@@ -425,6 +464,7 @@ func (m *EchoReply) Unmarshal(dAtA []byte) error {
 func skipEchoer(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
+	depth := 0
 	for iNdEx < l {
 		var wire uint64
 		for shift := uint(0); ; shift += 7 {
@@ -456,10 +496,8 @@ func skipEchoer(dAtA []byte) (n int, err error) {
 					break
 				}
 			}
-			return iNdEx, nil
 		case 1:
 			iNdEx += 8
-			return iNdEx, nil
 		case 2:
 			var length int
 			for shift := uint(0); ; shift += 7 {
@@ -476,70 +514,34 @@ func skipEchoer(dAtA []byte) (n int, err error) {
 					break
 				}
 			}
-			iNdEx += length
 			if length < 0 {
 				return 0, ErrInvalidLengthEchoer
 			}
-			return iNdEx, nil
+			iNdEx += length
 		case 3:
-			for {
-				var innerWire uint64
-				var start int = iNdEx
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return 0, ErrIntOverflowEchoer
-					}
-					if iNdEx >= l {
-						return 0, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					innerWire |= (uint64(b) & 0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				innerWireType := int(innerWire & 0x7)
-				if innerWireType == 4 {
-					break
-				}
-				next, err := skipEchoer(dAtA[start:])
-				if err != nil {
-					return 0, err
-				}
-				iNdEx = start + next
-			}
-			return iNdEx, nil
+			depth++
 		case 4:
-			return iNdEx, nil
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupEchoer
+			}
+			depth--
 		case 5:
 			iNdEx += 4
-			return iNdEx, nil
 		default:
 			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
 		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthEchoer
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
 	}
-	panic("unreachable")
+	return 0, io.ErrUnexpectedEOF
 }
 
 var (
-	ErrInvalidLengthEchoer = fmt.Errorf("proto: negative length found during unmarshaling")
-	ErrIntOverflowEchoer   = fmt.Errorf("proto: integer overflow")
+	ErrInvalidLengthEchoer        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowEchoer          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupEchoer = fmt.Errorf("proto: unexpected end of group")
 )
-
-func init() { proto.RegisterFile("grpc/echoer.proto", fileDescriptor_echoer_7b9399546c2083c6) }
-
-var fileDescriptor_echoer_7b9399546c2083c6 = []byte{
-	// 170 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x4c, 0x2f, 0x2a, 0x48,
-	0xd6, 0x4f, 0x4d, 0xce, 0xc8, 0x4f, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x01,
-	0x09, 0x29, 0x29, 0x72, 0x71, 0xbb, 0x26, 0x67, 0xe4, 0x07, 0xa5, 0x16, 0x96, 0xa6, 0x16, 0x97,
-	0x08, 0x09, 0x71, 0xb1, 0x94, 0xa4, 0x56, 0x94, 0x48, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x06, 0x81,
-	0xd9, 0x4a, 0x8a, 0x5c, 0x9c, 0x10, 0x25, 0x05, 0x39, 0x95, 0x42, 0x22, 0x5c, 0xac, 0x45, 0x20,
-	0x06, 0x54, 0x05, 0x84, 0x63, 0x64, 0xc6, 0xc5, 0xe6, 0x0a, 0x36, 0x5b, 0x48, 0x87, 0x8b, 0x05,
-	0xc4, 0x12, 0x12, 0xd4, 0x03, 0x19, 0xaf, 0x87, 0x64, 0xb6, 0x14, 0x3f, 0xb2, 0x50, 0x41, 0x4e,
-	0xa5, 0x12, 0x83, 0x93, 0xc2, 0x89, 0x87, 0x72, 0x0c, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24,
-	0xc7, 0x78, 0xe3, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78,
-	0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43, 0x12, 0x1b, 0xd8, 0xb1, 0xc6, 0x80, 0x00, 0x00, 0x00,
-	0xff, 0xff, 0x5a, 0xcd, 0x52, 0xa6, 0xc1, 0x00, 0x00, 0x00,
-}

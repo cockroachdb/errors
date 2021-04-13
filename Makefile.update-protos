@@ -6,13 +6,16 @@
 #   go get github.com/gogo/protobuf/types
 #   go get github.com/gogo/protobuf/protoc-gen-gogo
 #
-# Note: as of 2020-11-01, it is not (yet) possible to use gogoproto
-# v1.3.x to generate .pb.go files so that they are compatible with
-# CockroachDB. This is because CockroachDB hardcodes gogoproto at
-# version v1.2, and thus does not provide v1.3's
-# proto.GoGoProtoPackageIsVersion3.
+# Note: as of 2021-04-13, we like to use a custom protoc-gen-gogo
+# with additional options, to stabilize the marshalled
+# encoding of objects (so that they are deterministic
+# across marshal/unmarshal cycles) and reduce the memory footprint
+# of objects:
 #
-# For details, see https://github.com/cockroachdb/cockroach/issues/56378
+#	vanity.TurnOnStable_MarshalerAll,
+#	vanity.TurnOffGoUnrecognizedAll,
+#	vanity.TurnOffGoUnkeyedAll,
+#	vanity.TurnOffGoSizecacheAll,
 #
 # Until this is resolved, the "go get" commands above are not
 # adequate; instead:
