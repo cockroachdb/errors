@@ -2434,7 +2434,7 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &errors.errorString{s:"innerone\ninnertwo"},
@@ -2443,7 +2443,7 @@ require (?s)innerone.*innertwo
 ===== non-redactable formats
 =====
 == %#v
-&os.PathError{Op:"link", Path:"/path/to/file", Err:(*errors.errorString)(0xAAAABBBB)}
+&fs.PathError{Op:"link", Path:"/path/to/file", Err:(*errors.errorString)(0xAAAABBBB)}
 == Error()
 link /path/to/file: innerone
 innertwo
@@ -2454,7 +2454,7 @@ innertwo
 == %X = HEX Error(), good
 == %+v = Error(), ok
 == %#v via Formattable() (IRREGULAR: not same as %#v)
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &errors.errorString{s:"innerone\ninnertwo"},
@@ -2467,7 +2467,7 @@ link /path/to/file: innerone
 (1) link /path/to/file
 Wraps: (2) innerone
   | innertwo
-Error types: (1) *os.PathError (2) *errors.errorString
+Error types: (1) *fs.PathError (2) *errors.errorString
 =====
 ===== redactable formats
 =====
@@ -2484,7 +2484,7 @@ link ‹/path/to/file›: ‹innerone›
 (1) link ‹/path/to/file›
 Wraps: (2) ‹innerone›‹›
 ‹  | innertwo›
-Error types: (1) *os.PathError (2) *errors.errorString
+Error types: (1) *fs.PathError (2) *errors.errorString
 =====
 ===== Sentry reporting
 =====
@@ -2493,10 +2493,10 @@ link ×: ×
 ×
 --
 *errors.errorString
-*os.PathError
+*fs.PathError
 == Extra "error types"
 errors/*errors.errorString (*::)
-os/*os.PathError (*::)
+io/fs/*fs.PathError (os/*os.PathError::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*errors.errorString"
 Title: "link ×: ×\n×"

@@ -2992,7 +2992,7 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &errbase.opaqueLeaf{
@@ -3009,7 +3009,7 @@ require (?s)innerone.*innertwo
 ===== non-redactable formats
 =====
 == %#v
-&os.PathError{Op:"link", Path:"/path/to/file", Err:&errbase.opaqueLeaf{
+&fs.PathError{Op:"link", Path:"/path/to/file", Err:&errbase.opaqueLeaf{
     msg:     "innerone\ninnertwo",
     details: errorspb.EncodedErrorDetails{
         OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errFmt",
@@ -3028,7 +3028,7 @@ innertwo
 == %X = HEX Error(), good
 == %+v = Error(), ok
 == %#v via Formattable() (IRREGULAR: not same as %#v)
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &errbase.opaqueLeaf{
@@ -3052,7 +3052,7 @@ Wraps: (2) innerone
   |
   | (opaque error leaf)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
-Error types: (1) *os.PathError (2) *errbase.opaqueLeaf
+Error types: (1) *fs.PathError (2) *errbase.opaqueLeaf
 =====
 ===== redactable formats
 =====
@@ -3072,7 +3072,7 @@ Wraps: (2) ‹innerone›
   |
   | (opaque error leaf)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
-Error types: (1) *os.PathError (2) *errbase.opaqueLeaf
+Error types: (1) *fs.PathError (2) *errbase.opaqueLeaf
 =====
 ===== Sentry reporting
 =====
@@ -3081,10 +3081,10 @@ link ×: ×
 ×
 --
 *fmttests.errFmt
-*os.PathError
+*fs.PathError
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
-os/*os.PathError (*::)
+io/fs/*fs.PathError (os/*os.PathError::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
 Title: "link ×: ×\n×"

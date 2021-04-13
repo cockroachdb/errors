@@ -2170,7 +2170,7 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)
 ----
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
@@ -2179,7 +2179,7 @@ require (?s)
 ===== non-redactable formats
 =====
 == %#v
-&os.PathError{Op:"link", Path:"/path/to/file", Err:(*fmttests.errNoFmt)(0xAAAABBBB)}
+&fs.PathError{Op:"link", Path:"/path/to/file", Err:(*fmttests.errNoFmt)(0xAAAABBBB)}
 == Error()
 link /path/to/file: innerone
 innertwo
@@ -2190,7 +2190,7 @@ innertwo
 == %X = HEX Error(), good
 == %+v = Error(), ok
 == %#v via Formattable() (IRREGULAR: not same as %#v)
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
@@ -2203,7 +2203,7 @@ link /path/to/file: innerone
 (1) link /path/to/file
 Wraps: (2) innerone
   | innertwo
-Error types: (1) *os.PathError (2) *fmttests.errNoFmt
+Error types: (1) *fs.PathError (2) *fmttests.errNoFmt
 =====
 ===== redactable formats
 =====
@@ -2220,7 +2220,7 @@ link ‹/path/to/file›: ‹innerone›
 (1) link ‹/path/to/file›
 Wraps: (2) ‹innerone›‹›
 ‹  | innertwo›
-Error types: (1) *os.PathError (2) *fmttests.errNoFmt
+Error types: (1) *fs.PathError (2) *fmttests.errNoFmt
 =====
 ===== Sentry reporting
 =====
@@ -2229,10 +2229,10 @@ link ×: ×
 ×
 --
 *fmttests.errNoFmt
-*os.PathError
+*fs.PathError
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
-os/*os.PathError (*::)
+io/fs/*fs.PathError (os/*os.PathError::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errNoFmt"
 Title: "link ×: ×\n×"

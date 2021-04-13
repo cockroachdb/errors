@@ -180,13 +180,13 @@ func TestAdaptOsErrors(t *testing.T) {
 
 	origErr = &os.PathError{Op: "hello", Path: "world", Err: goErr.New("woo")}
 	newErr := network(t, origErr)
-	tt.Check(reflect.DeepEqual(newErr, origErr))
+	tt.CheckDeepEqual(newErr, origErr)
 
 	origErr = &os.LinkError{Op: "hello", Old: "world", New: "universe", Err: goErr.New("woo")}
 	newErr = network(t, origErr)
-	tt.Check(reflect.DeepEqual(newErr, origErr))
+	tt.CheckDeepEqual(newErr, origErr)
 
 	origErr = &os.SyscallError{Syscall: "hello", Err: goErr.New("woo")}
 	newErr = network(t, origErr)
-	tt.Check(reflect.DeepEqual(newErr, origErr))
+	tt.CheckDeepEqual(newErr, origErr)
 }

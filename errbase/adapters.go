@@ -191,9 +191,11 @@ func init() {
 	ws := pkgErr.WithStack(baseErr)
 	RegisterWrapperEncoder(GetTypeKey(ws), encodePkgWithStack)
 
+	registerOsPathErrorMigration() // Needed for Go 1.16.
 	pKey := GetTypeKey(&os.PathError{})
 	RegisterWrapperEncoder(pKey, encodePathError)
 	RegisterWrapperDecoder(pKey, decodePathError)
+
 	pKey = GetTypeKey(&os.LinkError{})
 	RegisterWrapperEncoder(pKey, encodeLinkError)
 	RegisterWrapperDecoder(pKey, decodeLinkError)

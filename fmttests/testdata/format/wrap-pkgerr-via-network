@@ -4908,7 +4908,7 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)innerone.*innertwo
 ----
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &errbase.opaqueLeaf{
@@ -4925,7 +4925,7 @@ require (?s)innerone.*innertwo
 ===== non-redactable formats
 =====
 == %#v
-&os.PathError{Op:"link", Path:"/path/to/file", Err:&errbase.opaqueLeaf{
+&fs.PathError{Op:"link", Path:"/path/to/file", Err:&errbase.opaqueLeaf{
     msg:     "innerone\ninnertwo",
     details: errorspb.EncodedErrorDetails{
         OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
@@ -4944,7 +4944,7 @@ innertwo
 == %X = HEX Error(), good
 == %+v = Error(), ok
 == %#v via Formattable() (IRREGULAR: not same as %#v)
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &errbase.opaqueLeaf{
@@ -4994,7 +4994,7 @@ Wraps: (2) innerone
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Error types: (1) *os.PathError (2) *errbase.opaqueLeaf
+Error types: (1) *fs.PathError (2) *errbase.opaqueLeaf
 =====
 ===== redactable formats
 =====
@@ -5040,7 +5040,7 @@ Wraps: (2) ‹innerone›
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Error types: (1) *os.PathError (2) *errbase.opaqueLeaf
+Error types: (1) *fs.PathError (2) *errbase.opaqueLeaf
 =====
 ===== Sentry reporting
 =====
@@ -5049,10 +5049,10 @@ Error types: (1) *os.PathError (2) *errbase.opaqueLeaf
 ×
 --
 <path>:<lineno>: *errors.fundamental (top exception)
-*os.PathError
+*fs.PathError
 == Extra "error types"
 github.com/pkg/errors/*errors.fundamental (*::)
-os/*os.PathError (*::)
+io/fs/*fs.PathError (os/*os.PathError::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func9)"
 Title: "*errors.fundamental: link ×: ×\n×"

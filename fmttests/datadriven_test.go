@@ -502,6 +502,9 @@ func TestDatadriven(t *testing.T) {
 				var acceptDirectives []string
 				var requiredMsgRe *regexp.Regexp
 
+				// Needed as long as pre-go1.16 is supported to build.
+				needOsPathRedirect := false
+
 				// We're going to execute the input line-by-line.
 				lines := strings.Split(d.Input, "\n")
 				for i, line := range lines {
@@ -534,6 +537,11 @@ func TestDatadriven(t *testing.T) {
 							c = leafCommands[d.Cmd]
 						} else {
 							c = wrapCommands[d.Cmd]
+
+							// Needed as long as pre-go1.16 is supported to build.
+							if d.Cmd == "os-path" {
+								needOsPathRedirect = true
+							}
 						}
 						if c == nil {
 							d.Fatalf(t, "unknown command: %s", d.Cmd)
@@ -764,7 +772,19 @@ func TestDatadriven(t *testing.T) {
 					}
 				}
 
-				return fmtClean(buf.String())
+				res := fmtClean(buf.String())
+
+				if needOsPathRedirect {
+					// When running the tests with a Go version before 1.16,
+					// the reference test output wrt fs.PathError will not match what the
+					// Go runtime thinks (os.PathError was a separate type).
+					//
+					// In that case, we translate the test output as per the old
+					// runtime into the shape expected in 1.16 or later.
+					res = fakeGo116(res)
+				}
+
+				return res
 			})
 	})
 }

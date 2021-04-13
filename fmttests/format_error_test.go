@@ -367,6 +367,7 @@ func fmtClean(spv string) string {
 	spv = stackref.ReplaceAllString(spv, `&stack{...}`)
 	spv = hexref.ReplaceAllString(spv, "0xAAAABBBB")
 	spv = strings.ReplaceAll(spv, "\t", "<tab>")
+
 	return spv
 }
 
