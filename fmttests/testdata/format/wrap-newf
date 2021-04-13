@@ -4387,7 +4387,7 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)
 ----
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &withstack.withStack{
@@ -4399,7 +4399,7 @@ require (?s)
 ===== non-redactable formats
 =====
 == %#v
-&os.PathError{Op:"link", Path:"/path/to/file", Err:&withstack.withStack{
+&fs.PathError{Op:"link", Path:"/path/to/file", Err:&withstack.withStack{
     cause: &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
     stack: &stack{...},
 }}
@@ -4413,7 +4413,7 @@ innertwo
 == %X = HEX Error(), good
 == %+v = Error(), ok
 == %#v via Formattable() (IRREGULAR: not same as %#v)
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &withstack.withStack{
@@ -4455,7 +4455,7 @@ Wraps: (2) attached stack trace
   | <tab><path>:<lineno>
 Wraps: (3) new-style innerone
   | innertwo
-Error types: (1) *os.PathError (2) *withstack.withStack (3) *errutil.leafError
+Error types: (1) *fs.PathError (2) *withstack.withStack (3) *errutil.leafError
 =====
 ===== redactable formats
 =====
@@ -4498,7 +4498,7 @@ Wraps: (2) attached stack trace
   | <tab><path>:<lineno>
 Wraps: (3) new-style ‹innerone›
   | ‹innertwo›
-Error types: (1) *os.PathError (2) *withstack.withStack (3) *errutil.leafError
+Error types: (1) *fs.PathError (2) *withstack.withStack (3) *errutil.leafError
 =====
 ===== Sentry reporting
 =====
@@ -4508,7 +4508,7 @@ Error types: (1) *os.PathError (2) *withstack.withStack (3) *errutil.leafError
 --
 *errutil.leafError: new-style × (1)
 <path>:<lineno>: *withstack.withStack (top exception)
-*os.PathError
+*fs.PathError
 (check the extra data payloads)
 == Extra "1: details"
 new-style ×
@@ -4516,7 +4516,7 @@ new-style ×
 == Extra "error types"
 github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
-os/*os.PathError (*::)
+io/fs/*fs.PathError (os/*os.PathError::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> (func15)"
 Title: "*errutil.leafError: link ×: new-style ×\n×\nvia *withstack.withStack"

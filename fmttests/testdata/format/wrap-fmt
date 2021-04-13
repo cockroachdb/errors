@@ -2330,7 +2330,7 @@ accept %\#v via Formattable.*IRREGULAR: not same as %\#v
 
 require (?s)
 ----
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &fmttests.errFmt{msg:"innerone\ninnertwo"},
@@ -2339,7 +2339,7 @@ require (?s)
 ===== non-redactable formats
 =====
 == %#v
-&os.PathError{Op:"link", Path:"/path/to/file", Err:&fmttests.errFmt{msg:"innerone\ninnertwo"}}
+&fs.PathError{Op:"link", Path:"/path/to/file", Err:&fmttests.errFmt{msg:"innerone\ninnertwo"}}
 == Error()
 link /path/to/file: innerone
 innertwo
@@ -2350,7 +2350,7 @@ innertwo
 == %X = HEX Error(), good
 == %+v = Error(), ok
 == %#v via Formattable() (IRREGULAR: not same as %#v)
-&os.PathError{
+&fs.PathError{
     Op:   "link",
     Path: "/path/to/file",
     Err:  &fmttests.errFmt{msg:"innerone\ninnertwo"},
@@ -2366,7 +2366,7 @@ Wraps: (2) innerone
   | -- this is innerone
   | innertwo's
   | multi-line leaf payload
-Error types: (1) *os.PathError (2) *fmttests.errFmt
+Error types: (1) *fs.PathError (2) *fmttests.errFmt
 =====
 ===== redactable formats
 =====
@@ -2386,7 +2386,7 @@ Wraps: (2) ‹innerone›‹›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
 ‹  | multi-line leaf payload›
-Error types: (1) *os.PathError (2) *fmttests.errFmt
+Error types: (1) *fs.PathError (2) *fmttests.errFmt
 =====
 ===== Sentry reporting
 =====
@@ -2395,10 +2395,10 @@ link ×: ×
 ×
 --
 *fmttests.errFmt
-*os.PathError
+*fs.PathError
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
-os/*os.PathError (*::)
+io/fs/*fs.PathError (os/*os.PathError::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
 Title: "link ×: ×\n×"
