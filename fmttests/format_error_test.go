@@ -18,6 +18,8 @@ import (
 	"context"
 	goErr "errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -384,10 +386,23 @@ var fileref = regexp.MustCompile(`(` +
 	// Any path ending with .{go,s}:NNN:
 	`[a-zA-Z0-9\._/@-]+\.(?:go|s):\d+` +
 	`)`)
+var libroot = func() string {
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	return filepath.Clean(filepath.Join(wd, ".."))
+}()
 var libref = regexp.MustCompile(
-	// Any path containing the error library:
-	`((/[a-zA-Z0-9\._/@-]+)+` +
+	`((` +
+		// Any path starting with the errors library root directory:
+		libroot +
+		`|` +
+		// Any path containing the error library:
+		`(/[a-zA-Z0-9\._/@-]+)+` +
 		`/github.com/cockroachdb/errors` +
+		`)` +
+		// Followed by some directory components:
 		`(/[a-zA-Z0-9\._/@-]+)*` +
 		`)`)
 var hexref = regexp.MustCompile(`(0x[a-f0-9]{4,})`)
