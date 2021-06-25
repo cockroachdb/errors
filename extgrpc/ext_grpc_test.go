@@ -17,7 +17,10 @@ package extgrpc_test
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"strings"
 	"testing"
+	"unicode"
 
 	"github.com/cockroachdb/errors"
 	"github.com/cockroachdb/errors/errbase"
@@ -152,7 +155,12 @@ func TestEncodeDecodeStatus(t *testing.T) {
 				if expectDetail == nil {
 					require.Implements(t, (*error)(nil), statusDetails[i], "detail %v", i)
 				} else {
-					require.Equal(t, expectDetail, statusDetails[i], "detail %v", i)
+					// gRPC populates a non-public field in the decoded struct.
+					// This causes a direct deep equality comparison to fail.
+					// To avert this, we compare just the public fields.
+					actual := reflect.New(reflect.TypeOf(statusDetails[i]).Elem()).Interface()
+					copyPublicFields(actual, statusDetails[i])
+					require.Equal(t, expectDetail, actual, "detail %v", i)
 				}
 			}
 
@@ -192,9 +200,26 @@ func TestEncodeDecodeStatus(t *testing.T) {
 				if expectDetail == nil {
 					require.Implements(t, (*error)(nil), decodedDetails[i], "detail %v", i)
 				} else {
-					require.Equal(t, expectDetail, decodedDetails[i], "detail %v", i)
+					// gRPC populates a non-public field in the decoded struct.
+					// This causes a direct deep equality comparison to fail.
+					// To avert this, we compare just the public fields.
+					actual := reflect.New(reflect.TypeOf(decodedDetails[i]).Elem()).Interface()
+					copyPublicFields(actual, decodedDetails[i])
+					require.Equal(t, expectDetail, actual, "detail %v", i)
 				}
 			}
 		})
+	}
+}
+
+func copyPublicFields(dst, src interface{}) {
+	srcval := reflect.Indirect(reflect.ValueOf(src))
+	dstval := reflect.Indirect(reflect.ValueOf(dst))
+	typ := srcval.Type()
+	for i := 0; i < srcval.NumField(); i++ {
+		fname := typ.Field(i).Name
+		if unicode.IsUpper(rune(fname[0])) && !strings.HasPrefix(fname, "XXX_") {
+			dstval.Field(i).Set(srcval.Field(i))
+		}
 	}
 }
