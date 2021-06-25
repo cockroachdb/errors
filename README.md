@@ -11,7 +11,7 @@ automatically formats error details and strips them of PII.
 
 See also [the design RFC](https://github.com/cockroachdb/cockroach/blob/master/docs/RFCS/20190318_error_handling.md).
 
-[![Build Status](https://github.com/cockroachdb/errors/actions/workflows/ci.yaml/badge.svg?branch=master)](https://travis-ci.org/cockroachdb/errors)
+![Build Status](https://github.com/cockroachdb/errors/actions/workflows/ci.yaml/badge.svg?branch=master)
 [![Go Reference](https://pkg.go.dev/badge/github.com/cockroachdb/errors.svg)](https://pkg.go.dev/github.com/cockroachdb/errors)
 
 Table of contents:
