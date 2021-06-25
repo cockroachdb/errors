@@ -10,7 +10,7 @@ require (
 	github.com/gogo/googleapis v1.2.0 // gogoproto 1.2-compatible, for CRDB
 	github.com/gogo/protobuf v1.3.2
 	github.com/gogo/status v1.1.0
-	github.com/hydrogen18/memlistener v0.0.0-20141126152155-54553eb933fb
+	github.com/hydrogen18/memlistener v0.0.0-20200120041712-dcc25e7acd91
 	github.com/kr/pretty v0.2.1
 	github.com/kr/text v0.2.0 // indirect
 	github.com/pkg/errors v0.9.1
