@@ -30,3 +30,6 @@ jobs:
 
     - name: Test (${{ matrix.go }})
       run: go test ./...
+
+    - name: Tidy (${{ matrix.go }})
+      run: '[[ `go version` < "go version go1.15.10" ]] || go mod tidy'
