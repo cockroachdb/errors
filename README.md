@@ -58,8 +58,6 @@ older version of the package.
 
 ## How to use
 
-This library works best with go ≥ 1.15.10. It works with 1.15.9 but breaks `go mod tidy` and `go mod vendor`.
-
 - construct errors with `errors.New()`, etc as usual, but also see the other [error leaf constructors](#Available-error-leaves) below.
 - wrap errors with `errors.Wrap()` as usual, but also see the [other wrappers](#Available-wrapper-constructors) below.
 - test error identity with `errors.Is()` as usual.
