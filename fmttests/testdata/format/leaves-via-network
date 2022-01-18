@@ -232,28 +232,12 @@ ctx-deadline oneline twoline
 opaque
 accept %\+v via Formattable.*IRREGULAR: not same as %\+v
 ----
-&errbase.opaqueLeaf{
-    msg:     "context deadline exceeded",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "context/context.deadlineExceededError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"context/context.deadlineExceededError", Extension:""},
-        ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
-    },
-}
+context.deadlineExceededError{}
 =====
 ===== non-redactable formats
 =====
 == %#v
-&errbase.opaqueLeaf{
-    msg:     "context deadline exceeded",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "context/context.deadlineExceededError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"context/context.deadlineExceededError", Extension:""},
-        ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
-    },
-}
+context.deadlineExceededError{}
 == Error()
 context deadline exceeded
 == %v = Error(), good
@@ -261,15 +245,15 @@ context deadline exceeded
 == %q = quoted Error(), good
 == %x = hex Error(), good
 == %X = HEX Error(), good
-== %+v
-context deadline exceeded
-(1) context deadline exceeded
-Error types: (1) *errbase.opaqueLeaf
+== %+v = Error(), ok
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
 == %q via Formattable() = quoted %v via Formattable(), good
-== %+v via Formattable() == %+v, good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
+context deadline exceeded
+(1) context deadline exceeded
+Error types: (1) context.deadlineExceededError
 =====
 ===== redactable formats
 =====
@@ -280,10 +264,10 @@ context deadline exceeded
 == printed via redact Printf() %q, refused - good
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
-== printed via redact Printf() %+v, ok - congruent with %+v
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 context deadline exceeded
 (1) context deadline exceeded
-Error types: (1) *errbase.opaqueLeaf
+Error types: (1) context.deadlineExceededError
 =====
 ===== Sentry reporting
 =====
