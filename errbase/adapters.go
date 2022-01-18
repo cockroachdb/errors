@@ -37,6 +37,11 @@ func decodeErrorString(_ context.Context, msg string, _ []string, _ proto.Messag
 	return goErr.New(msg)
 }
 
+// context.DeadlineExceeded uses a custom type.
+func decodeDeadlineExceeded(_ context.Context, _ string, _ []string, _ proto.Message) error {
+	return context.DeadlineExceeded
+}
+
 // errors.fundamental from github.com/pkg/errors cannot be encoded
 // exactly because it includes a non-serializable stack trace
 // object. In order to work with it, we encode it by dumping
@@ -182,6 +187,8 @@ func encodeOpaqueErrno(
 func init() {
 	baseErr := goErr.New("")
 	RegisterLeafDecoder(GetTypeKey(baseErr), decodeErrorString)
+
+	RegisterLeafDecoder(GetTypeKey(context.DeadlineExceeded), decodeDeadlineExceeded)
 
 	pkgE := pkgErr.New("")
 	RegisterLeafEncoder(GetTypeKey(pkgE), encodePkgFundamental)

@@ -172,6 +172,14 @@ func TestAdaptProtoErrorsWithWrapper(t *testing.T) {
 	tt.CheckDeepEqual(newErr, origErr)
 }
 
+func TestAdaptContextCanceled(t *testing.T) {
+	// context.DeadlineExceeded is preserved exactly.
+
+	tt := testutils.T{T: t}
+	newErr := network(t, context.DeadlineExceeded)
+	tt.CheckEqual(newErr, context.DeadlineExceeded)
+}
+
 func TestAdaptOsErrors(t *testing.T) {
 	// The special os error types are preserved exactly.
 
