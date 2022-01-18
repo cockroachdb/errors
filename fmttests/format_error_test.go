@@ -382,7 +382,7 @@ func fmtClean(spv string) string {
 	return spv
 }
 
-var funcNN = regexp.MustCompile(`(?m)(\.\.func\d+| func\d+\(\)|\(func\d+\))"?$`)
+var funcNN = regexp.MustCompile(`(?m)((\.\.func\d+| func\d+\(\)|\(func\d+\))"?$)|(\.\.func\d+\\n)`)
 
 var stackref = regexp.MustCompile(`(&(?:errors\.stack|withstack\.stack)\{[^}]*\})`)
 var fileref = regexp.MustCompile(`(` +
