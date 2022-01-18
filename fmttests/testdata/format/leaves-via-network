@@ -1661,6 +1661,89 @@ Title: "*errors.fundamental: ×\n×"
    (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
 
 run
+safefmt oneline twoline
+opaque
+
+require (?s)oneline.*twoline
+----
+&errbase.opaqueLeaf{
+    msg:     "safe oneline\ntwoline",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errSafeFormat",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errSafeFormat", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
+    },
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&errbase.opaqueLeaf{
+    msg:     "safe oneline\ntwoline",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errSafeFormat",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errSafeFormat", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
+    },
+}
+== Error()
+safe oneline
+twoline
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+safe oneline
+(1) safe oneline
+  | twoline
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errSafeFormat
+Error types: (1) *errbase.opaqueLeaf
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+‹safe oneline›
+‹twoline›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+‹safe oneline›
+(1) ‹safe oneline›
+  | ‹twoline›
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errSafeFormat
+Error types: (1) *errbase.opaqueLeaf
+=====
+===== Sentry reporting
+=====
+== Message payload
+×
+×
+--
+*fmttests.errSafeFormat
+== Extra "error types"
+github.com/cockroachdb/errors/fmttests/*fmttests.errSafeFormat (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*fmttests.errSafeFormat"
+Title: "×\n×"
+(NO STACKTRACE)
+
+run
 unimplemented oneline twoline
 opaque
 

@@ -3609,6 +3609,123 @@ Title: "×\n×"
 
 run
 nofmt innerone innertwo
+safefmt outerthree outerfour
+opaque
+
+require (?s)outerthree.*outerfour.*innerone.*innertwo
+----
+&errbase.opaqueWrapper{
+    cause: &errbase.opaqueLeaf{
+        msg:     "innerone\ninnertwo",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+            ReportablePayload: nil,
+            FullDetails:       (*types.Any)(nil),
+        },
+    },
+    prefix:  "safe outerthree\nouterfour",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
+    },
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&errbase.opaqueWrapper{
+    cause: &errbase.opaqueLeaf{
+        msg:     "innerone\ninnertwo",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+            ReportablePayload: nil,
+            FullDetails:       (*types.Any)(nil),
+        },
+    },
+    prefix:  "safe outerthree\nouterfour",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
+    },
+}
+== Error()
+safe outerthree
+outerfour: innerone
+innertwo
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+safe outerthree: innerone
+(1) safe outerthree
+  | outerfour
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat
+Wraps: (2) innerone
+  | innertwo
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+‹safe outerthree›
+‹outerfour›: ‹innerone›
+‹innertwo›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+‹safe outerthree›: ‹innerone›
+(1) ‹safe outerthree›
+  | ‹outerfour›
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat
+Wraps: (2) ‹innerone›
+  | ‹innertwo›
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+=====
+===== Sentry reporting
+=====
+== Message payload
+×
+×: ×
+×
+--
+*fmttests.errNoFmt
+*fmttests.werrSafeFormat
+== Extra "error types"
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*fmttests.errNoFmt"
+Title: "×\n×: ×\n×"
+(NO STACKTRACE)
+
+run
+nofmt innerone innertwo
 secondary outerthree outerfour
 opaque
 
