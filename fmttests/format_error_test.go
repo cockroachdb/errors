@@ -369,6 +369,7 @@ func fmtClean(spv string) string {
 	spv = stackref.ReplaceAllString(spv, `&stack{...}`)
 	spv = hexref.ReplaceAllString(spv, "0xAAAABBBB")
 	spv = strings.ReplaceAll(spv, "\t", "<tab>")
+	spv = funcNN.ReplaceAllString(spv, `...funcNN...`)
 
 	// When running the tests with a Go version before 1.16,
 	// the reference test output wrt fs.PathError will not match what the
@@ -380,6 +381,8 @@ func fmtClean(spv string) string {
 
 	return spv
 }
+
+var funcNN = regexp.MustCompile(`(?m)(\.\.func\d+| func\d+\(\)|\(func\d+\))"?$`)
 
 var stackref = regexp.MustCompile(`(&(?:errors\.stack|withstack\.stack)\{[^}]*\})`)
 var fileref = regexp.MustCompile(`(` +
