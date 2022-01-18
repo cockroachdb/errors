@@ -5046,6 +5046,159 @@ Title: "*errors.fundamental: ×\n×"
 
 run
 pkgerr innerone innertwo
+safefmt outerthree outerfour
+
+require (?s)outerthree.*outerfour.*
+----
+&fmttests.werrSafeFormat{
+    cause: &errors.fundamental{
+        msg:   "innerone\ninnertwo",
+        stack: &stack{...},
+    },
+    msg: "outerthree\nouterfour",
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&fmttests.werrSafeFormat{
+    cause: &errors.fundamental{
+        msg:   "innerone\ninnertwo",
+        stack: &stack{...},
+    },
+    msg: "outerthree\nouterfour",
+}
+== Error()
+safe outerthree
+outerfour: innerone
+innertwo
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+safe outerthree: innerone
+(1) safe outerthree
+  | outerfour
+Wraps: (2) innerone
+  | innertwo
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Error types: (1) *fmttests.werrSafeFormat (2) *errors.fundamental
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+safe ‹outerthree›
+‹outerfour›: ‹innerone›
+‹innertwo›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+safe ‹outerthree›: ‹innerone›
+(1) safe ‹outerthree›
+  | ‹outerfour›
+Wraps: (2) ‹innerone›‹›
+‹  | innertwo›
+‹  | github.com/cockroachdb/errors/fmttests.glob..func9›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.runDirective.func1›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.runDirective›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.runTestInternal›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.RunTest›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.Walk›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.Walk.func1›
+‹  | <tab><path>:<lineno>›
+‹  | testing.tRunner›
+‹  | <tab><path>:<lineno>›
+‹  | runtime.goexit›
+‹  | <tab><path>:<lineno>›
+Error types: (1) *fmttests.werrSafeFormat (2) *errors.fundamental
+=====
+===== Sentry reporting
+=====
+== Message payload
+<path>:<lineno>: safe ×
+×: ×
+×
+--
+<path>:<lineno>: *errors.fundamental (top exception)
+*fmttests.werrSafeFormat
+== Extra "error types"
+github.com/pkg/errors/*errors.fundamental (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "<path>:<lineno> ...funcNN...
+Title: "*errors.fundamental: safe ×\n×: ×\n×"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
+
+run
+pkgerr innerone innertwo
 secondary outerthree outerfour
 
 require (?s)

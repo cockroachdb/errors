@@ -2664,6 +2664,82 @@ Title: "×\n×"
 
 run
 nofmt innerone innertwo
+safefmt outerthree outerfour
+
+require (?s)outerthree.*outerfour.*
+----
+&fmttests.werrSafeFormat{
+    cause: &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+    msg:   "outerthree\nouterfour",
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&fmttests.werrSafeFormat{
+    cause: &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+    msg:   "outerthree\nouterfour",
+}
+== Error()
+safe outerthree
+outerfour: innerone
+innertwo
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+safe outerthree: innerone
+(1) safe outerthree
+  | outerfour
+Wraps: (2) innerone
+  | innertwo
+Error types: (1) *fmttests.werrSafeFormat (2) *fmttests.errNoFmt
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+safe ‹outerthree›
+‹outerfour›: ‹innerone›
+‹innertwo›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+safe ‹outerthree›: ‹innerone›
+(1) safe ‹outerthree›
+  | ‹outerfour›
+Wraps: (2) ‹innerone›‹›
+‹  | innertwo›
+Error types: (1) *fmttests.werrSafeFormat (2) *fmttests.errNoFmt
+=====
+===== Sentry reporting
+=====
+== Message payload
+safe ×
+×: ×
+×
+--
+*fmttests.errNoFmt
+*fmttests.werrSafeFormat
+== Extra "error types"
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*fmttests.errNoFmt"
+Title: "safe ×\n×: ×\n×"
+(NO STACKTRACE)
+
+run
+nofmt innerone innertwo
 secondary outerthree outerfour
 
 require (?s)

@@ -317,6 +317,13 @@ Wraps: (3) woo
   | multi-line leaf payload
 Error types: (1) *fmttests.werrDelegateEmpty (2) *errors.withStack (3) *fmttests.errFmt`, ``,
 		},
+
+		{"safeformatter leaf",
+			&errSafeFormat{msg: "world"},
+			`safe world`, `
+safe world
+(1) safe world
+Error types: (1) *fmttests.errSafeFormat`, ``},
 	}
 
 	for _, test := range testCases {
@@ -701,4 +708,28 @@ func (w *werrMigrated) Format(s fmt.State, verb rune) { errbase.FormatError(w, s
 
 func init() {
 	errbase.RegisterTypeMigration("some/previous/path", "prevpkg.prevType", (*werrMigrated)(nil))
+}
+
+type errSafeFormat struct {
+	msg string
+}
+
+func (e *errSafeFormat) Error() string                 { return fmt.Sprint(e) }
+func (e *errSafeFormat) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+func (e *errSafeFormat) SafeFormatError(p errbase.Printer) (next error) {
+	p.Printf("safe %s", e.msg)
+	return nil
+}
+
+type werrSafeFormat struct {
+	cause error
+	msg   string
+}
+
+func (w *werrSafeFormat) Cause() error                  { return w.cause }
+func (w *werrSafeFormat) Error() string                 { return fmt.Sprint(w) }
+func (w *werrSafeFormat) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+func (w *werrSafeFormat) SafeFormatError(p errbase.Printer) (next error) {
+	p.Printf("safe %s", w.msg)
+	return w.cause
 }

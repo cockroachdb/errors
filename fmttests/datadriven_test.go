@@ -91,6 +91,9 @@ var leafCommands = map[string]commandFn{
 	// errFmt has both Format() and FormatError(),
 	// and demonstrates the common case of "rich" errors.
 	"fmt": func(_ error, args []arg) error { return &errFmt{strfy(args)} },
+	// errSafeFormat has SafeFormatError(), and has Error() and Format()
+	// redirect to that.
+	"safefmt": func(_ error, args []arg) error { return &errSafeFormat{strfy(args)} },
 
 	// errutil.New implements multi-layer errors.
 	"newf": func(_ error, args []arg) error { return errutil.Newf("new-style %s", strfy(args)) },
@@ -176,6 +179,9 @@ var wrapCommands = map[string]commandFn{
 	// werrFmt has both Format() and FormatError(),
 	// and demonstrates the common case of "rich" errors.
 	"fmt": func(err error, args []arg) error { return &werrFmt{err, strfy(args)} },
+	// werrSafeFormat has SafeFormatError(), and has Error() and Format()
+	// redirect to that.
+	"safefmt": func(err error, args []arg) error { return &werrSafeFormat{cause: err, msg: strfy(args)} },
 	// werrEmpty has no message of its own. Its Error() is implemented via its cause.
 	"empty": func(err error, _ []arg) error { return &werrEmpty{err} },
 	// werrDelegate delegates its Error() behavior to FormatError().
