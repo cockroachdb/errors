@@ -44,7 +44,7 @@ import (
 	"github.com/cockroachdb/errors/withstack"
 	"github.com/cockroachdb/logtags"
 	"github.com/cockroachdb/redact"
-	"github.com/cockroachdb/sentry-go"
+	"github.com/getsentry/sentry-go"
 	"github.com/kr/pretty"
 	pkgErr "github.com/pkg/errors"
 )
