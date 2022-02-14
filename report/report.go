@@ -23,7 +23,7 @@ import (
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/withstack"
 	"github.com/cockroachdb/redact"
-	"github.com/cockroachdb/sentry-go"
+	"github.com/getsentry/sentry-go"
 )
 
 // BuildSentryReport builds the components of a sentry report.  This
