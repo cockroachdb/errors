@@ -3,7 +3,7 @@ module github.com/cockroachdb/errors
 go 1.13
 
 require (
-	github.com/cockroachdb/datadriven v1.0.1-0.20220214165345-9baa518899e9
+	github.com/cockroachdb/datadriven v1.0.1-0.20220214170620-9913f5bc19b7
 	github.com/cockroachdb/logtags v0.0.0-20211118104740-dabe8e521a4f
 	github.com/cockroachdb/redact v1.1.3
 	github.com/getsentry/sentry-go v0.12.0
