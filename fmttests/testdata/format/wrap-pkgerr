@@ -6,8 +6,8 @@ require (?s)
 ----
 &assert.withAssertionFailure{
     cause: &withstack.withStack{
-        cause: &barriers.barrierError{
-            msg:       "innerone\ninnertwo",
+        cause: &barriers.barrierErr{
+            smsg:      "‹innerone›\n‹innertwo›",
             maskedErr: &errors.fundamental{
                 msg:   "innerone\ninnertwo",
                 stack: &stack{...},
@@ -22,8 +22,8 @@ require (?s)
 == %#v
 &assert.withAssertionFailure{
     cause: &withstack.withStack{
-        cause: &barriers.barrierError{
-            msg:       "innerone\ninnertwo",
+        cause: &barriers.barrierErr{
+            smsg:      "‹innerone›\n‹innertwo›",
             maskedErr: &errors.fundamental{
                 msg:   "innerone\ninnertwo",
                 stack: &stack{...},
@@ -101,7 +101,7 @@ Wraps: (3) innerone
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -179,7 +179,7 @@ Wraps: (3) ‹innerone›
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
@@ -244,18 +244,18 @@ Wraps: (3) ×
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierErr
 -- report composition:
-*barriers.barrierError: details for github.com/pkg/errors/*errors.fundamental:::
+*barriers.barrierErr: details for github.com/pkg/errors/*errors.fundamental:::
 <path>:<lineno>: *withstack.withStack (top exception)
 *assert.withAssertionFailure
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/assert/*assert.withAssertionFailure (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*barriers.barrierError: ×\nvia *withstack.withStack"
+Title: "*barriers.barrierErr: ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -290,8 +290,8 @@ require (?s)outerthree.*outerfour.*
 &assert.withAssertionFailure{
     cause: &withstack.withStack{
         cause: &errutil.withPrefix{
-            cause: &barriers.barrierError{
-                msg:       "innerone\ninnertwo",
+            cause: &barriers.barrierErr{
+                smsg:      "‹innerone›\n‹innertwo›",
                 maskedErr: &errors.fundamental{
                     msg:   "innerone\ninnertwo",
                     stack: &stack{...},
@@ -309,8 +309,8 @@ require (?s)outerthree.*outerfour.*
 &assert.withAssertionFailure{
     cause: &withstack.withStack{
         cause: &errutil.withPrefix{
-            cause: &barriers.barrierError{
-                msg:       "innerone\ninnertwo",
+            cause: &barriers.barrierErr{
+                smsg:      "‹innerone›\n‹innertwo›",
                 maskedErr: &errors.fundamental{
                     msg:   "innerone\ninnertwo",
                     stack: &stack{...},
@@ -393,7 +393,7 @@ Wraps: (4) innerone
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -474,7 +474,7 @@ Wraps: (4) ‹innerone›
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
@@ -541,20 +541,20 @@ Wraps: (4) ×
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierErr
 -- report composition:
-*barriers.barrierError: details for github.com/pkg/errors/*errors.fundamental:::
+*barriers.barrierErr: details for github.com/pkg/errors/*errors.fundamental:::
 *errutil.withPrefix: assertmsg: ×
 <path>:<lineno>: *withstack.withStack (top exception)
 *assert.withAssertionFailure
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/assert/*assert.withAssertionFailure (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*barriers.barrierError: assertmsg: ×: ×\nvia *withstack.withStack"
+Title: "*barriers.barrierErr: assertmsg: ×: ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -586,8 +586,8 @@ barrier outerthree outerfour
 
 require (?s)
 ----
-&barriers.barrierError{
-    msg:       "innerone\ninnertwo",
+&barriers.barrierErr{
+    smsg:      "‹innerone›\n‹innertwo›",
     maskedErr: &errors.fundamental{
         msg:   "innerone\ninnertwo",
         stack: &stack{...},
@@ -597,8 +597,8 @@ require (?s)
 ===== non-redactable formats
 =====
 == %#v
-&barriers.barrierError{
-    msg:       "innerone\ninnertwo",
+&barriers.barrierErr{
+    smsg:      "‹innerone›\n‹innertwo›",
     maskedErr: &errors.fundamental{
         msg:   "innerone\ninnertwo",
         stack: &stack{...},
@@ -646,7 +646,7 @@ innerone
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *barriers.barrierError
+Error types: (1) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -697,7 +697,7 @@ Error types: (1) *barriers.barrierError
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *barriers.barrierError
+Error types: (1) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
@@ -735,13 +735,13 @@ Error types: (1) *barriers.barrierError
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *barriers.barrierError
+Error types: (1) *barriers.barrierErr
 -- report composition:
-*barriers.barrierError: details for github.com/pkg/errors/*errors.fundamental:::
+*barriers.barrierErr: details for github.com/pkg/errors/*errors.fundamental:::
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "*barriers.barrierError"
+Type: "*barriers.barrierErr"
 Title: "×"
 (NO STACKTRACE)
 
@@ -2967,8 +2967,8 @@ handled-domain outerthree outerfour
 require (?s)
 ----
 &domains.withDomain{
-    cause: &barriers.barrierError{
-        msg:       "innerone\ninnertwo",
+    cause: &barriers.barrierErr{
+        smsg:      "‹innerone›\n‹innertwo›",
         maskedErr: &errors.fundamental{
             msg:   "innerone\ninnertwo",
             stack: &stack{...},
@@ -2981,8 +2981,8 @@ require (?s)
 =====
 == %#v
 &domains.withDomain{
-    cause: &barriers.barrierError{
-        msg:       "innerone\ninnertwo",
+    cause: &barriers.barrierErr{
+        smsg:      "‹innerone›\n‹innertwo›",
         maskedErr: &errors.fundamental{
             msg:   "innerone\ninnertwo",
             stack: &stack{...},
@@ -3033,7 +3033,7 @@ Wraps: (2) innerone
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *domains.withDomain (2) *barriers.barrierError
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -3085,7 +3085,7 @@ Wraps: (2) ‹innerone›
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *domains.withDomain (2) *barriers.barrierError
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
@@ -3124,15 +3124,15 @@ Wraps: (2) ×
   |   | runtime.goexit
   |   | <tab><path>:<lineno>
   | Error types: (1) *errors.fundamental
-Error types: (1) *domains.withDomain (2) *barriers.barrierError
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
 -- report composition:
-*barriers.barrierError: details for github.com/pkg/errors/*errors.fundamental:::
+*barriers.barrierErr: details for github.com/pkg/errors/*errors.fundamental:::
 *domains.withDomain: error domain: pkg <path>
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/domains/*domains.withDomain (*::error domain: pkg <path>)
 == Exception 1 (Module: "error domain: pkg <path>")
-Type: "*barriers.barrierError"
+Type: "*barriers.barrierErr"
 Title: "×"
 (NO STACKTRACE)
 

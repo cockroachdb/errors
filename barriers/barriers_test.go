@@ -118,7 +118,7 @@ woo
   | woo
   | (1) woo
   | Error types: (1) *errors.errorString
-Error types: (1) *barriers.barrierError`},
+Error types: (1) *barriers.barrierErr`},
 
 		{"handled + handled", barriers.Handled(barriers.Handled(goErr.New("woo"))), woo, `
 woo
@@ -130,8 +130,8 @@ woo
   |   | woo
   |   | (1) woo
   |   | Error types: (1) *errors.errorString
-  | Error types: (1) *barriers.barrierError
-Error types: (1) *barriers.barrierError`},
+  | Error types: (1) *barriers.barrierErr
+Error types: (1) *barriers.barrierErr`},
 
 		{"handledmsg", barriers.HandledWithMessage(goErr.New("woo"), "waa"), "waa", `
 waa
@@ -140,7 +140,7 @@ waa
   | woo
   | (1) woo
   | Error types: (1) *errors.errorString
-Error types: (1) *barriers.barrierError`},
+Error types: (1) *barriers.barrierErr`},
 
 		{"handledmsg + handledmsg", barriers.HandledWithMessage(
 			barriers.HandledWithMessage(
@@ -154,8 +154,8 @@ wuu
   |   | woo
   |   | (1) woo
   |   | Error types: (1) *errors.errorString
-  | Error types: (1) *barriers.barrierError
-Error types: (1) *barriers.barrierError`},
+  | Error types: (1) *barriers.barrierErr
+Error types: (1) *barriers.barrierErr`},
 
 		{"handled + wrapper",
 			barriers.Handled(
@@ -172,7 +172,7 @@ waa: woo
   |   | multi-line wrapper payload
   | Wraps: (2) woo
   | Error types: (1) *barriers_test.werrFmt (2) *errors.errorString
-Error types: (1) *barriers.barrierError`},
+Error types: (1) *barriers.barrierErr`},
 	}
 
 	for _, test := range testCases {
