@@ -7,8 +7,8 @@ require (?s)innerone.*innertwo
 ----
 &assert.withAssertionFailure{
     cause: &errbase.opaqueWrapper{
-        cause: &barriers.barrierError{
-            msg:       "new-style innerone\ninnertwo",
+        cause: &barriers.barrierErr{
+            smsg:      "new-style ‹innerone›\n‹innertwo›",
             maskedErr: &errbase.opaqueWrapper{
                 cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
                 prefix:  "",
@@ -35,8 +35,8 @@ require (?s)innerone.*innertwo
 == %#v
 &assert.withAssertionFailure{
     cause: &errbase.opaqueWrapper{
-        cause: &barriers.barrierError{
-            msg:       "new-style innerone\ninnertwo",
+        cause: &barriers.barrierErr{
+            smsg:      "new-style ‹innerone›\n‹innertwo›",
             maskedErr: &errbase.opaqueWrapper{
                 cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
                 prefix:  "",
@@ -133,7 +133,7 @@ Wraps: (3) new-style innerone
   | Wraps: (2) new-style innerone
   |   | innertwo
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -143,7 +143,7 @@ Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *ba
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹new-style innerone›
+new-style ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
@@ -151,7 +151,7 @@ Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *ba
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
-‹new-style innerone›
+new-style ‹innerone›
 (1) assertion failure
 Wraps: (2)
   | (opaque error wrapper)
@@ -182,7 +182,7 @@ Wraps: (2)
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (3) ‹new-style innerone›
+Wraps: (3) new-style ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | new-style ‹innerone›
@@ -218,12 +218,12 @@ Wraps: (3) ‹new-style innerone›
   | Wraps: (2) new-style ‹innerone›
   |   | ‹innertwo›
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: ×
+<path>:<lineno>: new-style ×
 (1) assertion failure
 Wraps: (2)
   | (opaque error wrapper)
@@ -254,7 +254,7 @@ Wraps: (2)
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (3) ×
+Wraps: (3) new-style ×
   | ×
   | -- cause hidden behind barrier
   | new-style ×
@@ -290,18 +290,18 @@ Wraps: (3) ×
   | Wraps: (2) new-style ×
   |   | ×
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierErr
 -- report composition:
-*barriers.barrierError: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
+*barriers.barrierErr: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
 <path>:<lineno>: *withstack.withStack (top exception)
 *assert.withAssertionFailure
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/assert/*assert.withAssertionFailure (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*barriers.barrierError: ×\nvia *withstack.withStack"
+Title: "*barriers.barrierErr: new-style ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -337,8 +337,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &assert.withAssertionFailure{
     cause: &errbase.opaqueWrapper{
         cause: &errutil.withPrefix{
-            cause: &barriers.barrierError{
-                msg:       "new-style innerone\ninnertwo",
+            cause: &barriers.barrierErr{
+                smsg:      "new-style ‹innerone›\n‹innertwo›",
                 maskedErr: &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
                     prefix:  "",
@@ -368,8 +368,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &assert.withAssertionFailure{
     cause: &errbase.opaqueWrapper{
         cause: &errutil.withPrefix{
-            cause: &barriers.barrierError{
-                msg:       "new-style innerone\ninnertwo",
+            cause: &barriers.barrierErr{
+                smsg:      "new-style ‹innerone›\n‹innertwo›",
                 maskedErr: &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
                     prefix:  "",
@@ -471,7 +471,7 @@ Wraps: (4) new-style innerone
   | Wraps: (2) new-style innerone
   |   | innertwo
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -482,7 +482,7 @@ Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *er
 =====
 == printed via redact Print(), ok - congruent with %v
 assertmsg: ‹outerthree›
-‹outerfour›: ‹new-style innerone›
+‹outerfour›: new-style ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
@@ -490,7 +490,7 @@ assertmsg: ‹outerthree›
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
-assertmsg: ‹outerthree›: ‹new-style innerone›
+assertmsg: ‹outerthree›: new-style ‹innerone›
 (1) assertion failure
 Wraps: (2)
   | (opaque error wrapper)
@@ -523,7 +523,7 @@ Wraps: (2)
   | <tab><path>:<lineno>
 Wraps: (3) assertmsg: ‹outerthree›
   | ‹outerfour›
-Wraps: (4) ‹new-style innerone›
+Wraps: (4) new-style ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | new-style ‹innerone›
@@ -559,12 +559,12 @@ Wraps: (4) ‹new-style innerone›
   | Wraps: (2) new-style ‹innerone›
   |   | ‹innertwo›
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: assertmsg: ×: ×
+<path>:<lineno>: assertmsg: ×: new-style ×
 (1) assertion failure
 Wraps: (2)
   | (opaque error wrapper)
@@ -597,7 +597,7 @@ Wraps: (2)
   | <tab><path>:<lineno>
 Wraps: (3) assertmsg: ×
   | ×
-Wraps: (4) ×
+Wraps: (4) new-style ×
   | ×
   | -- cause hidden behind barrier
   | new-style ×
@@ -633,20 +633,20 @@ Wraps: (4) ×
   | Wraps: (2) new-style ×
   |   | ×
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierErr
 -- report composition:
-*barriers.barrierError: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
+*barriers.barrierErr: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
 *errutil.withPrefix: assertmsg: ×
 <path>:<lineno>: *withstack.withStack (top exception)
 *assert.withAssertionFailure
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/assert/*assert.withAssertionFailure (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*barriers.barrierError: assertmsg: ×: ×\nvia *withstack.withStack"
+Title: "*barriers.barrierErr: assertmsg: ×: new-style ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -679,8 +679,8 @@ opaque
 
 require (?s)innerone.*innertwo
 ----
-&barriers.barrierError{
-    msg:       "new-style innerone\ninnertwo",
+&barriers.barrierErr{
+    smsg:      "new-style ‹innerone›\n‹innertwo›",
     maskedErr: &errbase.opaqueWrapper{
         cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
         prefix:  "",
@@ -696,8 +696,8 @@ require (?s)innerone.*innertwo
 ===== non-redactable formats
 =====
 == %#v
-&barriers.barrierError{
-    msg:       "new-style innerone\ninnertwo",
+&barriers.barrierErr{
+    smsg:      "new-style ‹innerone›\n‹innertwo›",
     maskedErr: &errbase.opaqueWrapper{
         cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
         prefix:  "",
@@ -755,7 +755,7 @@ new-style innerone
   | Wraps: (2) new-style innerone
   |   | innertwo
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *barriers.barrierError
+Error types: (1) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -765,7 +765,7 @@ Error types: (1) *barriers.barrierError
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹new-style innerone›
+new-style ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
@@ -773,8 +773,8 @@ Error types: (1) *barriers.barrierError
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
-‹new-style innerone›
-(1) ‹new-style innerone›
+new-style ‹innerone›
+(1) new-style ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | new-style ‹innerone›
@@ -810,13 +810,13 @@ Error types: (1) *barriers.barrierError
   | Wraps: (2) new-style ‹innerone›
   |   | ‹innertwo›
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *barriers.barrierError
+Error types: (1) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
 == Message payload
-×
-(1) ×
+new-style ×
+(1) new-style ×
   | ×
   | -- cause hidden behind barrier
   | new-style ×
@@ -852,14 +852,14 @@ Error types: (1) *barriers.barrierError
   | Wraps: (2) new-style ×
   |   | ×
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *barriers.barrierError
+Error types: (1) *barriers.barrierErr
 -- report composition:
-*barriers.barrierError: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
+*barriers.barrierErr: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "*barriers.barrierError"
-Title: "×"
+Type: "*barriers.barrierErr"
+Title: "new-style ×"
 (NO STACKTRACE)
 
 run
@@ -3555,8 +3555,8 @@ opaque
 require (?s)innerone.*innertwo
 ----
 &domains.withDomain{
-    cause: &barriers.barrierError{
-        msg:       "new-style innerone\ninnertwo",
+    cause: &barriers.barrierErr{
+        smsg:      "new-style ‹innerone›\n‹innertwo›",
         maskedErr: &errbase.opaqueWrapper{
             cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
             prefix:  "",
@@ -3575,8 +3575,8 @@ require (?s)innerone.*innertwo
 =====
 == %#v
 &domains.withDomain{
-    cause: &barriers.barrierError{
-        msg:       "new-style innerone\ninnertwo",
+    cause: &barriers.barrierErr{
+        smsg:      "new-style ‹innerone›\n‹innertwo›",
         maskedErr: &errbase.opaqueWrapper{
             cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
             prefix:  "",
@@ -3637,7 +3637,7 @@ Wraps: (2) new-style innerone
   | Wraps: (2) new-style innerone
   |   | innertwo
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *domains.withDomain (2) *barriers.barrierError
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -3647,7 +3647,7 @@ Error types: (1) *domains.withDomain (2) *barriers.barrierError
 ===== redactable formats
 =====
 == printed via redact Print(), ok - congruent with %v
-‹new-style innerone›
+new-style ‹innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
@@ -3655,9 +3655,9 @@ Error types: (1) *domains.withDomain (2) *barriers.barrierError
 == printed via redact Printf() %x, refused - good
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
-‹new-style innerone›
+new-style ‹innerone›
 (1) error domain: pkg <path>
-Wraps: (2) ‹new-style innerone›
+Wraps: (2) new-style ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | new-style ‹innerone›
@@ -3693,14 +3693,14 @@ Wraps: (2) ‹new-style innerone›
   | Wraps: (2) new-style ‹innerone›
   |   | ‹innertwo›
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *domains.withDomain (2) *barriers.barrierError
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
 == Message payload
-×
+new-style ×
 (1) error domain: pkg <path>
-Wraps: (2) ×
+Wraps: (2) new-style ×
   | ×
   | -- cause hidden behind barrier
   | new-style ×
@@ -3736,16 +3736,16 @@ Wraps: (2) ×
   | Wraps: (2) new-style ×
   |   | ×
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Error types: (1) *domains.withDomain (2) *barriers.barrierError
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
 -- report composition:
-*barriers.barrierError: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
+*barriers.barrierErr: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
 *domains.withDomain: error domain: pkg <path>
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/domains/*domains.withDomain (*::error domain: pkg <path>)
 == Exception 1 (Module: "error domain: pkg <path>")
-Type: "*barriers.barrierError"
-Title: "×"
+Type: "*barriers.barrierErr"
+Title: "new-style ×"
 (NO STACKTRACE)
 
 run
