@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/cockroachdb/errors/errbase"
+	"github.com/cockroachdb/redact"
 	"github.com/gogo/protobuf/proto"
 )
 
@@ -88,6 +89,7 @@ func (e *barrierError) SafeDetails() []string {
 		sd := errbase.GetSafeDetails(err)
 		details = sd.Fill(details)
 	}
+	details = append(details, redact.Sprintf("masked error: %+v", e.maskedErr).Redact().StripMarkers())
 	return details
 }
 

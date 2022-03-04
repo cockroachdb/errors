@@ -256,6 +256,39 @@ details for github.com/pkg/errors/*errors.fundamental:::
    <tab><path>:<lineno>
    runtime.goexit
    <tab><path>:<lineno>
+masked error: ×
+   (1) ×
+     | ×
+     |
+     | (opaque error leaf)
+     | type name: github.com/pkg/errors/*errors.fundamental
+     | reportable 0:
+     |
+     | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirective.func1
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirective
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runTestInternal
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.RunTest
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.Walk
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.Walk.func1
+     | <tab><path>:<lineno>
+     | testing.tRunner
+     | <tab><path>:<lineno>
+     | runtime.goexit
+     | <tab><path>:<lineno>
+   Error types: (1) *errbase.opaqueLeaf
 == Extra "error types"
 github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
@@ -562,6 +595,39 @@ details for github.com/pkg/errors/*errors.fundamental:::
    <tab><path>:<lineno>
    runtime.goexit
    <tab><path>:<lineno>
+masked error: ×
+   (1) ×
+     | ×
+     |
+     | (opaque error leaf)
+     | type name: github.com/pkg/errors/*errors.fundamental
+     | reportable 0:
+     |
+     | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirective.func1
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirective
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runTestInternal
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.RunTest
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.Walk
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.Walk.func1
+     | <tab><path>:<lineno>
+     | testing.tRunner
+     | <tab><path>:<lineno>
+     | runtime.goexit
+     | <tab><path>:<lineno>
+   Error types: (1) *errbase.opaqueLeaf
 == Extra "2: details"
 assertmsg: ×
    ×
@@ -774,6 +840,39 @@ details for github.com/pkg/errors/*errors.fundamental:::
    <tab><path>:<lineno>
    runtime.goexit
    <tab><path>:<lineno>
+masked error: ×
+   (1) ×
+     | ×
+     |
+     | (opaque error leaf)
+     | type name: github.com/pkg/errors/*errors.fundamental
+     | reportable 0:
+     |
+     | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirective.func1
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirective
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runTestInternal
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.RunTest
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.Walk
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.Walk.func1
+     | <tab><path>:<lineno>
+     | testing.tRunner
+     | <tab><path>:<lineno>
+     | runtime.goexit
+     | <tab><path>:<lineno>
+   Error types: (1) *errbase.opaqueLeaf
 == Extra "error types"
 github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
 == Exception 1 (Module: "error domain: <none>")
@@ -3196,6 +3295,39 @@ details for github.com/pkg/errors/*errors.fundamental:::
    <tab><path>:<lineno>
    runtime.goexit
    <tab><path>:<lineno>
+masked error: ×
+   (1) ×
+     | ×
+     |
+     | (opaque error leaf)
+     | type name: github.com/pkg/errors/*errors.fundamental
+     | reportable 0:
+     |
+     | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirective.func1
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirective
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.runTestInternal
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.RunTest
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.Walk
+     | <tab><path>:<lineno>
+     | github.com/cockroachdb/datadriven.Walk.func1
+     | <tab><path>:<lineno>
+     | testing.tRunner
+     | <tab><path>:<lineno>
+     | runtime.goexit
+     | <tab><path>:<lineno>
+   Error types: (1) *errbase.opaqueLeaf
 == Extra "2: details"
 error domain: pkg <path>
 == Extra "error types"

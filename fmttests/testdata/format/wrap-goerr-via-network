@@ -150,9 +150,15 @@ Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *ba
 <path>:<lineno>: ×
 ×
 --
-*barriers.barrierError
+*barriers.barrierError: masked error: × (1)
 <path>:<lineno>: *withstack.withStack (top exception)
 *assert.withAssertionFailure
+(check the extra data payloads)
+== Extra "1: details"
+masked error: ×
+   (1) ××
+   ×
+   Error types: (1) *errors.errorString
 == Extra "error types"
 github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
@@ -350,12 +356,17 @@ Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *er
 ×: ×
 ×
 --
-*barriers.barrierError
-*errutil.withPrefix: assertmsg: × (1)
+*barriers.barrierError: masked error: × (1)
+*errutil.withPrefix: assertmsg: × (2)
 <path>:<lineno>: *withstack.withStack (top exception)
 *assert.withAssertionFailure
 (check the extra data payloads)
 == Extra "1: details"
+masked error: ×
+   (1) ××
+   ×
+   Error types: (1) *errors.errorString
+== Extra "2: details"
 assertmsg: ×
    ×
 == Extra "error types"
@@ -461,7 +472,13 @@ Error types: (1) *barriers.barrierError
 ×
 ×
 --
-*barriers.barrierError
+*barriers.barrierError: masked error: × (1)
+(check the extra data payloads)
+== Extra "1: details"
+masked error: ×
+   (1) ××
+   ×
+   Error types: (1) *errors.errorString
 == Extra "error types"
 github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
 == Exception 1 (Module: "error domain: <none>")
@@ -1613,10 +1630,15 @@ Error types: (1) *domains.withDomain (2) *barriers.barrierError
 ×
 ×
 --
-*barriers.barrierError
-*domains.withDomain: error domain: pkg <path> (1)
+*barriers.barrierError: masked error: × (1)
+*domains.withDomain: error domain: pkg <path> (2)
 (check the extra data payloads)
 == Extra "1: details"
+masked error: ×
+   (1) ××
+   ×
+   Error types: (1) *errors.errorString
+== Extra "2: details"
 error domain: pkg <path>
 == Extra "error types"
 github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
