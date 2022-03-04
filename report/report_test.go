@@ -27,7 +27,7 @@ import (
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/testutils"
 	"github.com/cockroachdb/errors/withstack"
-	"github.com/getsentry/sentry-go"
+	sentry "github.com/getsentry/sentry-go"
 	"github.com/kr/pretty"
 )
 
@@ -44,12 +44,13 @@ import (
 //
 // 	myErr := errutil.Newf("Hello %s %d", "world", redact.Safe(123))
 // 	myErr = errutil.Wrapf(myErr, "some prefix %s", "unseen")
+// 	// myErr := goErr.New("hai")
+// 	myErr = errutil.NewAssertionErrorWithWrappedErrf(myErr, "assert %s %s", redact.Safe("safe"), "unsafe")
 //
 // 	if eventID := report.ReportError(myErr); eventID == "" {
 // 		t.Fatal("eventID is empty")
 // 	}
 // 	sentry.Flush(2 * time.Second)
-//
 // }
 
 func TestReport(t *testing.T) {
@@ -94,12 +95,28 @@ func TestReport(t *testing.T) {
 	e := events[0]
 
 	tt.Run("long message payload", func(tt testutils.T) {
-		expectedLongMessage := `^\*errors.errorString
-\*safedetails.withSafeDetails: universe 123 multi \(1\)
-report_test.go:\d+: \*withstack.withStack \(top exception\)
-\*domains\.withDomain: error domain: "thisdomain" \(2\)
-\*report_test\.myWrapper
-\(check the extra data payloads\)$`
+		expectedLongMessage := `^
+report_test.go:\d+: ×
+\(1\)
+Wraps: \(2\) error domain: \"thisdomain\"
+Wraps: \(3\) attached stack trace
+  -- stack trace:
+  | github.com/cockroachdb/errors/report_test.TestReport
+  | \t[^:]*report/report_test.go:\d+
+  | testing.tRunner
+  | \t.*src/testing/testing.go:\d+
+  | runtime.goexit
+  | \t[^:]*:\d+
+Wraps: \(4\) universe 123 multi
+  | line
+Wraps: \(5\) ×
+Error types: \(1\) *report_test.myWrapper \(2\) *domains.withDomain \(3\) *withstack.withStack \(4\) *safedetails.withSafeDetails \(5\) *errors.errorString
+-- report composition:
+*errors.errorString
+*safedetails.withSafeDetails: universe 123 multi
+report_test.go:82: *withstack.withStack \(top exception\)
+*domains.withDomain: error domain: \"thisdomain\"
+*report_test.myWrapper$`
 		tt.CheckRegexpEqual(e.Message, expectedLongMessage)
 	})
 
@@ -112,15 +129,6 @@ github.com/cockroachdb/errors/report_test/*report_test.myWrapper (some/previous/
 `
 		types := fmt.Sprintf("%s", e.Extra["error types"])
 		tt.CheckEqual(types, expectedTypes)
-
-		expectedDetail := `universe 123 multi
-   line`
-		detail := fmt.Sprintf("%s", e.Extra["1: details"])
-		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)
-
-		expectedDetail = string(thisDomain)
-		detail = fmt.Sprintf("%s", e.Extra["2: details"])
-		tt.CheckEqual(strings.TrimSpace(detail), expectedDetail)
 	})
 
 	hasStack := false
