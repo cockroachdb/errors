@@ -7,8 +7,8 @@ require (?s)innerone.*innertwo
 ----
 &assert.withAssertionFailure{
     cause: &errbase.opaqueWrapper{
-        cause: &barriers.barrierError{
-            msg:       "innerone\ninnertwo",
+        cause: &barriers.barrierErr{
+            smsg:      "‹innerone›\n‹innertwo›",
             maskedErr: &errbase.opaqueLeaf{
                 msg:     "innerone\ninnertwo",
                 details: errorspb.EncodedErrorDetails{
@@ -34,8 +34,8 @@ require (?s)innerone.*innertwo
 == %#v
 &assert.withAssertionFailure{
     cause: &errbase.opaqueWrapper{
-        cause: &barriers.barrierError{
-            msg:       "innerone\ninnertwo",
+        cause: &barriers.barrierErr{
+            smsg:      "‹innerone›\n‹innertwo›",
             maskedErr: &errbase.opaqueLeaf{
                 msg:     "innerone\ninnertwo",
                 details: errorspb.EncodedErrorDetails{
@@ -105,7 +105,7 @@ Wraps: (3) innerone
   |   | (opaque error leaf)
   |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
   | Error types: (1) *errbase.opaqueLeaf
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -164,24 +164,64 @@ Wraps: (3) ‹innerone›
   |   | (opaque error leaf)
   |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
   | Error types: (1) *errbase.opaqueLeaf
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
 == Message payload
 <path>:<lineno>: ×
-×
---
-*barriers.barrierError
+(1) assertion failure
+Wraps: (2)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (3) ×
+  | ×
+  | -- cause hidden behind barrier
+  | ×
+  | (1) ×
+  |   | ×
+  |   |
+  |   | (opaque error leaf)
+  |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+  | Error types: (1) *errbase.opaqueLeaf
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierErr
+-- report composition:
+*barriers.barrierErr: masked error: ×
 <path>:<lineno>: *withstack.withStack (top exception)
 *assert.withAssertionFailure
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/assert/*assert.withAssertionFailure (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*barriers.barrierError: ×\n×\nvia *withstack.withStack"
+Title: "*barriers.barrierErr: ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -217,8 +257,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &assert.withAssertionFailure{
     cause: &errbase.opaqueWrapper{
         cause: &errutil.withPrefix{
-            cause: &barriers.barrierError{
-                msg:       "innerone\ninnertwo",
+            cause: &barriers.barrierErr{
+                smsg:      "‹innerone›\n‹innertwo›",
                 maskedErr: &errbase.opaqueLeaf{
                     msg:     "innerone\ninnertwo",
                     details: errorspb.EncodedErrorDetails{
@@ -247,8 +287,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &assert.withAssertionFailure{
     cause: &errbase.opaqueWrapper{
         cause: &errutil.withPrefix{
-            cause: &barriers.barrierError{
-                msg:       "innerone\ninnertwo",
+            cause: &barriers.barrierErr{
+                smsg:      "‹innerone›\n‹innertwo›",
                 maskedErr: &errbase.opaqueLeaf{
                     msg:     "innerone\ninnertwo",
                     details: errorspb.EncodedErrorDetails{
@@ -323,7 +363,7 @@ Wraps: (4) innerone
   |   | (opaque error leaf)
   |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
   | Error types: (1) *errbase.opaqueLeaf
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -385,31 +425,68 @@ Wraps: (4) ‹innerone›
   |   | (opaque error leaf)
   |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
   | Error types: (1) *errbase.opaqueLeaf
-Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierError
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: assertmsg: ×
-×: ×
-×
---
-*barriers.barrierError
-*errutil.withPrefix: assertmsg: × (1)
+<path>:<lineno>: assertmsg: ×: ×
+(1) assertion failure
+Wraps: (2)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (3) assertmsg: ×
+  | ×
+Wraps: (4) ×
+  | ×
+  | -- cause hidden behind barrier
+  | ×
+  | (1) ×
+  |   | ×
+  |   |
+  |   | (opaque error leaf)
+  |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+  | Error types: (1) *errbase.opaqueLeaf
+Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierErr
+-- report composition:
+*barriers.barrierErr: masked error: ×
+*errutil.withPrefix: assertmsg: ×
 <path>:<lineno>: *withstack.withStack (top exception)
 *assert.withAssertionFailure
-(check the extra data payloads)
-== Extra "1: details"
-assertmsg: ×
-   ×
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/assert/*assert.withAssertionFailure (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*barriers.barrierError: assertmsg: ×\n×: ×\n×\nvia *withstack.withStack"
+Title: "*barriers.barrierErr: assertmsg: ×: ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -442,8 +519,8 @@ opaque
 
 require (?s)innerone.*innertwo
 ----
-&barriers.barrierError{
-    msg:       "innerone\ninnertwo",
+&barriers.barrierErr{
+    smsg:      "‹innerone›\n‹innertwo›",
     maskedErr: &errbase.opaqueLeaf{
         msg:     "innerone\ninnertwo",
         details: errorspb.EncodedErrorDetails{
@@ -458,8 +535,8 @@ require (?s)innerone.*innertwo
 ===== non-redactable formats
 =====
 == %#v
-&barriers.barrierError{
-    msg:       "innerone\ninnertwo",
+&barriers.barrierErr{
+    smsg:      "‹innerone›\n‹innertwo›",
     maskedErr: &errbase.opaqueLeaf{
         msg:     "innerone\ninnertwo",
         details: errorspb.EncodedErrorDetails{
@@ -490,7 +567,7 @@ innerone
   |   | (opaque error leaf)
   |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
   | Error types: (1) *errbase.opaqueLeaf
-Error types: (1) *barriers.barrierError
+Error types: (1) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -519,20 +596,30 @@ Error types: (1) *barriers.barrierError
   |   | (opaque error leaf)
   |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
   | Error types: (1) *errbase.opaqueLeaf
-Error types: (1) *barriers.barrierError
+Error types: (1) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
 == Message payload
 ×
-×
---
-*barriers.barrierError
+(1) ×
+  | ×
+  | -- cause hidden behind barrier
+  | ×
+  | (1) ×
+  |   | ×
+  |   |
+  |   | (opaque error leaf)
+  |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+  | Error types: (1) *errbase.opaqueLeaf
+Error types: (1) *barriers.barrierErr
+-- report composition:
+*barriers.barrierErr: masked error: ×
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "*barriers.barrierError"
-Title: "×\n×"
+Type: "*barriers.barrierErr"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -638,10 +725,19 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
-×
---
+(1) ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrDelegate
 == Extra "error types"
@@ -649,7 +745,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -750,8 +846,16 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrDelegateEmpty
 == Extra "error types"
@@ -759,7 +863,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -860,8 +964,16 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrDelegateNoPrefix
 == Extra "error types"
@@ -869,7 +981,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -956,8 +1068,15 @@ Error types: (1) *hintdetail.withDetail (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
+(1) ×
 ×
---
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *hintdetail.withDetail (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *hintdetail.withDetail
 == Extra "error types"
@@ -965,7 +1084,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/hintdetail/*hintdetail.withDetail (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -1050,19 +1169,22 @@ Error types: (1) *domains.withDomain (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1) mydomain
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *domains.withDomain (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*domains.withDomain: mydomain (1)
-(check the extra data payloads)
-== Extra "1: details"
-mydomain
+*domains.withDomain: mydomain
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/domains/*domains.withDomain (*::mydomain)
 == Exception 1 (Module: "mydomain")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -1149,8 +1271,15 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
+(1) ××
 ×
---
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *fmttests.werrWithElidedCause (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrWithElidedCause
 == Extra "error types"
@@ -1158,7 +1287,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrWithElidedCause (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -1259,8 +1388,16 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrEmpty
 == Extra "error types"
@@ -1268,7 +1405,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -1374,10 +1511,19 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
-×
---
+(1) ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrFmt
 == Extra "error types"
@@ -1385,7 +1531,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -1494,10 +1640,19 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
-×
---
+(1) ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrFmto
 == Extra "error types"
@@ -1505,7 +1660,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -1614,10 +1769,19 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
-×
---
+(1) ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrFmtoDelegate
 == Extra "error types"
@@ -1625,7 +1789,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -1731,10 +1895,19 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
-×
---
+(1) ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrFmtp
 == Extra "error types"
@@ -1742,7 +1915,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -1851,10 +2024,19 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
-×
---
+(1) ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: fmt/*fmt.wrapError
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmt.wrapError
 == Extra "error types"
@@ -1862,7 +2044,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 fmt/*fmt.wrapError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -1873,8 +2055,8 @@ opaque
 require (?s)innerone.*innertwo
 ----
 &domains.withDomain{
-    cause: &barriers.barrierError{
-        msg:       "innerone\ninnertwo",
+    cause: &barriers.barrierErr{
+        smsg:      "‹innerone›\n‹innertwo›",
         maskedErr: &errbase.opaqueLeaf{
             msg:     "innerone\ninnertwo",
             details: errorspb.EncodedErrorDetails{
@@ -1892,8 +2074,8 @@ require (?s)innerone.*innertwo
 =====
 == %#v
 &domains.withDomain{
-    cause: &barriers.barrierError{
-        msg:       "innerone\ninnertwo",
+    cause: &barriers.barrierErr{
+        smsg:      "‹innerone›\n‹innertwo›",
         maskedErr: &errbase.opaqueLeaf{
             msg:     "innerone\ninnertwo",
             details: errorspb.EncodedErrorDetails{
@@ -1927,7 +2109,7 @@ Wraps: (2) innerone
   |   | (opaque error leaf)
   |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
   | Error types: (1) *errbase.opaqueLeaf
-Error types: (1) *domains.withDomain (2) *barriers.barrierError
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
 == %#v via Formattable() = %#v, good
 == %v via Formattable() = Error(), good
 == %s via Formattable() = %v via Formattable(), good
@@ -1957,25 +2139,33 @@ Wraps: (2) ‹innerone›
   |   | (opaque error leaf)
   |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
   | Error types: (1) *errbase.opaqueLeaf
-Error types: (1) *domains.withDomain (2) *barriers.barrierError
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
 =====
 ===== Sentry reporting
 =====
 == Message payload
 ×
-×
---
-*barriers.barrierError
-*domains.withDomain: error domain: pkg <path> (1)
-(check the extra data payloads)
-== Extra "1: details"
-error domain: pkg <path>
+(1) error domain: pkg <path>
+Wraps: (2) ×
+  | ×
+  | -- cause hidden behind barrier
+  | ×
+  | (1) ×
+  |   | ×
+  |   |
+  |   | (opaque error leaf)
+  |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+  | Error types: (1) *errbase.opaqueLeaf
+Error types: (1) *domains.withDomain (2) *barriers.barrierErr
+-- report composition:
+*barriers.barrierErr: masked error: ×
+*domains.withDomain: error domain: pkg <path>
 == Extra "error types"
-github.com/cockroachdb/errors/barriers/*barriers.barrierError (*::)
+github.com/cockroachdb/errors/barriers/*barriers.barrierErr (*::)
 github.com/cockroachdb/errors/domains/*domains.withDomain (*::error domain: pkg <path>)
 == Exception 1 (Module: "error domain: pkg <path>")
-Type: "*barriers.barrierError"
-Title: "×\n×"
+Type: "*barriers.barrierErr"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -2062,8 +2252,15 @@ Error types: (1) *hintdetail.withHint (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
+(1) ×
 ×
---
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *hintdetail.withHint (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *hintdetail.withHint
 == Extra "error types"
@@ -2071,7 +2268,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/hintdetail/*hintdetail.withHint (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -2160,21 +2357,24 @@ Error types: (1) *issuelink.withIssueLink (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1) issue: https://mysite
+  | detail: outerthree
+  | outerfour
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *issuelink.withIssueLink (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*issuelink.withIssueLink: https://mysite (1)
-(check the extra data payloads)
-== Extra "1: details"
-https://mysite
-outerthree
-   outerfour
+*issuelink.withIssueLink: https://mysite
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/issuelink/*issuelink.withIssueLink (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -2275,8 +2475,16 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrMigrated
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrMigrated
 == Extra "error types"
@@ -2284,7 +2492,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrMigrated (some/previous/path/prevpkg.prevType::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -2372,22 +2580,24 @@ Error types: (1) *errutil.withPrefix (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-outerthree
-outerfour: ×
-×
---
+outerthree: ×
+(1) outerthree
+  | outerfour
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errutil.withPrefix (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*errutil.withPrefix: outerthree (1)
-(check the extra data payloads)
-== Extra "1: details"
-outerthree
-   outerfour
+*errutil.withPrefix: outerthree
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "outerthree\nouterfour: ×\n×"
+Title: "outerthree: ×"
 (NO STACKTRACE)
 
 run
@@ -2592,18 +2802,57 @@ Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *e
 =====
 == Message payload
 <path>:<lineno>: new-style (×
-×) :: ×
-× ::
---
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) secondary error attachment
+  | ×
+  | (1) ×
+  |   | ×
+  |   |
+  |   | (opaque error leaf)
+  |   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+  | Error types: (1) *errbase.opaqueLeaf
+Wraps: (3) new-style (×
+  | ×) :: ×
+  | × ::
+Wraps: (4) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *errutil.withNewMessage (4) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*errutil.withNewMessage: new-style (× (1)
+*errutil.withNewMessage: new-style (×
 *secondary.withSecondaryError
 <path>:<lineno>: *withstack.withStack (top exception)
-(check the extra data payloads)
-== Extra "1: details"
-new-style (×
-   ×) :: ×
-   × ::
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/errutil/*errutil.withNewMessage (*::)
@@ -2611,7 +2860,7 @@ github.com/cockroachdb/errors/secondary/*secondary.withSecondaryError (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*fmttests.errFmt: new-style (×\n×) :: ×\n× ::\nvia *withstack.withStack"
+Title: "*fmttests.errFmt: new-style (×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -2743,10 +2992,19 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
-×
---
+(1) ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrNoFmt
 == Extra "error types"
@@ -2754,7 +3012,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -2855,8 +3113,14 @@ Error types: (1) *os.LinkError (2) *errbase.opaqueLeaf
 =====
 == Message payload
 link × ×: ×
-×
---
+(1) link × ×
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *os.LinkError (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *os.LinkError
 == Extra "error types"
@@ -2864,7 +3128,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 os/*os.LinkError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "link × ×: ×\n×"
+Title: "link × ×: ×"
 (NO STACKTRACE)
 
 run
@@ -2970,8 +3234,17 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×: ×
-×
---
+(1) ×
+  |
+  | (opaque error wrapper)
+  | type name: net/*net.OpError
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *net.OpError
 == Extra "error types"
@@ -2979,7 +3252,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 net/*net.OpError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -3078,8 +3351,14 @@ Error types: (1) *fs.PathError (2) *errbase.opaqueLeaf
 =====
 == Message payload
 link ×: ×
-×
---
+(1) link ×
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *fs.PathError (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fs.PathError
 == Extra "error types"
@@ -3087,7 +3366,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 io/fs/*fs.PathError (os/*os.PathError::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "link ×: ×\n×"
+Title: "link ×: ×"
 (NO STACKTRACE)
 
 run
@@ -3184,8 +3463,14 @@ Error types: (1) *os.SyscallError (2) *errbase.opaqueLeaf
 =====
 == Message payload
 open: ×
-×
---
+(1) open
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *os.SyscallError (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *os.SyscallError
 == Extra "error types"
@@ -3193,7 +3478,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 os/*os.SyscallError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "open: ×\n×"
+Title: "open: ×"
 (NO STACKTRACE)
 
 run
@@ -3303,10 +3588,16 @@ Error types: (1) *errors.withMessage (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
+(1) ××
 ×
---
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errors.withMessage (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *errors.withMessage
 == Extra "error types"
@@ -3314,7 +3605,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/pkg/errors/*errors.withMessage (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -3472,8 +3763,42 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 =====
 == Message payload
 <path>:<lineno>: ×
-×
---
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/pkg/errors/*errors.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 <path>:<lineno>: *errors.withStack (top exception)
 == Extra "error types"
@@ -3481,7 +3806,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/pkg/errors/*errors.withStack (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*fmttests.errFmt: ×\n×\nvia *errors.withStack"
+Title: "*fmttests.errFmt: ×\nvia *errors.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -3591,20 +3916,23 @@ Error types: (1) *safedetails.withSafeDetails (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1) safe ×
+  | ×
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *safedetails.withSafeDetails (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*safedetails.withSafeDetails: safe × (1)
-(check the extra data payloads)
-== Extra "1: details"
-safe ×
-   ×
+*safedetails.withSafeDetails: safe ×
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/safedetails/*safedetails.withSafeDetails (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -3710,10 +4038,19 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 ===== Sentry reporting
 =====
 == Message payload
-×
 ×: ×
-×
---
+(1) ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 *fmttests.werrSafeFormat
 == Extra "error types"
@@ -3721,7 +4058,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×: ×\n×"
+Title: "×: ×"
 (NO STACKTRACE)
 
 run
@@ -3730,7 +4067,6 @@ secondary outerthree outerfour
 opaque
 
 require (?s)innerone.*innertwo
-----
 ----
 &secondary.withSecondaryError{
     cause: &errbase.opaqueLeaf{
@@ -3891,50 +4227,56 @@ Error types: (1) *secondary.withSecondaryError (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1) secondary error attachment
+  | outerthree
+  | (1)
+  |   | (opaque error wrapper)
+  |   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  |   | reportable 0:
+  |   |
+  |   | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirective.func1
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirective
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runTestInternal
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.RunTest
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.Walk
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.Walk.func1
+  |   | <tab><path>:<lineno>
+  |   | testing.tRunner
+  |   | <tab><path>:<lineno>
+  |   | runtime.goexit
+  |   | <tab><path>:<lineno>
+  | Wraps: (2) outerthree
+  |   | outerfour
+  | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *secondary.withSecondaryError (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*secondary.withSecondaryError: details for github.com/cockroachdb/errors/withstack/*withstack.withStack::: (1)
-(check the extra data payloads)
-== Extra "1: details"
-details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
-  
-   github.com/cockroachdb/errors/fmttests.glob...funcNN...
-   <tab><path>:<lineno>
-   github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.runDirective.func1
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.runDirective
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.runDirectiveOrSubTest
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.runTestInternal
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.RunTest
-   <tab><path>:<lineno>
-   github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.Walk
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.Walk.func1
-   <tab><path>:<lineno>
-   testing.tRunner
-   <tab><path>:<lineno>
-   runtime.goexit
-   <tab><path>:<lineno>
-details for github.com/cockroachdb/errors/errutil/*errutil.leafError:::
-  outerthree
-   outerfour
+*secondary.withSecondaryError: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/secondary/*secondary.withSecondaryError (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
-----
-----
 
 run
 fmt innerone innertwo
@@ -4086,8 +4428,42 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 =====
 == Message payload
 <path>:<lineno>: ×
-×
---
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
 <path>:<lineno>: *withstack.withStack (top exception)
 == Extra "error types"
@@ -4095,7 +4471,7 @@ github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*fmttests.errFmt: ×\n×\nvia *withstack.withStack"
+Title: "*fmttests.errFmt: ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -4251,20 +4627,22 @@ Error types: (1) *contexttags.withContext (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1) tags: [k×,safe=×]
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *contexttags.withContext (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*contexttags.withContext: k× (1)
-(check the extra data payloads)
-== Extra "1: details"
-k×
-safe=456
+*contexttags.withContext: k×
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/contexttags/*contexttags.withContext (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -4351,21 +4729,23 @@ Error types: (1) *telemetrykeys.withTelemetry (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×
-×
---
+(1) keys: [somekey outerthree
+  | outerfour]
+Wraps: (2) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *telemetrykeys.withTelemetry (2) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*telemetrykeys.withTelemetry: somekey (1)
-(check the extra data payloads)
-== Extra "1: details"
-somekey
-outerthree
-   outerfour
+*telemetrykeys.withTelemetry: somekey
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/telemetrykeys/*telemetrykeys.withTelemetry (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "*fmttests.errFmt"
-Title: "×\n×"
+Title: "×"
 (NO STACKTRACE)
 
 run
@@ -4529,24 +4909,55 @@ Error types: (1) *errbase.opaqueWrapper (2) *errutil.withPrefix (3) *errbase.opa
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: new-stylew ×
-×: ×
-×
---
+<path>:<lineno>: new-stylew ×: ×
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) new-stylew ×
+  | ×
+Wraps: (3) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *errutil.withPrefix (3) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*errutil.withPrefix: new-stylew × (1)
+*errutil.withPrefix: new-stylew ×
 <path>:<lineno>: *withstack.withStack (top exception)
-(check the extra data payloads)
-== Extra "1: details"
-new-stylew ×
-   ×
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*fmttests.errFmt: new-stylew ×\n×: ×\n×\nvia *withstack.withStack"
+Title: "*fmttests.errFmt: new-stylew ×: ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -4578,7 +4989,6 @@ wrapf-attached outerthree outerfour
 opaque
 
 require (?s)outerthree.*outerfour.*innerone.*innertwo
-----
 ----
 &errbase.opaqueWrapper{
     cause: &secondary.withSecondaryError{
@@ -4824,47 +5234,82 @@ Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *e
 ===== Sentry reporting
 =====
 == Message payload
-<path>:<lineno>: new-style ×
-× (payload): ×
-×
---
+<path>:<lineno>: new-style ×: ×
+(1)
+  | (opaque error wrapper)
+  | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  | reportable 0:
+  |
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) secondary error attachment
+  | payload
+  | (1)
+  |   | (opaque error wrapper)
+  |   | type name: github.com/cockroachdb/errors/withstack/*withstack.withStack
+  |   | reportable 0:
+  |   |
+  |   | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirective.func1
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirective
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.runTestInternal
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.RunTest
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.Walk
+  |   | <tab><path>:<lineno>
+  |   | github.com/cockroachdb/datadriven.Walk.func1
+  |   | <tab><path>:<lineno>
+  |   | testing.tRunner
+  |   | <tab><path>:<lineno>
+  |   | runtime.goexit
+  |   | <tab><path>:<lineno>
+  | Wraps: (2) payload
+  | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
+Wraps: (3) new-style ×
+  | × (payload)
+Wraps: (4) ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: github.com/cockroachdb/errors/fmttests/*fmttests.errFmt
+Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *errutil.withPrefix (4) *errbase.opaqueLeaf
+-- report composition:
 *fmttests.errFmt
-*errutil.withPrefix: new-style × (1)
-*secondary.withSecondaryError: details for github.com/cockroachdb/errors/withstack/*withstack.withStack::: (2)
+*errutil.withPrefix: new-style ×
+*secondary.withSecondaryError: details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
 <path>:<lineno>: *withstack.withStack (top exception)
-(check the extra data payloads)
-== Extra "1: details"
-new-style ×
-   × (payload)
-== Extra "2: details"
-details for github.com/cockroachdb/errors/withstack/*withstack.withStack:::
-  
-   github.com/cockroachdb/errors/fmttests.glob...funcNN...
-   <tab><path>:<lineno>
-   github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.runDirective.func1
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.runDirective
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.runDirectiveOrSubTest
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.runTestInternal
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.RunTest
-   <tab><path>:<lineno>
-   github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.Walk
-   <tab><path>:<lineno>
-   github.com/cockroachdb/datadriven.Walk.func1
-   <tab><path>:<lineno>
-   testing.tRunner
-   <tab><path>:<lineno>
-   runtime.goexit
-   <tab><path>:<lineno>
-details for github.com/cockroachdb/errors/errutil/*errutil.leafError:::
-  payload
 == Extra "error types"
 github.com/cockroachdb/errors/fmttests/*fmttests.errFmt (*::)
 github.com/cockroachdb/errors/errutil/*errutil.withPrefix (*::)
@@ -4872,7 +5317,7 @@ github.com/cockroachdb/errors/secondary/*secondary.withSecondaryError (*::)
 github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
-Title: "*fmttests.errFmt: new-style ×\n× (payload): ×\n×\nvia *withstack.withStack"
+Title: "*fmttests.errFmt: new-style ×: ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
@@ -4897,5 +5342,3 @@ Title: "*fmttests.errFmt: new-style ×\n× (payload): ×\n×\nvia *withstack.wit
    (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
 <path>:<lineno>:
    (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
-----
-----

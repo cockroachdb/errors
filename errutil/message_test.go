@@ -124,7 +124,7 @@ Wraps: (4) wuu: woo
   |   | multi-line payload
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierError`,
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierErr`,
 		},
 
 		{"assert + wrap empty",
@@ -148,7 +148,7 @@ Wraps: (3) wuu: woo
   |   | multi-line payload
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierError`,
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *barriers.barrierErr`,
 		},
 
 		{"assert + wrap empty+arg",
@@ -173,7 +173,7 @@ Wraps: (4) wuu: woo
   |   | multi-line payload
   | Wraps: (2) woo
   | Error types: (1) *errutil_test.werrFmt (2) *errors.errorString
-Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierError`,
+Error types: (1) *assert.withAssertionFailure (2) *withstack.withStack (3) *errutil.withPrefix (4) *barriers.barrierErr`,
 		},
 	}
 
