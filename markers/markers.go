@@ -46,10 +46,12 @@ func Is(err, reference error) bool {
 		return err == nil
 	}
 
+	isComparable := reflect.TypeOf(reference).Comparable()
+
 	// Direct reference comparison is the fastest, and most
 	// likely to be true, so do this first.
 	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
-		if c == reference {
+		if isComparable && c == reference {
 			return true
 		}
 		// Compatibility with std go errors: if the error object itself
@@ -141,10 +143,27 @@ func If(err error, pred func(err error) (interface{}, bool)) (interface{}, bool)
 // package location or a different type, ensure that
 // RegisterTypeMigration() was called prior to IsAny().
 func IsAny(err error, references ...error) bool {
-	// First try using direct reference comparison.
-	for c := err; ; c = errbase.UnwrapOnce(c) {
+	if err == nil {
 		for _, refErr := range references {
-			if c == refErr {
+			if refErr == nil {
+				return true
+			}
+		}
+		// The mark-based comparison below will never match anything if
+		// the error is nil, so don't bother with computing the marks in
+		// that case. This avoids the computational expense of computing
+		// the reference marks upfront.
+		return false
+	}
+
+	// First try using direct reference comparison.
+	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
+		for _, refErr := range references {
+			if refErr == nil {
+				continue
+			}
+			isComparable := reflect.TypeOf(refErr).Comparable()
+			if isComparable && c == refErr {
 				return true
 			}
 			// Compatibility with std go errors: if the error object itself
@@ -153,19 +172,6 @@ func IsAny(err error, references ...error) bool {
 				return true
 			}
 		}
-		if c == nil {
-			// This special case is to support a comparison to a nil
-			// reference.
-			break
-		}
-	}
-
-	if err == nil {
-		// The mark-based comparison below will never match anything if
-		// the error is nil, so don't bother with computing the marks in
-		// that case. This avoids the computational expense of computing
-		// the reference marks upfront.
-		return false
 	}
 
 	// Try harder with marks.
