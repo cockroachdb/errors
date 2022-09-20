@@ -46,10 +46,12 @@ func Is(err, reference error) bool {
 		return err == nil
 	}
 
+	isComparable := reflect.TypeOf(reference).Comparable()
+
 	// Direct reference comparison is the fastest, and most
 	// likely to be true, so do this first.
 	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
-		if c == reference {
+		if isComparable && c == reference {
 			return true
 		}
 		// Compatibility with std go errors: if the error object itself
@@ -144,7 +146,8 @@ func IsAny(err error, references ...error) bool {
 	// First try using direct reference comparison.
 	for c := err; ; c = errbase.UnwrapOnce(c) {
 		for _, refErr := range references {
-			if c == refErr {
+			isComparable := reflect.TypeOf(refErr).Comparable()
+			if isComparable && c == refErr {
 				return true
 			}
 			// Compatibility with std go errors: if the error object itself

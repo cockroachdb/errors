@@ -599,3 +599,35 @@ func (e *errWithIs) Is(o error) bool {
 	}
 	return false
 }
+
+func TestCompareUncomparable(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := errors.New("hello")
+	f := []string{"woo"}
+	tt.Check(markers.Is(errorUncomparable{f}, errorUncomparable{}))
+	tt.Check(markers.IsAny(errorUncomparable{f}, errorUncomparable{}))
+	tt.Check(!markers.Is(errorUncomparable{f}, &errorUncomparable{}))
+	tt.Check(!markers.IsAny(errorUncomparable{f}, &errorUncomparable{}))
+	tt.Check(markers.Is(&errorUncomparable{f}, errorUncomparable{}))
+	tt.Check(markers.IsAny(&errorUncomparable{f}, errorUncomparable{}))
+	tt.Check(!markers.Is(&errorUncomparable{f}, &errorUncomparable{}))
+	tt.Check(!markers.IsAny(&errorUncomparable{f}, &errorUncomparable{}))
+	tt.Check(!markers.Is(errorUncomparable{f}, err1))
+	tt.Check(!markers.IsAny(errorUncomparable{f}, err1))
+	tt.Check(!markers.Is(&errorUncomparable{f}, err1))
+	tt.Check(!markers.IsAny(&errorUncomparable{f}, err1))
+}
+
+type errorUncomparable struct {
+	f []string
+}
+
+func (e errorUncomparable) Error() string {
+	return fmt.Sprintf("uncomparable error %d", len(e.f))
+}
+
+func (errorUncomparable) Is(target error) bool {
+	_, ok := target.(errorUncomparable)
+	return ok
+}
