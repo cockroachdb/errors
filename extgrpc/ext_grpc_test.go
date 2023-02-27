@@ -125,7 +125,13 @@ func TestEncodeDecodeStatus(t *testing.T) {
 				return grpcstatus.Convert(err)
 			},
 			expectDetails: []interface{}{
-				grpcstatus.New(codes.Internal, "status").Proto(), // Protobuf succeeds
+				// Protobuf succeeds
+				func() interface{} {
+					var st interface{} = grpcstatus.New(codes.Internal, "status").Proto()
+					res := reflect.New(reflect.TypeOf(st).Elem()).Interface()
+					copyPublicFields(res, st)
+					return res
+				}(),
 				nil, // gogoproto decode fails
 				nil, // dummy decode fails
 			},
