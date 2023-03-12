@@ -1,6 +1,6 @@
 module github.com/cockroachdb/errors
 
-go 1.17
+go 1.20
 
 require (
 	github.com/cockroachdb/datadriven v1.0.2
