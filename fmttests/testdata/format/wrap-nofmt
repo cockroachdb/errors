@@ -2054,6 +2054,188 @@ Title: "×"
 
 run
 nofmt innerone innertwo
+join outerthree outerfour
+
+accept %\+v via Formattable.*IRREGULAR: not same as %\+v
+accept %\#v via Formattable.*IRREGULAR: not same as %\#v
+
+require (?s)
+----
+&join.joinError{
+    errs: {
+        &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+        &withstack.withStack{
+            cause: &errutil.leafError{msg:"outerthree\nouterfour"},
+            stack: &stack{...},
+        },
+    },
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&join.joinError{
+    errs: {
+        &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+        &withstack.withStack{
+            cause: &errutil.leafError{msg:"outerthree\nouterfour"},
+            stack: &stack{...},
+        },
+    },
+}
+== Error()
+innerone
+innertwo
+outerthree
+outerfour
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+innerone
+(1) innerone
+  | innertwo
+  | outerthree
+  | outerfour
+Wraps: (2) attached stack trace
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+└─ Wraps: (3) outerthree
+  | outerfour
+Wraps: (4) innerone
+  | innertwo
+Error types: (1) *join.joinError (2) *withstack.withStack (3) *errutil.leafError (4) *fmttests.errNoFmt
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+‹innerone›
+‹innertwo›
+‹outerthree›
+‹outerfour›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+‹innerone›
+(1) ‹innerone›
+  | ‹innertwo›
+  | ‹outerthree›
+  | ‹outerfour›
+Wraps: (2) attached stack trace
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+└─ Wraps: (3) outerthree
+  | outerfour
+Wraps: (4) ‹innerone›
+‹  | innertwo›
+Error types: (1) *join.joinError (2) *withstack.withStack (3) *errutil.leafError (4) *fmttests.errNoFmt
+=====
+===== Sentry reporting
+=====
+== Message payload
+×
+(1) ×
+  | ×
+  | ×
+  | ×
+Wraps: (2) attached stack trace
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+└─ Wraps: (3) outerthree
+  | outerfour
+Wraps: (4) ×
+×
+Error types: (1) *join.joinError (2) *withstack.withStack (3) *errutil.leafError (4) *fmttests.errNoFmt
+-- report composition:
+*join.joinError
+== Extra "error types"
+github.com/cockroachdb/errors/join/*join.joinError (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*join.joinError"
+Title: "×"
+(NO STACKTRACE)
+
+run
+nofmt innerone innertwo
 migrated outerthree outerfour
 
 require (?s)
