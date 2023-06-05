@@ -12,11 +12,15 @@ func Error(c codes.Code, msg string) error {
 }
 
 func Errorf(c codes.Code, format string, args ...interface{}) error {
-	return extgrpc.WrapWithGrpcCode(errors.Errorf(format, args...), c)
+	return extgrpc.WrapWithGrpcCode(errors.Newf(format, args...), c)
 }
 
 func WrapErr(c codes.Code, msg string, err error) error {
 	return extgrpc.WrapWithGrpcCode(errors.WrapWithDepth(1, err, msg), c)
+}
+
+func WrapErrf(c codes.Code, err error, format string, args ...interface{}) error {
+	return extgrpc.WrapWithGrpcCode(errors.WrapWithDepthf(1, err, format, args...), c)
 }
 
 func Code(err error) codes.Code {
