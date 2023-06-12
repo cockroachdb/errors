@@ -139,7 +139,7 @@ Wraps: (3) ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | Error types: (1) *errors.errorString
 Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierErr
@@ -182,7 +182,7 @@ Wraps: (3) ×
   | ×
   | -- cause hidden behind barrier
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | Error types: (1) *errors.errorString
 Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *barriers.barrierErr
@@ -375,7 +375,7 @@ Wraps: (4) ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | Error types: (1) *errors.errorString
 Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierErr
@@ -420,7 +420,7 @@ Wraps: (4) ×
   | ×
   | -- cause hidden behind barrier
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | Error types: (1) *errors.errorString
 Error types: (1) *assert.withAssertionFailure (2) *errbase.opaqueWrapper (3) *errutil.withPrefix (4) *barriers.barrierErr
@@ -521,7 +521,7 @@ Error types: (1) *barriers.barrierErr
   | ‹innertwo›
   | -- cause hidden behind barrier
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | Error types: (1) *errors.errorString
 Error types: (1) *barriers.barrierErr
@@ -534,7 +534,7 @@ Error types: (1) *barriers.barrierErr
   | ×
   | -- cause hidden behind barrier
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | Error types: (1) *errors.errorString
 Error types: (1) *barriers.barrierErr
@@ -621,7 +621,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -634,7 +634,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -716,7 +716,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 (1)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -727,7 +727,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 (1)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -809,7 +809,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 (1)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -820,7 +820,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 (1)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -888,7 +888,7 @@ Error types: (1) *hintdetail.withDetail (2) *errors.errorString
 ‹innerone›
 (1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *hintdetail.withDetail (2) *errors.errorString
 =====
@@ -898,7 +898,7 @@ Error types: (1) *hintdetail.withDetail (2) *errors.errorString
 ×
 (1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *hintdetail.withDetail (2) *errors.errorString
 -- report composition:
@@ -964,7 +964,7 @@ Error types: (1) *domains.withDomain (2) *errors.errorString
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
 (1) mydomain
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *domains.withDomain (2) *errors.errorString
 =====
@@ -973,7 +973,7 @@ Error types: (1) *domains.withDomain (2) *errors.errorString
 == Message payload
 ×
 (1) mydomain
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *domains.withDomain (2) *errors.errorString
 -- report composition:
@@ -1039,9 +1039,9 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *errors.errorString
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *fmttests.werrWithElidedCause (2) *errors.errorString
 =====
@@ -1049,9 +1049,9 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *errors.errorString
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *fmttests.werrWithElidedCause (2) *errors.errorString
 -- report composition:
@@ -1133,7 +1133,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 (1)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -1144,7 +1144,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 (1)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -1232,7 +1232,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -1245,7 +1245,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -1336,7 +1336,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -1349,7 +1349,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -1440,7 +1440,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -1453,7 +1453,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -1541,7 +1541,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -1554,7 +1554,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -1645,7 +1645,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: fmt/*fmt.wrapError
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -1658,7 +1658,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: fmt/*fmt.wrapError
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -1739,7 +1739,7 @@ Wraps: (2) ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | Error types: (1) *errors.errorString
 Error types: (1) *domains.withDomain (2) *barriers.barrierErr
@@ -1753,7 +1753,7 @@ Wraps: (2) ×
   | ×
   | -- cause hidden behind barrier
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | Error types: (1) *errors.errorString
 Error types: (1) *domains.withDomain (2) *barriers.barrierErr
@@ -1822,7 +1822,7 @@ Error types: (1) *hintdetail.withHint (2) *errors.errorString
 ‹innerone›
 (1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *hintdetail.withHint (2) *errors.errorString
 =====
@@ -1832,7 +1832,7 @@ Error types: (1) *hintdetail.withHint (2) *errors.errorString
 ×
 (1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *hintdetail.withHint (2) *errors.errorString
 -- report composition:
@@ -1902,7 +1902,7 @@ Error types: (1) *issuelink.withIssueLink (2) *errors.errorString
 (1) issue: https://mysite
   | detail: outerthree
   | outerfour
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *issuelink.withIssueLink (2) *errors.errorString
 =====
@@ -1913,7 +1913,7 @@ Error types: (1) *issuelink.withIssueLink (2) *errors.errorString
 (1) issue: https://mysite
   | detail: outerthree
   | outerfour
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *issuelink.withIssueLink (2) *errors.errorString
 -- report composition:
@@ -1995,7 +1995,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 (1)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrMigrated
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -2006,7 +2006,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 (1)
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrMigrated
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -2076,7 +2076,7 @@ outerfour: ‹innerone›
 outerthree: ‹innerone›
 (1) outerthree
   | outerfour
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errutil.withPrefix (2) *errors.errorString
 =====
@@ -2086,7 +2086,7 @@ Error types: (1) *errutil.withPrefix (2) *errors.errorString
 outerthree: ×
 (1) outerthree
   | outerfour
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errutil.withPrefix (2) *errors.errorString
 -- report composition:
@@ -2244,13 +2244,13 @@ new-style (‹outerthree›
   | <tab><path>:<lineno>
 Wraps: (2) secondary error attachment
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | Error types: (1) *errors.errorString
 Wraps: (3) new-style (‹outerthree›
   | ‹outerfour›) :: ‹innerone›
   | ‹innertwo› ::
-Wraps: (4) ‹innerone›‹›
+Wraps: (4) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *errutil.withNewMessage (4) *errors.errorString
 =====
@@ -2289,13 +2289,13 @@ Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *e
   | <tab><path>:<lineno>
 Wraps: (2) secondary error attachment
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | Error types: (1) *errors.errorString
 Wraps: (3) new-style (×
   | ×) :: ×
   | × ::
-Wraps: (4) ××
+Wraps: (4) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *errutil.withNewMessage (4) *errors.errorString
 -- report composition:
@@ -2413,7 +2413,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -2426,7 +2426,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -2500,7 +2500,7 @@ link ‹/path/to/file› ‹/path/to/newfile›: ‹innerone›
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 link ‹/path/to/file› ‹/path/to/newfile›: ‹innerone›
 (1) link ‹/path/to/file› ‹/path/to/newfile›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *os.LinkError (2) *errors.errorString
 =====
@@ -2509,7 +2509,7 @@ Error types: (1) *os.LinkError (2) *errors.errorString
 == Message payload
 link × ×: ×
 (1) link × ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *os.LinkError (2) *errors.errorString
 -- report composition:
@@ -2596,7 +2596,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: net/*net.OpError
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -2608,7 +2608,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: net/*net.OpError
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -2680,7 +2680,7 @@ link ‹/path/to/file›: ‹innerone›
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 link ‹/path/to/file›: ‹innerone›
 (1) link ‹/path/to/file›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *fs.PathError (2) *errors.errorString
 =====
@@ -2689,7 +2689,7 @@ Error types: (1) *fs.PathError (2) *errors.errorString
 == Message payload
 link ×: ×
 (1) link ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *fs.PathError (2) *errors.errorString
 -- report composition:
@@ -2759,7 +2759,7 @@ open: ‹innerone›
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 open: ‹innerone›
 (1) open
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *os.SyscallError (2) *errors.errorString
 =====
@@ -2768,7 +2768,7 @@ Error types: (1) *os.SyscallError (2) *errors.errorString
 == Message payload
 open: ×
 (1) open
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *os.SyscallError (2) *errors.errorString
 -- report composition:
@@ -2853,9 +2853,9 @@ Error types: (1) *errors.withMessage (2) *errors.errorString
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errors.withMessage (2) *errors.errorString
 =====
@@ -2863,9 +2863,9 @@ Error types: (1) *errors.withMessage (2) *errors.errorString
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errors.withMessage (2) *errors.errorString
 -- report composition:
@@ -3004,7 +3004,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -3041,7 +3041,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -3132,7 +3132,7 @@ Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString
 ‹innerone›
 (1) safe ×
   | ×
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString
 =====
@@ -3142,7 +3142,7 @@ Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString
 ×
 (1) safe ×
   | ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *safedetails.withSafeDetails (2) *errors.errorString
 -- report composition:
@@ -3230,7 +3230,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -3243,7 +3243,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   |
   | (opaque error wrapper)
   | type name: github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -3393,7 +3393,7 @@ Error types: (1) *secondary.withSecondaryError (2) *errors.errorString
   | Wraps: (2) outerthree
   |   | outerfour
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *secondary.withSecondaryError (2) *errors.errorString
 =====
@@ -3435,7 +3435,7 @@ Error types: (1) *secondary.withSecondaryError (2) *errors.errorString
   | Wraps: (2) outerthree
   |   | outerfour
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *secondary.withSecondaryError (2) *errors.errorString
 -- report composition:
@@ -3569,7 +3569,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 =====
@@ -3606,7 +3606,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errors.errorString
 -- report composition:
@@ -3743,7 +3743,7 @@ Error types: (1) *contexttags.withContext (2) *errors.errorString
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
 (1) tags: [k‹123›,safe=‹456›]
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *contexttags.withContext (2) *errors.errorString
 =====
@@ -3752,7 +3752,7 @@ Error types: (1) *contexttags.withContext (2) *errors.errorString
 == Message payload
 ×
 (1) tags: [k×,safe=×]
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *contexttags.withContext (2) *errors.errorString
 -- report composition:
@@ -3820,7 +3820,7 @@ Error types: (1) *telemetrykeys.withTelemetry (2) *errors.errorString
 ‹innerone›
 (1) keys: [somekey outerthree
   | outerfour]
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *telemetrykeys.withTelemetry (2) *errors.errorString
 =====
@@ -3830,7 +3830,7 @@ Error types: (1) *telemetrykeys.withTelemetry (2) *errors.errorString
 ×
 (1) keys: [somekey outerthree
   | outerfour]
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 Error types: (1) *telemetrykeys.withTelemetry (2) *errors.errorString
 -- report composition:
@@ -3976,7 +3976,7 @@ new-stylew ‹outerthree›: ‹innerone›
   | <tab><path>:<lineno>
 Wraps: (2) new-stylew ‹outerthree›
   | ‹outerfour›
-Wraps: (3) ‹innerone›‹›
+Wraps: (3) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *errutil.withPrefix (3) *errors.errorString
 =====
@@ -4015,7 +4015,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errutil.withPrefix (3) *errors.erro
   | <tab><path>:<lineno>
 Wraps: (2) new-stylew ×
   | ×
-Wraps: (3) ××
+Wraps: (3) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *errutil.withPrefix (3) *errors.errorString
 -- report composition:
@@ -4276,7 +4276,7 @@ Wraps: (2) secondary error attachment
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
 Wraps: (3) new-style ‹outerthree›
   | ‹outerfour› (payload)
-Wraps: (4) ‹innerone›‹›
+Wraps: (4) ‹innerone›
 ‹  | innertwo›
 Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *errutil.withPrefix (4) *errors.errorString
 =====
@@ -4348,7 +4348,7 @@ Wraps: (2) secondary error attachment
   | Error types: (1) *errbase.opaqueWrapper (2) *errutil.leafError
 Wraps: (3) new-style ×
   | × (payload)
-Wraps: (4) ××
+Wraps: (4) ×
 ×
 Error types: (1) *errbase.opaqueWrapper (2) *secondary.withSecondaryError (3) *errutil.withPrefix (4) *errors.errorString
 -- report composition:

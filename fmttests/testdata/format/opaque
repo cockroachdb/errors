@@ -158,7 +158,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueLeaf
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outer›: ‹inner›
-(1) ‹outer›‹›
+(1) ‹outer›
 ‹  | outer2ndline›
 ‹  | -- this is outer›
 ‹  | outer2ndline's›
@@ -174,7 +174,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueLeaf
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
 ×
 ×
@@ -420,7 +420,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueWrapper (3) *errbase.opaqu
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outer›: ‹middle›: ‹inner›
-(1) ‹outer›‹›
+(1) ‹outer›
 ‹  | outer2ndline›
 ‹  | -- this is outer›
 ‹  | outer2ndline's›
@@ -441,7 +441,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueWrapper (3) *errbase.opaqu
 =====
 == Message payload
 ×: ×: ×
-(1) ××
+(1) ×
 ×
 ×
 ×
@@ -758,7 +758,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueWrapper (3) *errbase.opaqu
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹extern›: ‹outer›: ‹middle›: ‹inner›
-(1) ‹extern›‹›
+(1) ‹extern›
 ‹  | extern2ndline›
 ‹  | -- this is extern›
 ‹  | extern2ndline's›
@@ -784,7 +784,7 @@ Error types: (1) *fmttests.werrFmt (2) *errbase.opaqueWrapper (3) *errbase.opaqu
 =====
 == Message payload
 ×: ×: ×: ×
-(1) ××
+(1) ×
 ×
 ×
 ×

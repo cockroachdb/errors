@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/cockroachdb/datadriven v1.0.2
 	github.com/cockroachdb/logtags v0.0.0-20230118201751-21c54148d20b
-	github.com/cockroachdb/redact v1.1.3
+	github.com/cockroachdb/redact v1.1.5-0.20230524180507-7f31255ea60c
 	github.com/getsentry/sentry-go v0.18.0
 	github.com/gogo/googleapis v1.4.1 // gogoproto 1.2-compatible, for CRDB
 	github.com/gogo/protobuf v1.3.2
