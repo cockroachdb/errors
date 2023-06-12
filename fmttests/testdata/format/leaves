@@ -335,7 +335,7 @@ Error types: (1) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹oneline›
-(1) ‹oneline›‹›
+(1) ‹oneline›
 ‹  | twoline›
 ‹  | -- this is oneline›
 ‹  | twoline's›
@@ -346,7 +346,7 @@ Error types: (1) *fmttests.errFmt
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
 ×
 ×
@@ -412,7 +412,7 @@ Error types: (1) *fmttests.errFmto
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹›
+(1) ‹oneline›
 ‹  | twoline›
 Error types: (1) *fmttests.errFmto
 =====
@@ -420,7 +420,7 @@ Error types: (1) *fmttests.errFmto
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
 Error types: (1) *fmttests.errFmto
 -- report composition:
@@ -483,7 +483,7 @@ Error types: (1) *fmttests.errFmtoDelegate
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹›
+(1) ‹oneline›
 ‹  | twoline›
 Error types: (1) *fmttests.errFmtoDelegate
 =====
@@ -491,7 +491,7 @@ Error types: (1) *fmttests.errFmtoDelegate
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
 Error types: (1) *fmttests.errFmtoDelegate
 -- report composition:
@@ -545,7 +545,7 @@ Error types: (1) *fmttests.errFmtp
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹oneline›
-(1) ‹oneline›‹›
+(1) ‹oneline›
 ‹  | twoline›
 Error types: (1) *fmttests.errFmtp
 =====
@@ -553,7 +553,7 @@ Error types: (1) *fmttests.errFmtp
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
 Error types: (1) *fmttests.errFmtp
 -- report composition:
@@ -610,7 +610,7 @@ Error types: (1) *errors.errorString
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹›
+(1) ‹oneline›
 ‹  | twoline›
 Error types: (1) *errors.errorString
 =====
@@ -618,7 +618,7 @@ Error types: (1) *errors.errorString
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
 Error types: (1) *errors.errorString
 -- report composition:
@@ -1118,7 +1118,7 @@ Error types: (1) *fmttests.errNoFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹›
+(1) ‹oneline›
 ‹  | twoline›
 Error types: (1) *fmttests.errNoFmt
 =====
@@ -1126,7 +1126,7 @@ Error types: (1) *fmttests.errNoFmt
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
 Error types: (1) *fmttests.errNoFmt
 -- report composition:
@@ -1525,7 +1525,7 @@ Error types: (1) *errors.fundamental
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹›
+(1) ‹oneline›
 ‹  | twoline›
   -- stack trace:
   | github.com/cockroachdb/errors/fmttests.glob...funcNN...
@@ -1558,7 +1558,7 @@ Error types: (1) *errors.fundamental
 =====
 == Message payload
 <path>:<lineno>: ×
-(1) ××
+(1) ×
 ×
   -- stack trace:
   | github.com/cockroachdb/errors/fmttests.glob...funcNN...

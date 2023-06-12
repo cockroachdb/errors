@@ -841,7 +841,7 @@ Error types: (1) *fmttests.werrDelegate (2) *withstack.withStack (3) *errutil.le
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›: new-style ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 ‹  | -- multi-line›
 ‹  | wrapper payload›
@@ -879,7 +879,7 @@ Error types: (1) *fmttests.werrDelegate (2) *withstack.withStack (3) *errutil.le
 =====
 == Message payload
 <path>:<lineno>: ×: new-style ×
-(1) ××
+(1) ×
 ×
 ×
 ×
@@ -1762,7 +1762,7 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *withstack.withStack (3) *err
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -1798,7 +1798,7 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *withstack.withStack (3) *err
 =====
 == Message payload
 <path>:<lineno>: ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -2134,7 +2134,7 @@ Error types: (1) *fmttests.werrFmt (2) *withstack.withStack (3) *errutil.leafErr
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›: new-style ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 ‹  | -- this is outerthree›
 ‹  | outerfour's›
@@ -2173,7 +2173,7 @@ Error types: (1) *fmttests.werrFmt (2) *withstack.withStack (3) *errutil.leafErr
 =====
 == Message payload
 <path>:<lineno>: ×: new-style ×
-(1) ××
+(1) ×
 ×
 ×
 ×
@@ -2365,7 +2365,7 @@ Error types: (1) *fmttests.werrFmto (2) *withstack.withStack (3) *errutil.leafEr
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: new-style ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -2401,7 +2401,7 @@ Error types: (1) *fmttests.werrFmto (2) *withstack.withStack (3) *errutil.leafEr
 =====
 == Message payload
 <path>:<lineno>: ×: new-style ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -2590,7 +2590,7 @@ Error types: (1) *fmttests.werrFmtoDelegate (2) *withstack.withStack (3) *erruti
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: new-style ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -2626,7 +2626,7 @@ Error types: (1) *fmttests.werrFmtoDelegate (2) *withstack.withStack (3) *erruti
 =====
 == Message payload
 <path>:<lineno>: ×: new-style ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -2778,7 +2778,7 @@ Error types: (1) *fmttests.werrFmtp (2) *withstack.withStack (3) *errutil.leafEr
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›: new-style ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -2814,7 +2814,7 @@ Error types: (1) *fmttests.werrFmtp (2) *withstack.withStack (3) *errutil.leafEr
 =====
 == Message payload
 <path>:<lineno>: ×: new-style ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -2970,7 +2970,7 @@ Error types: (1) *fmt.wrapError (2) *withstack.withStack (3) *errutil.leafError
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: new-style ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -3006,7 +3006,7 @@ Error types: (1) *fmt.wrapError (2) *withstack.withStack (3) *errutil.leafError
 =====
 == Message payload
 <path>:<lineno>: ×: new-style ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -4434,7 +4434,7 @@ Error types: (1) *fmttests.werrNoFmt (2) *withstack.withStack (3) *errutil.leafE
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: new-style ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -4470,7 +4470,7 @@ Error types: (1) *fmttests.werrNoFmt (2) *withstack.withStack (3) *errutil.leafE
 =====
 == Message payload
 <path>:<lineno>: ×: new-style ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -5439,7 +5439,7 @@ Error types: (1) *errors.withMessage (2) *withstack.withStack (3) *errutil.leafE
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: new-style ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) attached stack trace
   -- stack trace:
@@ -5475,7 +5475,7 @@ Error types: (1) *errors.withMessage (2) *withstack.withStack (3) *errutil.leafE
 =====
 == Message payload
 <path>:<lineno>: ×: new-style ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) attached stack trace
   -- stack trace:

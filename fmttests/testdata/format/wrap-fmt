@@ -123,7 +123,7 @@ Wraps: (3) ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | ‹  | -- this is innerone›
   | ‹  | innertwo's›
@@ -166,7 +166,7 @@ Wraps: (3) ×
   | ×
   | -- cause hidden behind barrier
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | ×
   | ×
@@ -346,7 +346,7 @@ Wraps: (4) ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | ‹  | -- this is innerone›
   | ‹  | innertwo's›
@@ -391,7 +391,7 @@ Wraps: (4) ×
   | ×
   | -- cause hidden behind barrier
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | ×
   | ×
@@ -497,7 +497,7 @@ Error types: (1) *barriers.barrierErr
   | ‹innertwo›
   | -- cause hidden behind barrier
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | ‹  | -- this is innerone›
   | ‹  | innertwo's›
@@ -513,7 +513,7 @@ Error types: (1) *barriers.barrierErr
   | ×
   | -- cause hidden behind barrier
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | ×
   | ×
@@ -587,11 +587,11 @@ Error types: (1) *fmttests.werrDelegate (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 ‹  | -- multi-line›
 ‹  | wrapper payload›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -602,11 +602,11 @@ Error types: (1) *fmttests.werrDelegate (2) *fmttests.errFmt
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
 ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -675,7 +675,7 @@ Error types: (1) *fmttests.werrDelegateEmpty (2) *fmttests.errFmt
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
 (1)
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -687,7 +687,7 @@ Error types: (1) *fmttests.werrDelegateEmpty (2) *fmttests.errFmt
 == Message payload
 ×
 (1)
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -756,7 +756,7 @@ Error types: (1) *fmttests.werrDelegateNoPrefix (2) *fmttests.errFmt
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
 (1) ‹detail›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -768,7 +768,7 @@ Error types: (1) *fmttests.werrDelegateNoPrefix (2) *fmttests.errFmt
 == Message payload
 ×
 (1) ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -841,7 +841,7 @@ Error types: (1) *hintdetail.withDetail (2) *fmttests.errFmt
 ‹innerone›
 (1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -854,7 +854,7 @@ Error types: (1) *hintdetail.withDetail (2) *fmttests.errFmt
 ×
 (1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -925,7 +925,7 @@ Error types: (1) *domains.withDomain (2) *fmttests.errFmt
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
 (1) mydomain
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -937,7 +937,7 @@ Error types: (1) *domains.withDomain (2) *fmttests.errFmt
 == Message payload
 ×
 (1) mydomain
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1008,9 +1008,9 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1021,9 +1021,9 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *fmttests.errFmt
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1092,7 +1092,7 @@ Error types: (1) *fmttests.werrEmpty (2) *fmttests.errFmt
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
 (1)
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1104,7 +1104,7 @@ Error types: (1) *fmttests.werrEmpty (2) *fmttests.errFmt
 == Message payload
 ×
 (1)
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1180,12 +1180,12 @@ Error types: (1) *fmttests.werrFmt (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 ‹  | -- this is outerthree›
 ‹  | outerfour's›
 ‹  | multi-line wrapper payload›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1196,12 +1196,12 @@ Error types: (1) *fmttests.werrFmt (2) *fmttests.errFmt
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
 ×
 ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1288,9 +1288,9 @@ Error types: (1) *fmttests.werrFmto (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1301,9 +1301,9 @@ Error types: (1) *fmttests.werrFmto (2) *fmttests.errFmt
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1390,9 +1390,9 @@ Error types: (1) *fmttests.werrFmtoDelegate (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1403,9 +1403,9 @@ Error types: (1) *fmttests.werrFmtoDelegate (2) *fmttests.errFmt
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1478,9 +1478,9 @@ Error types: (1) *fmttests.werrFmtp (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1491,9 +1491,9 @@ Error types: (1) *fmttests.werrFmtp (2) *fmttests.errFmt
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1570,9 +1570,9 @@ Error types: (1) *fmt.wrapError (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1583,9 +1583,9 @@ Error types: (1) *fmt.wrapError (2) *fmttests.errFmt
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1671,7 +1671,7 @@ Wraps: (2) ‹innerone›
   | ‹innertwo›
   | -- cause hidden behind barrier
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | ‹  | -- this is innerone›
   | ‹  | innertwo's›
@@ -1688,7 +1688,7 @@ Wraps: (2) ×
   | ×
   | -- cause hidden behind barrier
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | ×
   | ×
@@ -1762,7 +1762,7 @@ Error types: (1) *hintdetail.withHint (2) *fmttests.errFmt
 ‹innerone›
 (1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1775,7 +1775,7 @@ Error types: (1) *hintdetail.withHint (2) *fmttests.errFmt
 ×
 (1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1850,7 +1850,7 @@ Error types: (1) *issuelink.withIssueLink (2) *fmttests.errFmt
 (1) issue: https://mysite
   | detail: outerthree
   | outerfour
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1864,7 +1864,7 @@ Error types: (1) *issuelink.withIssueLink (2) *fmttests.errFmt
 (1) issue: https://mysite
   | detail: outerthree
   | outerfour
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -1933,7 +1933,7 @@ Error types: (1) *fmttests.werrMigrated (2) *fmttests.errFmt
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
 (1)
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -1945,7 +1945,7 @@ Error types: (1) *fmttests.werrMigrated (2) *fmttests.errFmt
 == Message payload
 ×
 (1)
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -2020,7 +2020,7 @@ outerfour: ‹innerone›
 outerthree: ‹innerone›
 (1) outerthree
   | outerfour
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -2033,7 +2033,7 @@ Error types: (1) *errutil.withPrefix (2) *fmttests.errFmt
 outerthree: ×
 (1) outerthree
   | outerfour
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -2181,7 +2181,7 @@ new-style (‹outerthree›
   | <tab><path>:<lineno>
 Wraps: (2) secondary error attachment
   | ‹innerone›
-  | (1) ‹innerone›‹›
+  | (1) ‹innerone›
   | ‹  | innertwo›
   | ‹  | -- this is innerone›
   | ‹  | innertwo's›
@@ -2190,7 +2190,7 @@ Wraps: (2) secondary error attachment
 Wraps: (3) new-style (‹outerthree›
   | ‹outerfour›) :: ‹innerone›
   | ‹innertwo› ::
-Wraps: (4) ‹innerone›‹›
+Wraps: (4) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -2229,7 +2229,7 @@ Error types: (1) *withstack.withStack (2) *secondary.withSecondaryError (3) *err
   | <tab><path>:<lineno>
 Wraps: (2) secondary error attachment
   | ×
-  | (1) ××
+  | (1) ×
   | ×
   | ×
   | ×
@@ -2238,7 +2238,7 @@ Wraps: (2) secondary error attachment
 Wraps: (3) new-style (×
   | ×) :: ×
   | × ::
-Wraps: (4) ××
+Wraps: (4) ×
 ×
 ×
 ×
@@ -2342,9 +2342,9 @@ Error types: (1) *fmttests.werrNoFmt (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -2355,9 +2355,9 @@ Error types: (1) *fmttests.werrNoFmt (2) *fmttests.errFmt
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -2436,7 +2436,7 @@ link ‹/path/to/file› ‹/path/to/newfile›: ‹innerone›
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 link ‹/path/to/file› ‹/path/to/newfile›: ‹innerone›
 (1) link ‹/path/to/file› ‹/path/to/newfile›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -2448,7 +2448,7 @@ Error types: (1) *os.LinkError (2) *fmttests.errFmt
 == Message payload
 link × ×: ×
 (1) link × ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -2529,7 +2529,7 @@ send tcp ‹unixhello›: ‹innerone›
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 send tcp ‹unixhello›: ‹innerone›
 (1) send tcp ‹unixhello›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -2541,7 +2541,7 @@ Error types: (1) *net.OpError (2) *fmttests.errFmt
 == Message payload
 send tcp ×: ×
 (1) send tcp ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -2618,7 +2618,7 @@ link ‹/path/to/file›: ‹innerone›
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 link ‹/path/to/file›: ‹innerone›
 (1) link ‹/path/to/file›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -2630,7 +2630,7 @@ Error types: (1) *fs.PathError (2) *fmttests.errFmt
 == Message payload
 link ×: ×
 (1) link ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -2705,7 +2705,7 @@ open: ‹innerone›
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 open: ‹innerone›
 (1) open
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -2717,7 +2717,7 @@ Error types: (1) *os.SyscallError (2) *fmttests.errFmt
 == Message payload
 open: ×
 (1) open
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -2812,9 +2812,9 @@ Error types: (1) *errors.withMessage (2) *fmttests.errFmt
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -2825,9 +2825,9 @@ Error types: (1) *errors.withMessage (2) *fmttests.errFmt
 =====
 == Message payload
 ×: ×
-(1) ××
+(1) ×
 ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -2988,7 +2988,7 @@ Error types: (1) *errors.withStack (2) *fmttests.errFmt
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -3025,7 +3025,7 @@ Error types: (1) *errors.withStack (2) *fmttests.errFmt
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -3121,7 +3121,7 @@ Error types: (1) *safedetails.withSafeDetails (2) *fmttests.errFmt
 ‹innerone›
 (1) safe ×
   | ×
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -3134,7 +3134,7 @@ Error types: (1) *safedetails.withSafeDetails (2) *fmttests.errFmt
 ×
 (1) safe ×
   | ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -3209,7 +3209,7 @@ safe ‹outerthree›
 safe ‹outerthree›: ‹innerone›
 (1) safe ‹outerthree›
   | ‹outerfour›
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -3222,7 +3222,7 @@ Error types: (1) *fmttests.werrSafeFormat (2) *fmttests.errFmt
 safe ×: ×
 (1) safe ×
   | ×
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -3359,7 +3359,7 @@ Error types: (1) *secondary.withSecondaryError (2) *fmttests.errFmt
   | Wraps: (2) outerthree
   |   | outerfour
   | Error types: (1) *withstack.withStack (2) *errutil.leafError
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -3401,7 +3401,7 @@ Error types: (1) *secondary.withSecondaryError (2) *fmttests.errFmt
   | Wraps: (2) outerthree
   |   | outerfour
   | Error types: (1) *withstack.withStack (2) *errutil.leafError
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -3522,7 +3522,7 @@ Error types: (1) *withstack.withStack (2) *fmttests.errFmt
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -3559,7 +3559,7 @@ Error types: (1) *withstack.withStack (2) *fmttests.errFmt
   | <tab><path>:<lineno>
   | runtime.goexit
   | <tab><path>:<lineno>
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -3709,7 +3709,7 @@ Error types: (1) *contexttags.withContext (2) *fmttests.errFmt
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹innerone›
 (1) tags: [k‹123›,safe=456]
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -3721,7 +3721,7 @@ Error types: (1) *contexttags.withContext (2) *fmttests.errFmt
 == Message payload
 ×
 (1) tags: [k×,safe=456]
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -3794,7 +3794,7 @@ Error types: (1) *telemetrykeys.withTelemetry (2) *fmttests.errFmt
 ‹innerone›
 (1) keys: [somekey outerthree
   | outerfour]
-Wraps: (2) ‹innerone›‹›
+Wraps: (2) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -3807,7 +3807,7 @@ Error types: (1) *telemetrykeys.withTelemetry (2) *fmttests.errFmt
 ×
 (1) keys: [somekey outerthree
   | outerfour]
-Wraps: (2) ××
+Wraps: (2) ×
 ×
 ×
 ×
@@ -3940,7 +3940,7 @@ new-stylew ‹outerthree›: ‹innerone›
   | <tab><path>:<lineno>
 Wraps: (2) new-stylew ‹outerthree›
   | ‹outerfour›
-Wraps: (3) ‹innerone›‹›
+Wraps: (3) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -3979,7 +3979,7 @@ Error types: (1) *withstack.withStack (2) *errutil.withPrefix (3) *fmttests.errF
   | <tab><path>:<lineno>
 Wraps: (2) new-stylew ×
   | ×
-Wraps: (3) ××
+Wraps: (3) ×
 ×
 ×
 ×
@@ -4209,7 +4209,7 @@ Wraps: (2) secondary error attachment
   | Error types: (1) *withstack.withStack (2) *errutil.leafError
 Wraps: (3) new-style ‹outerthree›
   | ‹outerfour› (payload)
-Wraps: (4) ‹innerone›‹›
+Wraps: (4) ‹innerone›
 ‹  | innertwo›
 ‹  | -- this is innerone›
 ‹  | innertwo's›
@@ -4278,7 +4278,7 @@ Wraps: (2) secondary error attachment
   | Error types: (1) *withstack.withStack (2) *errutil.leafError
 Wraps: (3) new-style ×
   | × (payload)
-Wraps: (4) ××
+Wraps: (4) ×
 ×
 ×
 ×
