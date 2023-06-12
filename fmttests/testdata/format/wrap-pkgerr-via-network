@@ -2023,7 +2023,7 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *errbase.opaqueLeaf
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) ‹innerone›
   | ‹innertwo›
@@ -2062,7 +2062,7 @@ Error types: (1) *fmttests.werrWithElidedCause (2) *errbase.opaqueLeaf
 =====
 == Message payload
 <path>:<lineno>: ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) ×
   | ×
@@ -6245,7 +6245,7 @@ Error types: (1) *errors.withMessage (2) *errbase.opaqueLeaf
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹outerthree›: ‹innerone›
-(1) ‹outerthree›‹›
+(1) ‹outerthree›
 ‹  | outerfour›
 Wraps: (2) ‹innerone›
   | ‹innertwo›
@@ -6284,7 +6284,7 @@ Error types: (1) *errors.withMessage (2) *errbase.opaqueLeaf
 =====
 == Message payload
 <path>:<lineno>: ×: ×
-(1) ××
+(1) ×
 ×
 Wraps: (2) ×
   | ×

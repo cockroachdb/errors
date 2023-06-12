@@ -718,7 +718,7 @@ Error types: (1) *errors.errorString
 == printed via redact Printf() %X, refused - good
 == printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
 ‹oneline›
-(1) ‹oneline›‹›
+(1) ‹oneline›
 ‹  | twoline›
 Error types: (1) *errors.errorString
 =====
@@ -726,7 +726,7 @@ Error types: (1) *errors.errorString
 =====
 == Message payload
 ×
-(1) ××
+(1) ×
 ×
 Error types: (1) *errors.errorString
 -- report composition:
