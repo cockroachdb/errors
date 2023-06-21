@@ -2,9 +2,9 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, go-1.20-upgrade ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, go-1.20-upgrade ]
 
 jobs:
 
@@ -13,10 +13,8 @@ jobs:
     strategy:
       matrix:
         go:
-          - "1.17"
-          - "1.18"
-          - "1.19"
           - "1.20"
+          - "1.21"
     steps:
     - uses: actions/checkout@v2
 
