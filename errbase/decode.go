@@ -29,6 +29,9 @@ func DecodeError(ctx context.Context, enc EncodedError) error {
 	if w := enc.GetWrapper(); w != nil {
 		return decodeWrapper(ctx, w)
 	}
+	if w := enc.GetMultiWrapper(); w != nil {
+		return decodeMultiWrapper(ctx, w)
+	}
 	return decodeLeaf(ctx, enc.GetLeaf())
 }
 
@@ -71,6 +74,47 @@ func decodeLeaf(ctx context.Context, enc *errorspb.EncodedErrorLeaf) error {
 	// network again).
 	return &opaqueLeaf{
 		msg:     enc.Message,
+		details: enc.Details,
+	}
+}
+
+func decodeMultiWrapper(ctx context.Context, enc *errorspb.EncodedWrapperMulti) error {
+	// First decode the causes.
+	causes := make([]error, len(enc.Causes))
+	for i, c := range enc.Causes {
+		causes[i] = DecodeError(ctx, c)
+	}
+
+	// In case there is a detailed payload, decode it.
+	var payload proto.Message
+	if enc.Details.FullDetails != nil {
+		var d types.DynamicAny
+		err := types.UnmarshalAny(enc.Details.FullDetails, &d)
+		if err != nil {
+			// It's OK if we can't decode. We'll use
+			// the opaque type below.
+			warningFn(ctx, "error while unmarshalling wrapper error: %+v", err)
+		} else {
+			payload = d.Message
+		}
+	}
+
+	// Do we have a wrapper decoder for this?
+	typeKey := TypeKey(enc.Details.ErrorTypeMark.FamilyName)
+	if decoder, ok := decoders[typeKey]; ok {
+		// Yes, use it.
+		genErr := decoder(ctx, &MultiError{errs: causes}, enc.MessagePrefix, enc.Details.ReportablePayload, payload)
+		if genErr != nil {
+			// Decoding succeeded. Use this.
+			return genErr
+		}
+		// Decoding failed, we'll drop through to opaqueWrapper{} below.
+	}
+
+	// Otherwise, preserve all details about the original object.
+	return &opaqueMultiWrapper{
+		causes:  causes,
+		prefix:  enc.MessagePrefix,
 		details: enc.Details,
 	}
 }

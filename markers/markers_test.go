@@ -199,6 +199,40 @@ func TestWrappedEquivalence(t *testing.T) {
 	tt.Check(markers.Is(err2w, err1))
 }
 
+// This test demonstrates that equivalence can be "peeked" through
+// behind multiple layers of wrapping.
+func TestGoErrWrappedEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := errors.New("hello")
+	err2 := fmt.Errorf("an error %w", err1)
+
+	tt.Check(markers.Is(err2, err1))
+
+	m2 := errors.New("m2")
+	err2w := markers.Mark(err2, m2)
+
+	tt.Check(markers.Is(err2w, m2))
+}
+
+// This test demonstrates that equivalence can be "peeked" through
+// behind multiple layers of wrapping.
+func TestGoMultiErrWrappedEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := errors.New("hello")
+	err2 := errors.New("world")
+	err3 := fmt.Errorf("an error %w and %w", err1, err2)
+
+	tt.Check(markers.Is(err3, err1))
+	tt.Check(markers.Is(err3, err2))
+
+	m3 := errors.New("m3")
+	err3w := markers.Mark(err3, m3)
+
+	tt.Check(markers.Is(err3w, m3))
+}
+
 // This check verifies that IsAny() works.
 func TestIsAny(t *testing.T) {
 	tt := testutils.T{T: t}

@@ -59,6 +59,11 @@ func Is(err, reference error) bool {
 		if tryDelegateToIsMethod(c, reference) {
 			return true
 		}
+		if me, ok := c.(*errbase.MultiError); ok {
+			if MultiIs(me, reference) {
+				return true
+			}
+		}
 	}
 
 	if err == nil {
@@ -78,6 +83,15 @@ func Is(err, reference error) bool {
 	refMark := getMark(reference)
 	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
 		if equalMarks(getMark(c), refMark) {
+			return true
+		}
+	}
+	return false
+}
+
+func MultiIs(me *errbase.MultiError, reference error) bool {
+	for _, ee := range me.GetErrors() {
+		if Is(ee, reference) {
 			return true
 		}
 	}

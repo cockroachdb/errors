@@ -58,6 +58,20 @@ func As(err error, target interface{}) bool {
 		if x, ok := c.(interface{ As(interface{}) bool }); ok && x.As(target) {
 			return true
 		}
+		if x, ok := c.(*errbase.MultiError); ok {
+			if MultiAs(x, target) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func MultiAs(x *errbase.MultiError, target interface{}) bool {
+	for _, e := range x.GetErrors() {
+		if As(e, target) {
+			return true
+		}
 	}
 	return false
 }

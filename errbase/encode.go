@@ -145,6 +145,23 @@ func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 		details.FullDetails = encodeAsAny(ctx, err, payload)
 	}
 
+	if e, ok := cause.(*MultiError); ok {
+		causes := make([]EncodedError, len(e.errs))
+		for i, ee := range e.errs {
+			causes[i] = EncodeError(ctx, ee)
+		}
+
+		return EncodedError{
+			Error: &errorspb.EncodedError_MultiWrapper{
+				MultiWrapper: &errorspb.EncodedWrapperMulti{
+					Causes:        causes,
+					MessagePrefix: msg,
+					Details:       details,
+				},
+			},
+		}
+	}
+
 	return EncodedError{
 		Error: &errorspb.EncodedError_Wrapper{
 			Wrapper: &errorspb.EncodedWrapper{
@@ -158,9 +175,11 @@ func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 
 // extractPrefix extracts the prefix from a wrapper's error message.
 // For example,
-//    err := errors.New("bar")
-//    err = errors.Wrap(err, "foo")
-//    extractPrefix(err)
+//
+//	err := errors.New("bar")
+//	err = errors.Wrap(err, "foo")
+//	extractPrefix(err)
+//
 // returns "foo".
 func extractPrefix(err, cause error) string {
 	causeSuffix := cause.Error()

@@ -33,12 +33,15 @@ func UnwrapOnce(err error) (cause error) {
 		return e.Cause()
 	case interface{ Unwrap() error }:
 		return e.Unwrap()
+	case interface{ Unwrap() []error }:
+		return NewMultiError(e.Unwrap())
 	}
 	return nil
 }
 
 // UnwrapAll accesses the root cause object of the error.
 // If the error has no cause (leaf error), it is returned directly.
+// TODO(davidh): what should this do with multierrors?
 func UnwrapAll(err error) error {
 	for {
 		if cause := UnwrapOnce(err); cause != nil {

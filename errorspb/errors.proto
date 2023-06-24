@@ -13,6 +13,8 @@ message EncodedError {
     EncodedErrorLeaf leaf = 1;
     // This is used for wrapper errors.
     EncodedWrapper wrapper = 2;
+    // This is used for multi-wrapper errors.
+    EncodedWrapperMulti multiWrapper = 3;
   }
 }
 
@@ -67,7 +69,27 @@ message EncodedWrapper {
   EncodedError cause = 1 [(gogoproto.nullable) = false];
 
   // The wrapper message prefix (which may be empty). This
-  // isbprinted before the cause's own message when
+  // is printed before the cause's own message when
+  // constructing a full message. This may contain PII.
+  //
+  // This is extracted automatically:
+  //
+  // - for wrappers that have a registered encoder,
+  // - otherwise, when the wrapper's Error() has its cause's Error() as suffix.
+  string message_prefix = 2;
+
+  // The error details.
+  EncodedErrorDetails details = 3 [(gogoproto.nullable) = false];
+}
+
+// EncodedWrapperMulti is the wire-encodable representation
+// of an error wrapper with multiple causes.
+message EncodedWrapperMulti {
+  // List of causes. Mandatory.
+  repeated EncodedError causes = 1 [(gogoproto.nullable) = false];
+
+  // The wrapper message prefix (which may be empty). This
+  // is printed before the cause's own message when
   // constructing a full message. This may contain PII.
   //
   // This is extracted automatically:
