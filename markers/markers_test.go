@@ -133,7 +133,7 @@ func TestStandardFmtErrorRemoteEquivalence(t *testing.T) {
 
 // This test demonstrates that it is possible to recognize standard
 // multierrors that have been sent over the network.
-func TestStandardFmtMultirrorRemoteEquivalence(t *testing.T) {
+func TestStandardFmtMultierrorRemoteEquivalence(t *testing.T) {
 	tt := testutils.T{T: t}
 
 	err1 := fmt.Errorf("hello %w %w", goErr.New("world"), goErr.New("one"))
@@ -244,6 +244,20 @@ func TestKnownErrorTypeDifference(t *testing.T) {
 	tt.Check(markers.Is(err2, newErr2))
 
 	tt.Check(!markers.Is(newErr1, newErr2))
+}
+
+func TestStandardFmtSingleWrapRemoteEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := fmt.Errorf("hello %w", goErr.New("world"))
+	err2 := fmt.Errorf("hello %w", goErr.New("earth"))
+
+	newErr1 := network(err1)
+
+	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
+	tt.Check(!markers.Is(err2, newErr1))
+	tt.Check(!markers.Is(newErr1, err2))
 }
 
 // This test demonstrates that two errors that are structurally

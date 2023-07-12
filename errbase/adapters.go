@@ -211,4 +211,11 @@ func init() {
 	RegisterWrapperDecoder(pKey, decodeSyscallError)
 
 	RegisterLeafEncoder(GetTypeKey(&OpaqueErrno{}), encodeOpaqueErrno)
+
+	RegisterWrapperEncoder(GetTypeKey(fmt.Errorf("text %w text", baseErr)), encodeWrapError)
+	RegisterWrapperEncoder(GetTypeKey(fmt.Errorf("text %w %w text", baseErr, baseErr)), encodeWrapError)
+}
+
+func encodeWrapError(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message) {
+	return err.Error(), nil, nil
 }

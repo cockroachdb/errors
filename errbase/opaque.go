@@ -68,6 +68,10 @@ func (e *opaqueWrapper) Error() string {
 	if e.prefix == "" {
 		return e.cause.Error()
 	}
+	// TODO(davidh): cleaner way to do this?
+	if e.details.ErrorTypeMark.FamilyName == "fmt/*fmt.wrapError" {
+		return e.prefix
+	}
 	return fmt.Sprintf("%s: %s", e.prefix, e.cause)
 }
 
@@ -76,7 +80,7 @@ func (e *opaqueMultiWrapper) Error() string {
 	if e.prefix == "" {
 		return goErr.Join(e.causes...).Error()
 	}
-	return fmt.Sprintf("%s: %s", e.prefix, goErr.Join(e.causes...))
+	return e.prefix
 }
 
 // the opaque wrapper is a wrapper.

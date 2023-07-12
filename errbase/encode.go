@@ -204,6 +204,8 @@ func getTypeDetails(
 		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension
 	case *opaqueWrapper:
 		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension
+	case *opaqueMultiWrapper:
+		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension
 	}
 
 	// Compute the full error name, for reporting and printing details.
