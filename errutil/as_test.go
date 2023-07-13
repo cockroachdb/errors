@@ -53,6 +53,12 @@ func TestAs(t *testing.T) {
 	mywSlot = nil
 	tt.Check(errors.As(wwErr, &mywSlot))
 	tt.Check(errors.Is(mywSlot, refwErr))
+
+	// Check that it works even if hidden in multi-error
+	multiWrapErr := fmt.Errorf("test %w test", errors.Wrap(refwErr, "hidden"))
+	mywSlot = nil
+	tt.Check(errors.As(multiWrapErr, &mywSlot))
+	tt.Check(errors.Is(mywSlot, refwErr))
 }
 
 type myType struct{ msg string }

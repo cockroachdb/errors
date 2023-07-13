@@ -55,6 +55,18 @@ func TestAdaptBaseGoErr(t *testing.T) {
 	tt.CheckDeepEqual(newErr, origErr)
 }
 
+func TestAdaptGoSingleWrapErr(t *testing.T) {
+	origErr := fmt.Errorf("an error %w", goErr.New("hello"))
+	t.Logf("start err: %# v", pretty.Formatter(origErr))
+
+	newErr := network(t, origErr)
+
+	tt := testutils.T{T: t}
+	// The library preserves the cause. It's not possible to preserve the fmt
+	// string.
+	tt.CheckContains(newErr.Error(), "hello")
+}
+
 func TestAdaptPkgWithMessage(t *testing.T) {
 	// Simple message wrappers from github.com/pkg/errors are preserved
 	// completely.
