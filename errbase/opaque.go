@@ -40,9 +40,10 @@ var _ SafeFormatter = (*opaqueLeaf)(nil)
 // back to some network system that _does_ know about
 // the type, the original object can be restored.
 type opaqueWrapper struct {
-	cause   error
-	prefix  string
-	details errorspb.EncodedErrorDetails
+	cause           error
+	prefix          string
+	details         errorspb.EncodedErrorDetails
+	ownsErrorString bool
 }
 
 var _ error = (*opaqueWrapper)(nil)
@@ -53,6 +54,9 @@ var _ SafeFormatter = (*opaqueWrapper)(nil)
 func (e *opaqueLeaf) Error() string { return e.msg }
 
 func (e *opaqueWrapper) Error() string {
+	if e.ownsErrorString {
+		return e.prefix
+	}
 	if e.prefix == "" {
 		return e.cause.Error()
 	}
@@ -102,6 +106,9 @@ func (e *opaqueWrapper) SafeFormatError(p Printer) (next error) {
 		if e.details.FullDetails != nil {
 			p.Printf("\npayload type: %s", redact.Safe(e.details.FullDetails.TypeUrl))
 		}
+	}
+	if e.ownsErrorString {
+		return nil
 	}
 	return e.cause
 }

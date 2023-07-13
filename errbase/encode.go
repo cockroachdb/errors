@@ -115,9 +115,10 @@ func encodeAsAny(ctx context.Context, err error, payload proto.Message) *types.A
 func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 	var msg string
 	var details errorspb.EncodedErrorDetails
+	var ownError bool
 
 	if e, ok := err.(*opaqueWrapper); ok {
-		msg = e.prefix
+		msg, ownError = extractPrefix(err, cause)
 		details = e.details
 	} else {
 		details.OriginalTypeName, details.ErrorTypeMark.FamilyName, details.ErrorTypeMark.Extension = getTypeDetails(err, false /*onlyFamily*/)
@@ -127,12 +128,12 @@ func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 		// If we have a manually registered encoder, use that.
 		typeKey := TypeKey(details.ErrorTypeMark.FamilyName)
 		if enc, ok := encoders[typeKey]; ok {
-			msg, details.ReportablePayload, payload = enc(ctx, err)
+			msg, details.ReportablePayload, payload, ownError = enc(ctx, err)
 		} else {
 			// No encoder.
 			// In that case, we'll try to compute a message prefix
 			// manually.
-			msg = extractPrefix(err, cause)
+			msg, ownError = extractPrefix(err, cause)
 
 			// If there are known safe details, use them.
 			if s, ok := err.(SafeDetailer); ok {
@@ -148,9 +149,10 @@ func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 	return EncodedError{
 		Error: &errorspb.EncodedError_Wrapper{
 			Wrapper: &errorspb.EncodedWrapper{
-				Cause:         EncodeError(ctx, cause),
-				MessagePrefix: msg,
-				Details:       details,
+				Cause:                  EncodeError(ctx, cause),
+				MessagePrefix:          msg,
+				Details:                details,
+				WrapperOwnsErrorString: ownError,
 			},
 		},
 	}
@@ -158,21 +160,36 @@ func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 
 // extractPrefix extracts the prefix from a wrapper's error message.
 // For example,
-//    err := errors.New("bar")
-//    err = errors.Wrap(err, "foo")
-//    extractPrefix(err)
+//
+//	err := errors.New("bar")
+//	err = errors.Wrap(err, "foo")
+//	extractPrefix(err)
+//
 // returns "foo".
-func extractPrefix(err, cause error) string {
+//
+// If a presumed wrapper does not have a message prefix, it is assumed
+// to override the entire error message and `extractPrefix` returns
+// the entire message and the boolean `true` to signify that the causes
+// should not be appended to it.
+func extractPrefix(err, cause error) (string, bool) {
 	causeSuffix := cause.Error()
 	errMsg := err.Error()
 
 	if strings.HasSuffix(errMsg, causeSuffix) {
 		prefix := errMsg[:len(errMsg)-len(causeSuffix)]
 		if strings.HasSuffix(prefix, ": ") {
-			return prefix[:len(prefix)-2]
+			return prefix[:len(prefix)-2], false
+		}
+		// If error msg matches exactly then this is a wrapper
+		// with no message of its own
+		if len(prefix) == 0 {
+			return "", false
 		}
 	}
-	return ""
+	// If we don't have the cause as a suffix, then we have
+	// some other string as our error msg, preserve that and
+	// mark as override
+	return errMsg, true
 }
 
 func getTypeDetails(
@@ -295,6 +312,13 @@ var leafEncoders = map[TypeKey]LeafEncoder{}
 // or a different type, ensure that RegisterTypeMigration() was called
 // prior to RegisterWrapperEncoder().
 func RegisterWrapperEncoder(theType TypeKey, encoder WrapperEncoder) {
+	RegisterWrapperEncoderWithMessageOverride(theType, func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message, overrideError bool) {
+		prefix, details, payload := encoder(ctx, err)
+		return prefix, details, payload, false
+	})
+}
+
+func RegisterWrapperEncoderWithMessageOverride(theType TypeKey, encoder WrapperEncoderWithMessageOverride) {
 	if encoder == nil {
 		delete(encoders, theType)
 	} else {
@@ -306,5 +330,7 @@ func RegisterWrapperEncoder(theType TypeKey, encoder WrapperEncoder) {
 // by additional wrapper types not yet known to this library.
 type WrapperEncoder = func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message)
 
+type WrapperEncoderWithMessageOverride = func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message, overrideError bool)
+
 // registry for RegisterWrapperType.
-var encoders = map[TypeKey]WrapperEncoder{}
+var encoders = map[TypeKey]WrapperEncoderWithMessageOverride{}

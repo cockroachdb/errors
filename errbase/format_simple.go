@@ -21,7 +21,7 @@ import "io"
 // errors.Formatter interface.
 func formatSimpleError(err error, p *state, sep string) error {
 	if cause := UnwrapOnce(err); cause != nil {
-		pref := extractPrefix(err, cause)
+		pref, _ := extractPrefix(err, cause)
 		p.buf.WriteString(pref)
 		if pref != "" {
 			p.buf.WriteByte(':')

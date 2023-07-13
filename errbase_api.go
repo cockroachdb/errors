@@ -131,6 +131,20 @@ func RegisterWrapperEncoder(typeName TypeKey, encoder WrapperEncoder) {
 	errbase.RegisterWrapperEncoder(typeName, encoder)
 }
 
+// RegisterWrapperEncoderWithMessageOverride can be used to register new wrapper
+// types to the library. These wrappers can optionally override the child error
+// messages with their own error string instead of relying on iterative
+// concatenation. Registered wrappers will be encoded using their own Go type
+// when an error is encoded. Wrappers that have not been registered will be
+// encoded using the opaqueWrapper type.
+//
+// Note: if the error type has been migrated from a previous location
+// or a different type, ensure that RegisterTypeMigration() was called
+// prior to RegisterWrapperEncoder().
+func RegisterWrapperEncoderWithMessageOverride(typeName TypeKey, encoder errbase.WrapperEncoderWithMessageOverride) {
+	errbase.RegisterWrapperEncoderWithMessageOverride(typeName, encoder)
+}
+
 // WrapperEncoder is to be provided (via RegisterWrapperEncoder above)
 // by additional wrapper types not yet known to this library.
 type WrapperEncoder = errbase.WrapperEncoder
@@ -185,7 +199,8 @@ func Formattable(err error) fmt.Formatter { return errbase.Formattable(err) }
 // The value of previousTypeName must be the result of calling
 // reflect.TypeOf(err).String() on the original error object.
 // This is usually composed as follows:
-//     [*]<shortpackage>.<errortype>
+//
+//	[*]<shortpackage>.<errortype>
 //
 // For example, Go's standard error type has name "*errors.errorString".
 // The asterisk indicates that `errorString` implements the `error`

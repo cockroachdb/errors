@@ -78,6 +78,10 @@ message EncodedWrapper {
 
   // The error details.
   EncodedErrorDetails details = 3 [(gogoproto.nullable) = false];
+
+  // If true, treat `message_prefix` as the entire error string and
+  // do not concatenate cause.
+  bool wrapper_owns_error_string = 4;
 }
 
 // ErrorTypeMark identifies an error type for the purpose of determining

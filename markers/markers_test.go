@@ -96,6 +96,7 @@ func TestRemoteErrorEquivalence(t *testing.T) {
 	newErr1 := network(err1)
 
 	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
 	tt.Check(!markers.Is(err2, newErr1))
 }
 
@@ -110,7 +111,24 @@ func TestStandardErrorRemoteEquivalence(t *testing.T) {
 	newErr1 := network(err1)
 
 	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
 	tt.Check(!markers.Is(err2, newErr1))
+}
+
+// This test demonstrates that it is possible to recognize standard
+// errors that have been sent over the network.
+func TestStandardFmtErrorRemoteEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := fmt.Errorf("hello")
+	err2 := fmt.Errorf("world")
+
+	newErr1 := network(err1)
+
+	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
+	tt.Check(!markers.Is(err2, newErr1))
+	tt.Check(!markers.Is(newErr1, err2))
 }
 
 // This test demonstrates that when the error library does not know
@@ -162,6 +180,20 @@ func TestKnownErrorTypeDifference(t *testing.T) {
 	tt.Check(!markers.Is(newErr1, newErr2))
 }
 
+func TestStandardFmtSingleWrapRemoteEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := fmt.Errorf("hello %w", goErr.New("world"))
+	err2 := fmt.Errorf("hello %w", goErr.New("earth"))
+
+	newErr1 := network(err1)
+
+	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
+	tt.Check(!markers.Is(err2, newErr1))
+	tt.Check(!markers.Is(newErr1, err2))
+}
+
 // This test demonstrates that two errors that are structurally
 // different can be made to become equivalent by using the same
 // marker.
@@ -197,6 +229,22 @@ func TestWrappedEquivalence(t *testing.T) {
 	err2w := markers.Mark(err2, m2)
 
 	tt.Check(markers.Is(err2w, err1))
+}
+
+// This test demonstrates that equivalence can be "peeked" through
+// behind multiple layers of wrapping.
+func TestGoErrWrappedEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := errors.New("hello")
+	err2 := fmt.Errorf("an error %w", err1)
+
+	tt.Check(markers.Is(err2, err1))
+
+	m2 := errors.New("m2")
+	err2w := markers.Mark(err2, m2)
+
+	tt.Check(markers.Is(err2w, m2))
 }
 
 // This check verifies that IsAny() works.

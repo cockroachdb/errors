@@ -278,8 +278,9 @@ func (s *state) printEntry(entry formatEntry) {
 //
 // This function is used both when FormatError() is called indirectly
 // from .Error(), e.g. in:
-//      (e *myType) Error() { return fmt.Sprintf("%v", e) }
-//      (e *myType) Format(s fmt.State, verb rune) { errors.FormatError(s, verb, e) }
+//
+//	(e *myType) Error() { return fmt.Sprintf("%v", e) }
+//	(e *myType) Format(s fmt.State, verb rune) { errors.FormatError(s, verb, e) }
 //
 // and also to print the first line in the output of a %+v format.
 //
@@ -389,7 +390,14 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail bool) {
 				s.lastStack = st.StackTrace()
 			}
 		} else {
-			s.formatSimple(err, cause)
+			elideChildren := s.formatSimple(err, cause)
+			if elideChildren {
+				// The error wants to elide the short messages from inner
+				// causes. Do it.
+				for i := range s.entries {
+					s.entries[i].elideShort = true
+				}
+			}
 		}
 
 	default:
@@ -422,7 +430,14 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail bool) {
 			// If the error did not implement errors.Formatter nor
 			// fmt.Formatter, but it is a wrapper, still attempt best effort:
 			// print what we can at this level.
-			s.formatSimple(err, cause)
+			elideChildren := s.formatSimple(err, cause)
+			if elideChildren {
+				// The error wants to elide the short messages from inner
+				// causes. Do it.
+				for i := range s.entries {
+					s.entries[i].elideShort = true
+				}
+			}
 		}
 	}
 
@@ -500,16 +515,19 @@ func RegisterSpecialCasePrinter(fn safeErrorPrinterFn) {
 // formatSimple performs a best effort at extracting the details at a
 // given level of wrapping when the error object does not implement
 // the Formatter interface.
-func (s *state) formatSimple(err, cause error) {
+// Returns true if we want to elide errors from child entries.
+func (s *state) formatSimple(err, cause error) bool {
 	var pref string
+	elideChildren := false
 	if cause != nil {
-		pref = extractPrefix(err, cause)
+		pref, elideChildren = extractPrefix(err, cause)
 	} else {
 		pref = err.Error()
 	}
 	if len(pref) > 0 {
 		s.Write([]byte(pref))
 	}
+	return elideChildren
 }
 
 // finishDisplay renders s.finalBuf into s.State.
