@@ -107,9 +107,10 @@ func decodeWrapper(ctx context.Context, enc *errorspb.EncodedWrapper) error {
 
 	// Otherwise, preserve all details about the original object.
 	return &opaqueWrapper{
-		cause:   cause,
-		prefix:  enc.MessagePrefix,
-		details: enc.Details,
+		cause:           cause,
+		prefix:          enc.MessagePrefix,
+		details:         enc.Details,
+		ownsErrorString: enc.WrapperOwnsErrorString,
 	}
 }
 

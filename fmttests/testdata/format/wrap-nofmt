@@ -1376,6 +1376,178 @@ Title: "×: ×"
 
 run
 nofmt innerone innertwo
+go-errorf outerthree outerfour
+
+accept %\+v via Formattable.*IRREGULAR: not same as %\+v
+accept %\#v via Formattable.*IRREGULAR: not same as %\#v
+
+require (?s)outerthree.*outerfour.*
+----
+&fmt.wrapError{
+    msg: "outerthree\nouterfour - innerone\ninnertwo",
+    err: &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&fmt.wrapError{msg:"outerthree\nouterfour - innerone\ninnertwo", err:(*fmttests.errNoFmt)(0xAAAABBBB)}
+== Error()
+outerthree
+outerfour - innerone
+innertwo
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&fmt.wrapError{
+    msg: "outerthree\nouterfour - innerone\ninnertwo",
+    err: &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+}
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
+outerthree
+(1) outerthree
+  | outerfour - innerone
+  | innertwo
+Wraps: (2) innerone
+  | innertwo
+Error types: (1) *fmt.wrapError (2) *fmttests.errNoFmt
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+‹outerthree›
+‹outerfour - innerone›
+‹innertwo›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+‹outerthree›
+(1) ‹outerthree›
+‹  | outerfour - innerone›
+‹  | innertwo›
+Wraps: (2) ‹innerone›
+‹  | innertwo›
+Error types: (1) *fmt.wrapError (2) *fmttests.errNoFmt
+=====
+===== Sentry reporting
+=====
+== Message payload
+×
+(1) ×
+×
+×
+Wraps: (2) ×
+×
+Error types: (1) *fmt.wrapError (2) *fmttests.errNoFmt
+-- report composition:
+*fmttests.errNoFmt
+*fmt.wrapError
+== Extra "error types"
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
+fmt/*fmt.wrapError (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*fmttests.errNoFmt"
+Title: "×"
+(NO STACKTRACE)
+
+run
+nofmt innerone innertwo
+go-errorf-suffix outerthree outerfour
+
+accept %\+v via Formattable.*IRREGULAR: not same as %\+v
+accept %\#v via Formattable.*IRREGULAR: not same as %\#v
+
+require (?s).*outerthree.*outerfour
+----
+&fmt.wrapError{
+    msg: "innerone\ninnertwo - outerthree\nouterfour",
+    err: &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&fmt.wrapError{msg:"innerone\ninnertwo - outerthree\nouterfour", err:(*fmttests.errNoFmt)(0xAAAABBBB)}
+== Error()
+innerone
+innertwo - outerthree
+outerfour
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v = Error(), ok
+== %#v via Formattable() (IRREGULAR: not same as %#v)
+&fmt.wrapError{
+    msg: "innerone\ninnertwo - outerthree\nouterfour",
+    err: &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+}
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() (IRREGULAR: not same as %+v)
+innerone
+(1) innerone
+  | innertwo - outerthree
+  | outerfour
+Wraps: (2) innerone
+  | innertwo
+Error types: (1) *fmt.wrapError (2) *fmttests.errNoFmt
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+‹innerone›
+‹innertwo - outerthree›
+‹outerfour›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v via Formattable()
+‹innerone›
+(1) ‹innerone›
+‹  | innertwo - outerthree›
+‹  | outerfour›
+Wraps: (2) ‹innerone›
+‹  | innertwo›
+Error types: (1) *fmt.wrapError (2) *fmttests.errNoFmt
+=====
+===== Sentry reporting
+=====
+== Message payload
+×
+(1) ×
+×
+×
+Wraps: (2) ×
+×
+Error types: (1) *fmt.wrapError (2) *fmttests.errNoFmt
+-- report composition:
+*fmttests.errNoFmt
+*fmt.wrapError
+== Extra "error types"
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
+fmt/*fmt.wrapError (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*fmttests.errNoFmt"
+Title: "×"
+(NO STACKTRACE)
+
+run
+nofmt innerone innertwo
 goerr outerthree outerfour
 
 accept %\+v via Formattable.*IRREGULAR: not same as %\+v
@@ -2049,6 +2221,220 @@ github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 == Exception 1 (Module: "error domain: <none>")
 Type: "<path>:<lineno> ...funcNN...
 Title: "*fmttests.errNoFmt: new-style (×\nvia *withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
+
+run
+nofmt innerone innertwo
+newfw-suffix outerthree outerfour
+
+require (?s).*outerthree.*outerfour
+----
+&withstack.withStack{
+    cause: &secondary.withSecondaryError{
+        cause: &errutil.withNewMessage{
+            cause:   &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+            message: ":: ‹innerone›\n‹innertwo› :: new-style (‹outerthree›\n‹outerfour›)",
+        },
+        secondaryError: &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+    },
+    stack: &stack{...},
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&withstack.withStack{
+    cause: &secondary.withSecondaryError{
+        cause: &errutil.withNewMessage{
+            cause:   &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+            message: ":: ‹innerone›\n‹innertwo› :: new-style (‹outerthree›\n‹outerfour›)",
+        },
+        secondaryError: &fmttests.errNoFmt{msg:"innerone\ninnertwo"},
+    },
+    stack: &stack{...},
+}
+== Error()
+:: innerone
+innertwo :: new-style (outerthree
+outerfour)
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+:: innerone
+(1) attached stack trace
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) secondary error attachment
+  | innerone
+  | (1) innerone
+  |   | innertwo
+  | Error types: (1) *fmttests.errNoFmt
+Wraps: (3) :: innerone
+  | innertwo :: new-style (outerthree
+  | outerfour)
+Wraps: (4) innerone
+  | innertwo
+Error types: (1) *withstack.withStack (2) *secondary.withSecondaryError (3) *errutil.withNewMessage (4) *fmttests.errNoFmt
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+:: ‹innerone›
+‹innertwo› :: new-style (‹outerthree›
+‹outerfour›)
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+:: ‹innerone›
+(1) attached stack trace
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) secondary error attachment
+  | ‹innerone›
+  | (1) ‹innerone›
+  | ‹  | innertwo›
+  | Error types: (1) *fmttests.errNoFmt
+Wraps: (3) :: ‹innerone›
+  | ‹innertwo› :: new-style (‹outerthree›
+  | ‹outerfour›)
+Wraps: (4) ‹innerone›
+‹  | innertwo›
+Error types: (1) *withstack.withStack (2) *secondary.withSecondaryError (3) *errutil.withNewMessage (4) *fmttests.errNoFmt
+=====
+===== Sentry reporting
+=====
+== Message payload
+<path>:<lineno>: :: ×
+(1) attached stack trace
+  -- stack trace:
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (2) secondary error attachment
+  | ×
+  | (1) ×
+  | ×
+  | Error types: (1) *fmttests.errNoFmt
+Wraps: (3) :: ×
+  | × :: new-style (×
+  | ×)
+Wraps: (4) ×
+×
+Error types: (1) *withstack.withStack (2) *secondary.withSecondaryError (3) *errutil.withNewMessage (4) *fmttests.errNoFmt
+-- report composition:
+*fmttests.errNoFmt
+*errutil.withNewMessage: :: ×
+*secondary.withSecondaryError
+<path>:<lineno>: *withstack.withStack (top exception)
+== Extra "error types"
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
+github.com/cockroachdb/errors/errutil/*errutil.withNewMessage (*::)
+github.com/cockroachdb/errors/secondary/*secondary.withSecondaryError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "<path>:<lineno> ...funcNN...
+Title: "*fmttests.errNoFmt: :: ×\nvia *withstack.withStack"
 <path>:<lineno>:
    (runtime) goexit()
 <path>:<lineno>:
