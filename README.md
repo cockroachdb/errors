@@ -573,9 +573,11 @@ func RegisterLeafDecoder(typeName TypeKey, decoder LeafDecoder)
 func RegisterLeafEncoder(typeName TypeKey, encoder LeafEncoder)
 func RegisterWrapperDecoder(typeName TypeKey, decoder WrapperDecoder)
 func RegisterWrapperEncoder(typeName TypeKey, encoder WrapperEncoder)
+func RegisterWrapperEncoderWithMessageOverride (typeName TypeKey, encoder WrapperEncoderWithMessageOverride)
 type LeafEncoder = func(ctx context.Context, err error) (msg string, safeDetails []string, payload proto.Message)
 type LeafDecoder = func(ctx context.Context, msg string, safeDetails []string, payload proto.Message) error
 type WrapperEncoder = func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message)
+type WrapperEncoderWithMessageOverride = func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message, overrideError bool)
 type WrapperDecoder = func(ctx context.Context, cause error, msgPrefix string, safeDetails []string, payload proto.Message) error
 
 // Registering package renames for custom error types.

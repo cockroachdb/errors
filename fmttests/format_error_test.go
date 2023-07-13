@@ -682,9 +682,9 @@ func (e *werrWithElidedCause) FormatError(p errbase.Printer) error {
 // takes over, and that does not respect the elision.
 func encodeWithElidedCause(
 	_ context.Context, err error,
-) (prefix string, _ []string, _ proto.Message) {
+) (prefix string, _ []string, _ proto.Message, _ errbase.MessageType) {
 	m := err.(*werrWithElidedCause)
-	return m.msg, nil, nil
+	return m.msg, nil, nil, errbase.FullMessage
 }
 
 func decodeWithElidedCause(
@@ -694,7 +694,7 @@ func decodeWithElidedCause(
 }
 
 func init() {
-	errbase.RegisterWrapperEncoder(errbase.GetTypeKey(&werrWithElidedCause{}), encodeWithElidedCause)
+	errbase.RegisterWrapperEncoderWithMessageType(errbase.GetTypeKey(&werrWithElidedCause{}), encodeWithElidedCause)
 	errbase.RegisterWrapperDecoder(errbase.GetTypeKey(&werrWithElidedCause{}), decodeWithElidedCause)
 }
 

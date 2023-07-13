@@ -60,24 +60,42 @@ message EncodedErrorDetails {
   google.protobuf.Any full_details = 4;
 }
 
+// MessageType encodes information regarding the interpretation of an
+// error's message string.
+enum MessageType {
+  // Keeping zero value as default for backwards compatibility.
+  // PREFIX is a message that should be prepended to its cause.
+  PREFIX = 0;
+  // FULL_MESSAGE is a complete error message that can be displayed
+  // without its cause.
+  FULL_MESSAGE = 1;
+}
+
 // EncodedWrapper is the wire-encodable representation
 // of an error wrapper.
 message EncodedWrapper {
   // The cause error. Mandatory.
   EncodedError cause = 1 [(gogoproto.nullable) = false];
 
-  // The wrapper message prefix (which may be empty). This
-  // isbprinted before the cause's own message when
-  // constructing a full message. This may contain PII.
+  // The wrapper message. This could either be a full error message
+  // that can be printed independently, or a (potentially empty) prefix
+  // which is printed before the cause's own message to construct the
+  // full message. This may contain PII.
   //
   // This is extracted automatically:
   //
   // - for wrappers that have a registered encoder,
   // - otherwise, when the wrapper's Error() has its cause's Error() as suffix.
-  string message_prefix = 2;
+  string message = 2;
 
   // The error details.
   EncodedErrorDetails details = 3 [(gogoproto.nullable) = false];
+
+  // message_type encodes the interpretation of `message`. Prior
+  // versions will not set this field and it will be left as `PREFIX`.
+  // This retains backwards compatibility since the new behavior is
+  // only enabled when this enum is set to `FULL_MESSAGE`.
+  MessageType message_type = 4;
 }
 
 // ErrorTypeMark identifies an error type for the purpose of determining
