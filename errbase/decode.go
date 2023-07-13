@@ -97,7 +97,7 @@ func decodeWrapper(ctx context.Context, enc *errorspb.EncodedWrapper) error {
 	typeKey := TypeKey(enc.Details.ErrorTypeMark.FamilyName)
 	if decoder, ok := decoders[typeKey]; ok {
 		// Yes, use it.
-		genErr := decoder(ctx, cause, enc.MessagePrefix, enc.Details.ReportablePayload, payload)
+		genErr := decoder(ctx, cause, enc.Message, enc.Details.ReportablePayload, payload)
 		if genErr != nil {
 			// Decoding succeeded. Use this.
 			return genErr
@@ -107,9 +107,10 @@ func decodeWrapper(ctx context.Context, enc *errorspb.EncodedWrapper) error {
 
 	// Otherwise, preserve all details about the original object.
 	return &opaqueWrapper{
-		cause:   cause,
-		prefix:  enc.MessagePrefix,
-		details: enc.Details,
+		cause:       cause,
+		prefix:      enc.Message,
+		details:     enc.Details,
+		messageType: MessageType(enc.MessageType),
 	}
 }
 

@@ -218,6 +218,7 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    messageType: 0,
 }
 =====
 ===== non-redactable formats
@@ -240,6 +241,7 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    messageType: 0,
 }
 == Error()
 outer
@@ -344,6 +346,7 @@ fmt outer outer2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        messageType: 0,
     },
     msg: "outer\nouter2ndline",
 }
@@ -369,6 +372,7 @@ fmt outer outer2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        messageType: 0,
     },
     msg: "outer\nouter2ndline",
 }
@@ -494,6 +498,7 @@ opaque
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        messageType: 0,
     },
     prefix:  "outer\nouter2ndline",
     details: errorspb.EncodedErrorDetails{
@@ -502,6 +507,7 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    messageType: 0,
 }
 =====
 ===== non-redactable formats
@@ -525,6 +531,7 @@ opaque
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        messageType: 0,
     },
     prefix:  "outer\nouter2ndline",
     details: errorspb.EncodedErrorDetails{
@@ -533,6 +540,7 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    messageType: 0,
 }
 == Error()
 outer
@@ -658,6 +666,7 @@ fmt extern extern2ndline
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
             },
+            messageType: 0,
         },
         prefix:  "outer\nouter2ndline",
         details: errorspb.EncodedErrorDetails{
@@ -666,6 +675,7 @@ fmt extern extern2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        messageType: 0,
     },
     msg: "extern\nextern2ndline",
 }
@@ -692,6 +702,7 @@ fmt extern extern2ndline
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
             },
+            messageType: 0,
         },
         prefix:  "outer\nouter2ndline",
         details: errorspb.EncodedErrorDetails{
@@ -700,6 +711,7 @@ fmt extern extern2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        messageType: 0,
     },
     msg: "extern\nextern2ndline",
 }

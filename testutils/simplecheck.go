@@ -127,6 +127,13 @@ func (t *T) CheckEqual(val, ref interface{}) {
 	}
 }
 
+func (t *T) CheckContains(s, substr string) {
+	t.Helper()
+	if !strings.Contains(s, substr) {
+		t.failWithf(false, "value does not contain substring\n     got: %s\\nexpected: %s", s, substr)
+	}
+}
+
 // CheckEqual checks that the string value is equal to some reference.
 func (t *T) CheckStringEqual(val, ref string) {
 	t.Helper()
