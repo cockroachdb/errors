@@ -105,11 +105,18 @@ func decodeWrapper(ctx context.Context, enc *errorspb.EncodedWrapper) error {
 		// Decoding failed, we'll drop through to opaqueWrapper{} below.
 	}
 
+	ownsErrorString := false
+	if enc.EncoderKnowsAboutErrorStringOwnership {
+		ownsErrorString = enc.WrapperOwnsErrorString
+	}
+
 	// Otherwise, preserve all details about the original object.
 	return &opaqueWrapper{
-		cause:   cause,
-		prefix:  enc.MessagePrefix,
-		details: enc.Details,
+		cause:                                 cause,
+		prefix:                                enc.MessagePrefix,
+		details:                               enc.Details,
+		encoderKnowsAboutErrorStringOwnership: enc.EncoderKnowsAboutErrorStringOwnership,
+		ownsErrorString:                       ownsErrorString,
 	}
 }
 

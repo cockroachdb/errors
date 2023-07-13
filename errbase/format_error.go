@@ -278,8 +278,9 @@ func (s *state) printEntry(entry formatEntry) {
 //
 // This function is used both when FormatError() is called indirectly
 // from .Error(), e.g. in:
-//      (e *myType) Error() { return fmt.Sprintf("%v", e) }
-//      (e *myType) Format(s fmt.State, verb rune) { errors.FormatError(s, verb, e) }
+//
+//	(e *myType) Error() { return fmt.Sprintf("%v", e) }
+//	(e *myType) Format(s fmt.State, verb rune) { errors.FormatError(s, verb, e) }
 //
 // and also to print the first line in the output of a %+v format.
 //
@@ -356,9 +357,7 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail bool) {
 		if desiredShortening == nil {
 			// The error wants to elide the short messages from inner
 			// causes. Do it.
-			for i := range s.entries {
-				s.entries[i].elideShort = true
-			}
+			s.elideFurtherCauseMsgs()
 		}
 
 	case Formatter:
@@ -366,9 +365,7 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail bool) {
 		if desiredShortening == nil {
 			// The error wants to elide the short messages from inner
 			// causes. Do it.
-			for i := range s.entries {
-				s.entries[i].elideShort = true
-			}
+			s.elideFurtherCauseMsgs()
 		}
 
 	case fmt.Formatter:
@@ -389,7 +386,11 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail bool) {
 				s.lastStack = st.StackTrace()
 			}
 		} else {
-			s.formatSimple(err, cause)
+			if elideCauseMsg := s.formatSimple(err, cause); elideCauseMsg {
+				// The error wants to elide the short messages from inner
+				// causes. Do it.
+				s.elideFurtherCauseMsgs()
+			}
 		}
 
 	default:
@@ -411,9 +412,7 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail bool) {
 				if desiredShortening == nil {
 					// The error wants to elide the short messages from inner
 					// causes. Do it.
-					for i := range s.entries {
-						s.entries[i].elideShort = true
-					}
+					s.elideFurtherCauseMsgs()
 				}
 				break
 			}
@@ -422,7 +421,11 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail bool) {
 			// If the error did not implement errors.Formatter nor
 			// fmt.Formatter, but it is a wrapper, still attempt best effort:
 			// print what we can at this level.
-			s.formatSimple(err, cause)
+			if elideCauseMsg := s.formatSimple(err, cause); elideCauseMsg {
+				// The error wants to elide the short messages from inner
+				// causes. Do it.
+				s.elideFurtherCauseMsgs()
+			}
 		}
 	}
 
@@ -441,6 +444,18 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail bool) {
 	// Remember the entry for later rendering.
 	s.entries = append(s.entries, entry)
 	s.buf = bytes.Buffer{}
+}
+
+// elideFurtherCauseMsgs sets the `elideShort` field
+// on all entries added so far to `true`. Because these
+// entries are added recursively from the innermost
+// cause outward, we can iterate through all entries
+// without bound because the caller is guaranteed not
+// to see entries that it is the causer of.
+func (s *state) elideFurtherCauseMsgs() {
+	for i := range s.entries {
+		s.entries[i].elideShort = true
+	}
 }
 
 func (s *state) collectEntry(err error, bufIsRedactable bool) formatEntry {
@@ -500,16 +515,19 @@ func RegisterSpecialCasePrinter(fn safeErrorPrinterFn) {
 // formatSimple performs a best effort at extracting the details at a
 // given level of wrapping when the error object does not implement
 // the Formatter interface.
-func (s *state) formatSimple(err, cause error) {
+// Returns true if we want to elide errors from causal chain.
+func (s *state) formatSimple(err, cause error) bool {
 	var pref string
+	elideCauses := false
 	if cause != nil {
-		pref = extractPrefix(err, cause)
+		pref, elideCauses = extractPrefix(err, cause)
 	} else {
 		pref = err.Error()
 	}
 	if len(pref) > 0 {
 		s.Write([]byte(pref))
 	}
+	return elideCauses
 }
 
 // finishDisplay renders s.finalBuf into s.State.
