@@ -43,6 +43,14 @@ type opaqueWrapper struct {
 	cause   error
 	prefix  string
 	details errorspb.EncodedErrorDetails
+	// encoderKnowsAboutErrorStringOwnership is present here for
+	// backwards compatibility with prior versions of this library. If
+	// an older version encodes an error, this flag will be `false` on
+	// the proto when decoded by a new version. We should preserve that
+	// value across additional encode/decode operations using newer
+	// versions in order to interpret the error string correctly.
+	encoderKnowsAboutErrorStringOwnership bool
+	ownsErrorString                       bool
 }
 
 var _ error = (*opaqueWrapper)(nil)
@@ -53,6 +61,9 @@ var _ SafeFormatter = (*opaqueWrapper)(nil)
 func (e *opaqueLeaf) Error() string { return e.msg }
 
 func (e *opaqueWrapper) Error() string {
+	if e.ownsErrorString {
+		return e.prefix
+	}
 	if e.prefix == "" {
 		return e.cause.Error()
 	}
@@ -102,6 +113,9 @@ func (e *opaqueWrapper) SafeFormatError(p Printer) (next error) {
 		if e.details.FullDetails != nil {
 			p.Printf("\npayload type: %s", redact.Safe(e.details.FullDetails.TypeUrl))
 		}
+	}
+	if e.ownsErrorString {
+		return nil
 	}
 	return e.cause
 }

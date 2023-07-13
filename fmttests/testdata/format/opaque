@@ -218,6 +218,8 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    encoderKnowsAboutErrorStringOwnership: true,
+    ownsErrorString:                       false,
 }
 =====
 ===== non-redactable formats
@@ -240,6 +242,8 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    encoderKnowsAboutErrorStringOwnership: true,
+    ownsErrorString:                       false,
 }
 == Error()
 outer
@@ -344,6 +348,8 @@ fmt outer outer2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        encoderKnowsAboutErrorStringOwnership: true,
+        ownsErrorString:                       false,
     },
     msg: "outer\nouter2ndline",
 }
@@ -369,6 +375,8 @@ fmt outer outer2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        encoderKnowsAboutErrorStringOwnership: true,
+        ownsErrorString:                       false,
     },
     msg: "outer\nouter2ndline",
 }
@@ -494,6 +502,8 @@ opaque
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        encoderKnowsAboutErrorStringOwnership: true,
+        ownsErrorString:                       false,
     },
     prefix:  "outer\nouter2ndline",
     details: errorspb.EncodedErrorDetails{
@@ -502,6 +512,8 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    encoderKnowsAboutErrorStringOwnership: true,
+    ownsErrorString:                       false,
 }
 =====
 ===== non-redactable formats
@@ -525,6 +537,8 @@ opaque
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        encoderKnowsAboutErrorStringOwnership: true,
+        ownsErrorString:                       false,
     },
     prefix:  "outer\nouter2ndline",
     details: errorspb.EncodedErrorDetails{
@@ -533,6 +547,8 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    encoderKnowsAboutErrorStringOwnership: true,
+    ownsErrorString:                       false,
 }
 == Error()
 outer
@@ -658,6 +674,8 @@ fmt extern extern2ndline
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
             },
+            encoderKnowsAboutErrorStringOwnership: true,
+            ownsErrorString:                       false,
         },
         prefix:  "outer\nouter2ndline",
         details: errorspb.EncodedErrorDetails{
@@ -666,6 +684,8 @@ fmt extern extern2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        encoderKnowsAboutErrorStringOwnership: true,
+        ownsErrorString:                       false,
     },
     msg: "extern\nextern2ndline",
 }
@@ -692,6 +712,8 @@ fmt extern extern2ndline
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
             },
+            encoderKnowsAboutErrorStringOwnership: true,
+            ownsErrorString:                       false,
         },
         prefix:  "outer\nouter2ndline",
         details: errorspb.EncodedErrorDetails{
@@ -700,6 +722,8 @@ fmt extern extern2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        encoderKnowsAboutErrorStringOwnership: true,
+        ownsErrorString:                       false,
     },
     msg: "extern\nextern2ndline",
 }

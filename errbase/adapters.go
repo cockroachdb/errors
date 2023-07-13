@@ -212,3 +212,9 @@ func init() {
 
 	RegisterLeafEncoder(GetTypeKey(&OpaqueErrno{}), encodeOpaqueErrno)
 }
+
+func encodeWrapError(_ context.Context, err error) (
+	msgPrefix string, safeDetails []string, payload proto.Message, ownError bool,
+) {
+	return err.Error(), nil, nil, true
+}

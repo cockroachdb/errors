@@ -78,6 +78,17 @@ message EncodedWrapper {
 
   // The error details.
   EncodedErrorDetails details = 3 [(gogoproto.nullable) = false];
+
+  // If true, the encoder has inspected the error string
+  // and marked using `wrapper_owns_error_string` whether
+  // the wrapper owns the entire string or not. This field
+  // is here to provide easier backwards compatibility with
+  // multiple versions of this library co-existing.
+  bool encoder_knows_about_error_string_ownership = 4;
+
+  // If true, treat `message_prefix` as the entire error string and
+  // do not concatenate cause.
+  bool wrapper_owns_error_string = 5;
 }
 
 // ErrorTypeMark identifies an error type for the purpose of determining
