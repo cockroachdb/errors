@@ -147,7 +147,11 @@ func formatErrorInternal(err error, s fmt.State, verb rune, redactableOutput boo
 		// recursion. So we have no choice but to peel the data
 		// and then assemble the pieces ourselves.
 		p.formatRecursive(err, true /* isOutermost */, false /* withDetail */)
-		p.formatSingleLineOutput()
+		if ee, ok := err.(*opaqueWrapper); ok {
+			p.formatSingleLineOutput(ee.ownsErrorString)
+		} else {
+			p.formatSingleLineOutput(false)
+		}
 		p.finishDisplay(verb)
 
 	default:
@@ -185,7 +189,7 @@ func (s *state) formatEntries(err error) {
 	//
 	//   <complete error message>
 	//   (1) <details>
-	s.formatSingleLineOutput()
+	s.formatSingleLineOutput(false)
 	s.finalBuf.WriteString("\n(1)")
 
 	s.printEntry(s.entries[len(s.entries)-1])
@@ -278,8 +282,9 @@ func (s *state) printEntry(entry formatEntry) {
 //
 // This function is used both when FormatError() is called indirectly
 // from .Error(), e.g. in:
-//      (e *myType) Error() { return fmt.Sprintf("%v", e) }
-//      (e *myType) Format(s fmt.State, verb rune) { errors.FormatError(s, verb, e) }
+//
+//	(e *myType) Error() { return fmt.Sprintf("%v", e) }
+//	(e *myType) Format(s fmt.State, verb rune) { errors.FormatError(s, verb, e) }
 //
 // and also to print the first line in the output of a %+v format.
 //
@@ -290,7 +295,7 @@ func (s *state) printEntry(entry formatEntry) {
 // RedactableBytes. However, we are not using the helper facilities
 // from redact.SafePrinter to do this, so care should be taken below
 // to properly escape markers, etc.
-func (s *state) formatSingleLineOutput() {
+func (s *state) formatSingleLineOutput(parentOwnsErrorString bool) {
 	for i := len(s.entries) - 1; i >= 0; i-- {
 		entry := &s.entries[i]
 		if entry.elideShort {
@@ -315,6 +320,10 @@ func (s *state) formatSingleLineOutput() {
 			// We do care about redaction, but entry.redactable is unset.
 			// This means entry.head is unsafe. We need to escape it.
 			s.finalBuf.Write([]byte(redact.EscapeBytes(entry.head)))
+		}
+		if parentOwnsErrorString {
+			// only process the final wrapper
+			return
 		}
 	}
 }

@@ -162,9 +162,9 @@ func TestUnknownWrapperTraversal(t *testing.T) {
 	t.Logf("start err: %# v", pretty.Formatter(origErr))
 
 	// Register a temporary encoder.
-	myEncode := func(_ context.Context, err error) (string, []string, proto.Message) {
+	myEncode := func(_ context.Context, err error) (string, []string, proto.Message, bool) {
 		m := err.(*myWrap)
-		return "", nil, &internal.MyPayload{Val: int32(m.val)}
+		return "", nil, &internal.MyPayload{Val: int32(m.val)}, false
 	}
 	tn := errbase.GetTypeKey((*myWrap)(nil))
 	errbase.RegisterWrapperEncoder(tn, myEncode)

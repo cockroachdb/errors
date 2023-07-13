@@ -106,11 +106,11 @@ func (w *withGrpcCode) SafeFormatError(p errors.Printer) (next error) {
 }
 
 // it's an encodable error.
-func encodeWithGrpcCode(_ context.Context, err error) (string, []string, proto.Message) {
+func encodeWithGrpcCode(_ context.Context, err error) (string, []string, proto.Message, bool) {
 	w := err.(*withGrpcCode)
 	details := []string{fmt.Sprintf("gRPC %d", w.code)}
 	payload := &EncodedGrpcCode{Code: uint32(w.code)}
-	return "", details, payload
+	return "", details, payload, false
 }
 
 // it's a decodable error.

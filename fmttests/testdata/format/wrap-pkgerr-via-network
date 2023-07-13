@@ -26,6 +26,7 @@ require (?s)innerone.*innertwo
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:       (*types.Any)(nil),
         },
+        ownsErrorString: false,
     },
 }
 =====
@@ -53,6 +54,7 @@ require (?s)innerone.*innertwo
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:       (*types.Any)(nil),
         },
+        ownsErrorString: false,
     },
 }
 == Error()
@@ -356,6 +358,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:       (*types.Any)(nil),
         },
+        ownsErrorString: false,
     },
 }
 =====
@@ -386,6 +389,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:       (*types.Any)(nil),
         },
+        ownsErrorString: false,
     },
 }
 == Error()
@@ -880,6 +884,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -902,6 +907,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 outerthree
@@ -1107,6 +1113,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -1129,6 +1136,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 innerone
@@ -1326,6 +1334,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -1348,6 +1357,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 innerone
@@ -2154,6 +2164,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -2176,6 +2187,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 innerone
@@ -2373,6 +2385,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -2395,6 +2408,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 outerthree
@@ -2603,6 +2617,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -2625,6 +2640,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 outerthree
@@ -2833,6 +2849,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -2855,6 +2872,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 outerthree
@@ -3060,6 +3078,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -3082,6 +3101,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 outerthree
@@ -3283,13 +3303,14 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             FullDetails:       (*types.Any)(nil),
         },
     },
-    prefix:  "outerthree\nouterfour",
+    prefix:  "outerthree\nouterfour: innerone\ninnertwo",
     details: errorspb.EncodedErrorDetails{
         OriginalTypeName:  "fmt/*fmt.wrapError",
         ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapError", Extension:""},
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: true,
 }
 =====
 ===== non-redactable formats
@@ -3305,13 +3326,14 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             FullDetails:       (*types.Any)(nil),
         },
     },
-    prefix:  "outerthree\nouterfour",
+    prefix:  "outerthree\nouterfour: innerone\ninnertwo",
     details: errorspb.EncodedErrorDetails{
         OriginalTypeName:  "fmt/*fmt.wrapError",
         ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapError", Extension:""},
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: true,
 }
 == Error()
 outerthree
@@ -3325,7 +3347,8 @@ innertwo
 == %+v
 outerthree: innerone
 (1) outerthree
-  | outerfour
+  | outerfour: innerone
+  | innertwo
   |
   | (opaque error wrapper)
   | type name: fmt/*fmt.wrapError
@@ -3371,7 +3394,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 =====
 == printed via redact Print(), ok - congruent with %v
 ‹outerthree›
-‹outerfour›: ‹innerone›
+‹outerfour: innerone›
 ‹innertwo›
 == printed via redact Printf() %v = Print(), good
 == printed via redact Printf() %s = Print(), good
@@ -3381,7 +3404,8 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 == printed via redact Printf() %+v, ok - congruent with %+v
 ‹outerthree›: ‹innerone›
 (1) ‹outerthree›
-  | ‹outerfour›
+  | ‹outerfour: innerone›
+  | ‹innertwo›
   |
   | (opaque error wrapper)
   | type name: fmt/*fmt.wrapError
@@ -3423,6 +3447,7 @@ Error types: (1) *errbase.opaqueWrapper (2) *errbase.opaqueLeaf
 == Message payload
 <path>:<lineno>: ×: ×
 (1) ×
+  | ×
   | ×
   |
   | (opaque error wrapper)
@@ -4127,6 +4152,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -4149,6 +4175,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 innerone
@@ -4566,6 +4593,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -4602,6 +4630,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 new-style (outerthree
@@ -5025,6 +5054,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -5047,6 +5077,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 outerthree
@@ -5472,6 +5503,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -5494,6 +5526,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 send tcp unixhello: innerone
@@ -6381,6 +6414,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -6403,6 +6437,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 innerone
@@ -6910,6 +6945,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -6932,6 +6968,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 safe outerthree
@@ -7139,6 +7176,7 @@ require (?s)innerone.*innertwo
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:       (*types.Any)(nil),
         },
+        ownsErrorString: false,
     },
 }
 =====
@@ -7164,6 +7202,7 @@ require (?s)innerone.*innertwo
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
             FullDetails:       (*types.Any)(nil),
         },
+        ownsErrorString: false,
     },
 }
 == Error()
@@ -7455,6 +7494,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -7477,6 +7517,7 @@ require (?s)innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 innerone
@@ -8236,6 +8277,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -8261,6 +8303,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 new-stylew outerthree
@@ -8580,6 +8623,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
                 FullDetails:       (*types.Any)(nil),
             },
+            ownsErrorString: false,
         },
     },
     prefix:  "",
@@ -8589,6 +8633,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 =====
 ===== non-redactable formats
@@ -8617,6 +8662,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
                 FullDetails:       (*types.Any)(nil),
             },
+            ownsErrorString: false,
         },
     },
     prefix:  "",
@@ -8626,6 +8672,7 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
         FullDetails:       (*types.Any)(nil),
     },
+    ownsErrorString: false,
 }
 == Error()
 new-style outerthree

@@ -65,7 +65,7 @@ func TestFormatSingleLineOutput(t *testing.T) {
 
 	for _, tc := range testCases {
 		s := state{entries: tc.entries}
-		s.formatSingleLineOutput()
+		s.formatSingleLineOutput(false)
 		if s.finalBuf.String() != tc.exp {
 			t.Errorf("%s: expected %q, got %q", tc.entries, tc.exp, s.finalBuf.String())
 		}
@@ -165,7 +165,7 @@ func TestFormatSingleLineOutputRedactable(t *testing.T) {
 
 	for _, tc := range testCases {
 		s := state{entries: tc.entries, redactableOutput: true}
-		s.formatSingleLineOutput()
+		s.formatSingleLineOutput(false)
 		if s.finalBuf.String() != tc.exp {
 			t.Errorf("%s: expected %q, got %q", tc.entries, tc.exp, s.finalBuf.String())
 		}

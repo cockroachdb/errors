@@ -47,9 +47,9 @@ func (w *withDetail) FormatError(p errbase.Printer) error {
 	return w.cause
 }
 
-func encodeWithDetail(_ context.Context, err error) (string, []string, proto.Message) {
+func encodeWithDetail(_ context.Context, err error) (string, []string, proto.Message, bool) {
 	w := err.(*withDetail)
-	return "", nil, &errorspb.StringPayload{Msg: w.detail}
+	return "", nil, &errorspb.StringPayload{Msg: w.detail}, false
 }
 
 func decodeWithDetail(

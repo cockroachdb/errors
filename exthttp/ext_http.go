@@ -76,11 +76,11 @@ func (w *withHTTPCode) SafeFormatError(p errors.Printer) (next error) {
 }
 
 // it's an encodable error.
-func encodeWithHTTPCode(_ context.Context, err error) (string, []string, proto.Message) {
+func encodeWithHTTPCode(_ context.Context, err error) (string, []string, proto.Message, bool) {
 	w := err.(*withHTTPCode)
 	details := []string{fmt.Sprintf("HTTP %d", w.code)}
 	payload := &EncodedHTTPCode{Code: uint32(w.code)}
-	return "", details, payload
+	return "", details, payload, false
 }
 
 // it's a decodable error.

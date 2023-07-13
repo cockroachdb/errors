@@ -280,10 +280,10 @@ func (m *withMark) SafeFormatError(p errbase.Printer) error {
 	return m.cause
 }
 
-func encodeMark(_ context.Context, err error) (msg string, _ []string, payload proto.Message) {
+func encodeMark(_ context.Context, err error) (msg string, _ []string, payload proto.Message, ownError bool) {
 	m := err.(*withMark)
 	payload = &errorspb.MarkPayload{Msg: m.mark.msg, Types: m.mark.types}
-	return "", nil, payload
+	return "", nil, payload, false
 }
 
 func decodeMark(_ context.Context, cause error, _ string, _ []string, payload proto.Message) error {

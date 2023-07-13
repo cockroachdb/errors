@@ -75,13 +75,13 @@ func (w *withContext) SafeDetails() []string {
 	return redactTags(w.tags)
 }
 
-func encodeWithContext(_ context.Context, err error) (string, []string, proto.Message) {
+func encodeWithContext(_ context.Context, err error) (string, []string, proto.Message, bool) {
 	w := err.(*withContext)
 	p := &errorspb.TagsPayload{}
 	for _, t := range w.tags.Get() {
 		p.Tags = append(p.Tags, errorspb.TagPayload{Tag: t.Key(), Value: t.ValueStr()})
 	}
-	return "", w.SafeDetails(), p
+	return "", w.SafeDetails(), p, false
 }
 
 func decodeWithContext(

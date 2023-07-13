@@ -76,21 +76,21 @@ func decodeWithMessage(
 
 func encodePkgWithStack(
 	_ context.Context, err error,
-) (msgPrefix string, safe []string, _ proto.Message) {
+) (msgPrefix string, safe []string, _ proto.Message, _ bool) {
 	iErr := err.(interface{ StackTrace() pkgErr.StackTrace })
 	safeDetails := []string{fmt.Sprintf("%+v", iErr.StackTrace())}
-	return "" /* withStack does not have a message prefix */, safeDetails, nil
+	return "" /* withStack does not have a message prefix */, safeDetails, nil, false
 }
 
 func encodePathError(
 	_ context.Context, err error,
-) (msgPrefix string, safe []string, details proto.Message) {
+) (msgPrefix string, safe []string, details proto.Message, ownError bool) {
 	p := err.(*os.PathError)
 	msg := p.Op + " " + p.Path
 	details = &errorspb.StringsPayload{
 		Details: []string{p.Op, p.Path},
 	}
-	return msg, []string{p.Op}, details
+	return msg, []string{p.Op}, details, false
 }
 
 func decodePathError(
@@ -113,13 +113,13 @@ func decodePathError(
 
 func encodeLinkError(
 	_ context.Context, err error,
-) (msgPrefix string, safe []string, details proto.Message) {
+) (msgPrefix string, safe []string, details proto.Message, ownError bool) {
 	p := err.(*os.LinkError)
 	msg := p.Op + " " + p.Old + " " + p.New
 	details = &errorspb.StringsPayload{
 		Details: []string{p.Op, p.Old, p.New},
 	}
-	return msg, []string{p.Op}, details
+	return msg, []string{p.Op}, details, false
 }
 
 func decodeLinkError(
@@ -143,9 +143,9 @@ func decodeLinkError(
 
 func encodeSyscallError(
 	_ context.Context, err error,
-) (msgPrefix string, safe []string, details proto.Message) {
+) (msgPrefix string, safe []string, details proto.Message, ownError bool) {
 	p := err.(*os.SyscallError)
-	return p.Syscall, nil, nil
+	return p.Syscall, nil, nil, false
 }
 
 func decodeSyscallError(
@@ -211,4 +211,12 @@ func init() {
 	RegisterWrapperDecoder(pKey, decodeSyscallError)
 
 	RegisterLeafEncoder(GetTypeKey(&OpaqueErrno{}), encodeOpaqueErrno)
+
+	RegisterWrapperEncoder(GetTypeKey(fmt.Errorf("text %w text", baseErr)), encodeWrapError)
+}
+
+func encodeWrapError(_ context.Context, err error) (
+	msgPrefix string, safeDetails []string, payload proto.Message, ownError bool,
+) {
+	return err.Error(), nil, nil, true
 }

@@ -47,9 +47,9 @@ func (w *withHint) FormatError(p errbase.Printer) error {
 	return w.cause
 }
 
-func encodeWithHint(_ context.Context, err error) (string, []string, proto.Message) {
+func encodeWithHint(_ context.Context, err error) (string, []string, proto.Message, bool) {
 	w := err.(*withHint)
-	return "", nil, &errorspb.StringPayload{Msg: w.hint}
+	return "", nil, &errorspb.StringPayload{Msg: w.hint}, false
 }
 
 func decodeWithHint(

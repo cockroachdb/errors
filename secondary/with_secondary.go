@@ -59,10 +59,10 @@ func (e *withSecondaryError) Error() string { return e.cause.Error() }
 func (e *withSecondaryError) Cause() error  { return e.cause }
 func (e *withSecondaryError) Unwrap() error { return e.cause }
 
-func encodeWithSecondaryError(ctx context.Context, err error) (string, []string, proto.Message) {
+func encodeWithSecondaryError(ctx context.Context, err error) (string, []string, proto.Message, bool) {
 	e := err.(*withSecondaryError)
 	enc := errbase.EncodeError(ctx, e.secondaryError)
-	return "", nil, &enc
+	return "", nil, &enc, false
 }
 
 func decodeWithSecondaryError(

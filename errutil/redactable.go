@@ -85,9 +85,9 @@ func (l *withPrefix) SafeDetails() []string {
 	return []string{l.prefix.Redact().StripMarkers()}
 }
 
-func encodeWithPrefix(_ context.Context, err error) (string, []string, proto.Message) {
+func encodeWithPrefix(_ context.Context, err error) (string, []string, proto.Message, bool) {
 	l := err.(*withPrefix)
-	return l.Error(), l.SafeDetails(), &errorspb.StringPayload{Msg: string(l.prefix)}
+	return l.Error(), l.SafeDetails(), &errorspb.StringPayload{Msg: string(l.prefix)}, false
 }
 
 func decodeWithPrefix(
@@ -138,9 +138,9 @@ func (l *withNewMessage) SafeDetails() []string {
 	return []string{l.message.Redact().StripMarkers()}
 }
 
-func encodeWithNewMessage(_ context.Context, err error) (string, []string, proto.Message) {
+func encodeWithNewMessage(_ context.Context, err error) (string, []string, proto.Message, bool) {
 	l := err.(*withNewMessage)
-	return l.Error(), l.SafeDetails(), &errorspb.StringPayload{Msg: string(l.message)}
+	return l.Error(), l.SafeDetails(), &errorspb.StringPayload{Msg: string(l.message)}, false
 }
 
 func decodeWithNewMessage(
