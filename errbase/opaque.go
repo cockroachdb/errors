@@ -15,6 +15,7 @@
 package errbase
 
 import (
+	goErr "errors"
 	"fmt"
 
 	"github.com/cockroachdb/errors/errorspb"
@@ -46,10 +47,22 @@ type opaqueWrapper struct {
 	ownsErrorString bool
 }
 
+type opaqueMultiWrapper struct {
+	causes          []error
+	prefix          string
+	details         errorspb.EncodedErrorDetails
+	ownsErrorString bool
+}
+
 var _ error = (*opaqueWrapper)(nil)
 var _ SafeDetailer = (*opaqueWrapper)(nil)
 var _ fmt.Formatter = (*opaqueWrapper)(nil)
 var _ SafeFormatter = (*opaqueWrapper)(nil)
+
+var _ error = (*opaqueMultiWrapper)(nil)
+var _ SafeDetailer = (*opaqueMultiWrapper)(nil)
+var _ fmt.Formatter = (*opaqueMultiWrapper)(nil)
+var _ SafeFormatter = (*opaqueMultiWrapper)(nil)
 
 func (e *opaqueLeaf) Error() string { return e.msg }
 
@@ -63,15 +76,29 @@ func (e *opaqueWrapper) Error() string {
 	return fmt.Sprintf("%s: %s", e.prefix, e.cause)
 }
 
+// TODO(davidh): probably shouldn't create a join obj here
+func (e *opaqueMultiWrapper) Error() string {
+	if e.ownsErrorString {
+		return e.prefix
+	}
+	if e.prefix == "" {
+		return goErr.Join(e.causes...).Error()
+	}
+	return fmt.Sprintf("%s: %s", e.prefix, goErr.Join(e.causes...))
+}
+
 // the opaque wrapper is a wrapper.
-func (e *opaqueWrapper) Cause() error  { return e.cause }
-func (e *opaqueWrapper) Unwrap() error { return e.cause }
+func (e *opaqueWrapper) Cause() error         { return e.cause }
+func (e *opaqueWrapper) Unwrap() error        { return e.cause }
+func (e *opaqueMultiWrapper) Unwrap() []error { return e.causes }
 
-func (e *opaqueLeaf) SafeDetails() []string    { return e.details.ReportablePayload }
-func (e *opaqueWrapper) SafeDetails() []string { return e.details.ReportablePayload }
+func (e *opaqueLeaf) SafeDetails() []string         { return e.details.ReportablePayload }
+func (e *opaqueWrapper) SafeDetails() []string      { return e.details.ReportablePayload }
+func (e *opaqueMultiWrapper) SafeDetails() []string { return e.details.ReportablePayload }
 
-func (e *opaqueLeaf) Format(s fmt.State, verb rune)    { FormatError(e, s, verb) }
-func (e *opaqueWrapper) Format(s fmt.State, verb rune) { FormatError(e, s, verb) }
+func (e *opaqueLeaf) Format(s fmt.State, verb rune)         { FormatError(e, s, verb) }
+func (e *opaqueWrapper) Format(s fmt.State, verb rune)      { FormatError(e, s, verb) }
+func (e *opaqueMultiWrapper) Format(s fmt.State, verb rune) { FormatError(e, s, verb) }
 
 func (e *opaqueLeaf) SafeFormatError(p Printer) (next error) {
 	p.Print(e.msg)
@@ -108,4 +135,28 @@ func (e *opaqueWrapper) SafeFormatError(p Printer) (next error) {
 		}
 	}
 	return e.cause
+}
+
+// SafeFormatError for opaqueMultiWrapper does not follow the causal chain
+// because we assume the multiWrapper owns the error string.
+func (e *opaqueMultiWrapper) SafeFormatError(p Printer) (next error) {
+	if len(e.prefix) > 0 {
+		// We use the condition if len(msg) > 0 because
+		// otherwise an empty string would cause a "redactable
+		// empty string" to be emitted (something that looks like "<>")
+		// and the error formatting code only cleanly elides
+		// the prefix properly if the output string is completely empty.
+		p.Print(e.prefix)
+	}
+	if p.Detail() {
+		p.Printf("\n(opaque error wrapper)")
+		p.Printf("\ntype name: %s", redact.Safe(e.details.OriginalTypeName))
+		for i, d := range e.details.ReportablePayload {
+			p.Printf("\nreportable %d:\n%s", redact.Safe(i), redact.Safe(d))
+		}
+		if e.details.FullDetails != nil {
+			p.Printf("\npayload type: %s", redact.Safe(e.details.FullDetails.TypeUrl))
+		}
+	}
+	return nil
 }

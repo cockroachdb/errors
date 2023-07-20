@@ -33,6 +33,9 @@ func EncodeError(ctx context.Context, err error) EncodedError {
 	if cause := UnwrapOnce(err); cause != nil {
 		return encodeWrapper(ctx, err, cause)
 	}
+	if causes := UnwrapMulti(err); causes != nil {
+		return encodeWrapperMulti(ctx, err, causes)
+	}
 	// Not a causer.
 	return encodeLeaf(ctx, err)
 }
@@ -120,6 +123,7 @@ func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 	if e, ok := err.(*opaqueWrapper); ok {
 		msg = e.prefix
 		details = e.details
+		ownError = e.ownsErrorString
 	} else {
 		details.OriginalTypeName, details.ErrorTypeMark.FamilyName, details.ErrorTypeMark.Extension = getTypeDetails(err, false /*onlyFamily*/)
 
@@ -158,6 +162,58 @@ func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 	}
 }
 
+func encodeWrapperMulti(ctx context.Context, err error, causes []error) EncodedError {
+	var msg string
+	var details errorspb.EncodedErrorDetails
+	var ownError bool
+
+	if e, ok := err.(*opaqueWrapper); ok {
+		msg = e.prefix
+		details = e.details
+		ownError = e.ownsErrorString
+	} else {
+		details.OriginalTypeName, details.ErrorTypeMark.FamilyName, details.ErrorTypeMark.Extension = getTypeDetails(err, false /*onlyFamily*/)
+
+		var payload proto.Message
+
+		// If we have a manually registered encoder, use that.
+		typeKey := TypeKey(details.ErrorTypeMark.FamilyName)
+		if enc, ok := encoders[typeKey]; ok {
+			msg, details.ReportablePayload, payload, ownError = enc(ctx, err)
+		} else {
+			// No encoder.
+			// In that case, we assume parent error owns error string
+			msg = err.Error()
+			ownError = true
+
+			// If there are known safe details, use them.
+			if s, ok := err.(SafeDetailer); ok {
+				details.ReportablePayload = s.SafeDetails()
+			}
+
+			// That's all we can get.
+		}
+		// If there is a detail payload, encode it.
+		details.FullDetails = encodeAsAny(ctx, err, payload)
+	}
+
+	cs := make([]EncodedError, len(causes))
+	for i, ee := range causes {
+		cs[i] = EncodeError(ctx, ee)
+	}
+
+	return EncodedError{
+		Error: &errorspb.EncodedError_MultiWrapper{
+			MultiWrapper: &errorspb.EncodedWrapperMulti{
+				Causes:                 cs,
+				MessagePrefix:          msg,
+				Details:                details,
+				WrapperOwnsErrorString: ownError,
+			},
+		},
+	}
+}
+
 // extractPrefix extracts the prefix from a wrapper's error message.
 // For example,
 //
@@ -188,6 +244,8 @@ func getTypeDetails(
 	case *opaqueLeaf:
 		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension
 	case *opaqueWrapper:
+		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension
+	case *opaqueMultiWrapper:
 		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension
 	}
 

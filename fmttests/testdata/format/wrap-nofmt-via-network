@@ -2074,6 +2074,145 @@ Title: "×: ×"
 
 run
 nofmt innerone innertwo
+goerr-multi outerthree outerfour
+opaque
+
+accept %\+v via Formattable.*IRREGULAR: not same as %\+v
+accept %\#v via Formattable.*IRREGULAR: not same as %\#v
+
+require (?s)outerthree.*outerfour.*innerone.*innertwo
+----
+&errbase.opaqueMultiWrapper{
+    causes: {
+        &errbase.opaqueLeaf{
+            msg:     "innerone\ninnertwo",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+                ReportablePayload: nil,
+                FullDetails:       (*types.Any)(nil),
+            },
+        },
+        &errbase.opaqueLeaf{
+            msg:     "sibling error in wrapper",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
+            },
+        },
+    },
+    prefix:  "outerthree\nouterfour: innerone\ninnertwo sibling error in wrapper",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName:  "fmt/*fmt.wrapErrors",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapErrors", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
+    },
+    ownsErrorString: true,
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&errbase.opaqueMultiWrapper{
+    causes: {
+        &errbase.opaqueLeaf{
+            msg:     "innerone\ninnertwo",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+                ReportablePayload: nil,
+                FullDetails:       (*types.Any)(nil),
+            },
+        },
+        &errbase.opaqueLeaf{
+            msg:     "sibling error in wrapper",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
+            },
+        },
+    },
+    prefix:  "outerthree\nouterfour: innerone\ninnertwo sibling error in wrapper",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName:  "fmt/*fmt.wrapErrors",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapErrors", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
+    },
+    ownsErrorString: true,
+}
+== Error()
+outerthree
+outerfour: innerone
+innertwo sibling error in wrapper
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+outerthree
+(1) outerthree
+  | outerfour: innerone
+  | innertwo sibling error in wrapper
+  |
+  | (opaque error wrapper)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueMultiWrapper
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+‹outerthree›
+‹outerfour: innerone›
+‹innertwo sibling error in wrapper›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+‹outerthree›
+(1) ‹outerthree›
+  | ‹outerfour: innerone›
+  | ‹innertwo sibling error in wrapper›
+  |
+  | (opaque error wrapper)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueMultiWrapper
+=====
+===== Sentry reporting
+=====
+== Message payload
+×
+(1) ×
+  | ×
+  | ×
+  |
+  | (opaque error wrapper)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueMultiWrapper
+-- report composition:
+*fmt.wrapErrors
+== Extra "error types"
+fmt/*fmt.wrapErrors (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*fmt.wrapErrors"
+Title: "×"
+(NO STACKTRACE)
+
+run
+nofmt innerone innertwo
 handled-domain outerthree outerfour
 opaque
 

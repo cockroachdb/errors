@@ -29,6 +29,9 @@ func DecodeError(ctx context.Context, enc EncodedError) error {
 	if w := enc.GetWrapper(); w != nil {
 		return decodeWrapper(ctx, w)
 	}
+	if w := enc.GetMultiWrapper(); w != nil {
+		return decodeMultiWrapper(ctx, w)
+	}
 	return decodeLeaf(ctx, enc.GetLeaf())
 }
 
@@ -72,6 +75,21 @@ func decodeLeaf(ctx context.Context, enc *errorspb.EncodedErrorLeaf) error {
 	return &opaqueLeaf{
 		msg:     enc.Message,
 		details: enc.Details,
+	}
+}
+
+func decodeMultiWrapper(ctx context.Context, enc *errorspb.EncodedWrapperMulti) error {
+	// First decode the causes.
+	causes := make([]error, len(enc.Causes))
+	for i, c := range enc.Causes {
+		causes[i] = DecodeError(ctx, c)
+	}
+
+	return &opaqueMultiWrapper{
+		causes:          causes,
+		prefix:          enc.MessagePrefix,
+		details:         enc.Details,
+		ownsErrorString: enc.WrapperOwnsErrorString,
 	}
 }
 

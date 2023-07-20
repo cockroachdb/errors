@@ -27,6 +27,13 @@ package errbase
 // It supports both errors implementing causer (`Cause()` method, from
 // github.com/pkg/errors) and `Wrapper` (`Unwrap()` method, from the
 // Go 2 error proposal).
+//
+// UnwrapOnce treats multi-errors (those implementing the
+// `Unwrap() []error` interface as leaf-nodes since they cannot
+// reasonably be iterated through to a single cause. These errors
+// are typically constructed as a result of `fmt.Errorf` which results
+// in a `wrapErrors` instance that contains an interpolated error
+// string along with a list of causes.
 func UnwrapOnce(err error) (cause error) {
 	switch e := err.(type) {
 	case interface{ Cause() error }:
@@ -48,4 +55,11 @@ func UnwrapAll(err error) error {
 		break
 	}
 	return err
+}
+
+func UnwrapMulti(err error) []error {
+	if me, ok := err.(interface{ Unwrap() []error }); ok {
+		return me.Unwrap()
+	}
+	return nil
 }

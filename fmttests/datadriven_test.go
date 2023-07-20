@@ -148,6 +148,9 @@ accept %\+v via Formattable.*IRREGULAR: not same as %\+v`
 
 var wrapCommands = map[string]commandFn{
 	"goerr": func(err error, args []arg) error { return fmt.Errorf("%s: %w", strfy(args), err) },
+	"goerr-multi": func(err error, args []arg) error {
+		return fmt.Errorf("%s: %w %w", strfy(args), err, pkgErr.New("sibling error in wrapper"))
+	},
 	"opaque": func(err error, _ []arg) error {
 		return errbase.DecodeError(context.Background(),
 			errbase.EncodeError(context.Background(), err))
@@ -287,7 +290,7 @@ func init() {
 		// too. Most implementation of Format() are incomplete and unable to
 		// emit a "Go representation", so this breaks.
 		//
-		"goerr", "fmt-old", "fmt-old-delegate",
+		"goerr", "goerr-multi", "fmt-old", "fmt-old-delegate",
 		"os-syscall",
 		"os-link",
 		"os-path",
@@ -457,21 +460,20 @@ func generateFiles() {
 // The test DSL accepts a single directive "run" with a sub-DSL
 // for each test. The sub-DSL accepts 3 types of directive:
 //
-//    accept <regexp>
-//          Tells the test that a "problem" or "irregularity"
-//          is not to be considered a test failure if it matches
-//          the provided <regexp>
+//	accept <regexp>
+//	      Tells the test that a "problem" or "irregularity"
+//	      is not to be considered a test failure if it matches
+//	      the provided <regexp>
 //
-//    require <regexp>
-//          Requires the result of both Error() and %+v formatting
-//          to match <regexp>
+//	require <regexp>
+//	      Requires the result of both Error() and %+v formatting
+//	      to match <regexp>
 //
-//    <error constructor>
-//          The remaining directives in the sub-DSL construct
-//          an error object to format using a stack: the first directive
-//          creates a leaf error; the 2nd one wraps it a first time,
-//          the 3rd one wraps it a second time, and so forth.
-//
+//	<error constructor>
+//	      The remaining directives in the sub-DSL construct
+//	      an error object to format using a stack: the first directive
+//	      creates a leaf error; the 2nd one wraps it a first time,
+//	      the 3rd one wraps it a second time, and so forth.
 func TestDatadriven(t *testing.T) {
 	if *generateTestFiles {
 		generateFiles()

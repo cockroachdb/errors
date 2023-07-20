@@ -59,6 +59,15 @@ func As(err error, target interface{}) bool {
 			return true
 		}
 	}
+
+	if me, ok := err.(interface{ Unwrap() []error }); ok {
+		for _, e := range me.Unwrap() {
+			if As(e, target) {
+				return true
+			}
+		}
+	}
+
 	return false
 }
 
