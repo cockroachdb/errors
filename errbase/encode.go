@@ -33,16 +33,18 @@ func EncodeError(ctx context.Context, err error) EncodedError {
 	if cause := UnwrapOnce(err); cause != nil {
 		return encodeWrapper(ctx, err, cause)
 	}
-	// Not a causer.
-	return encodeLeaf(ctx, err)
+	return encodeLeaf(ctx, err, UnwrapMulti(err))
 }
 
 // encodeLeaf encodes a leaf error.
-func encodeLeaf(ctx context.Context, err error) EncodedError {
+func encodeLeaf(ctx context.Context, err error, causes []error) EncodedError {
 	var msg string
 	var details errorspb.EncodedErrorDetails
 
 	if e, ok := err.(*opaqueLeaf); ok {
+		msg = e.msg
+		details = e.details
+	} else if e, ok := err.(*opaqueLeafCauses); ok {
 		msg = e.msg
 		details = e.details
 	} else {
@@ -74,11 +76,21 @@ func encodeLeaf(ctx context.Context, err error) EncodedError {
 		details.FullDetails = encodeAsAny(ctx, err, payload)
 	}
 
+	var cs []*EncodedError
+	if len(causes) > 0 {
+		cs = make([]*EncodedError, len(causes))
+		for i, ee := range causes {
+			ee := EncodeError(ctx, ee)
+			cs[i] = &ee
+		}
+	}
+
 	return EncodedError{
 		Error: &errorspb.EncodedError_Leaf{
 			Leaf: &errorspb.EncodedErrorLeaf{
 				Message: msg,
 				Details: details,
+				Causes:  cs,
 			},
 		},
 	}
@@ -201,6 +213,8 @@ func getTypeDetails(
 	// we still know its type name. Return that.
 	switch t := err.(type) {
 	case *opaqueLeaf:
+		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension
+	case *opaqueLeafCauses:
 		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension
 	case *opaqueWrapper:
 		return t.details.OriginalTypeName, t.details.ErrorTypeMark.FamilyName, t.details.ErrorTypeMark.Extension

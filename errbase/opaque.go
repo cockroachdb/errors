@@ -30,10 +30,29 @@ type opaqueLeaf struct {
 	details errorspb.EncodedErrorDetails
 }
 
+// opaqueLeafCauses is used when receiving an unknown multi-cause
+// wrapper type. Its important property is that if it is communicated
+// back to some network system that _does_ know about the type, the
+// original object can be restored. We encode multi-cause errors as
+// leaf nodes over the network, in order to support backwards
+// compatibility with existing single-cause wrapper messages.
+//
+// This struct *must* be initialized with a non-nil causes value in
+// order to comply with go stdlib expectations for `Unwrap()`.
+type opaqueLeafCauses struct {
+	opaqueLeaf
+	causes []error
+}
+
 var _ error = (*opaqueLeaf)(nil)
 var _ SafeDetailer = (*opaqueLeaf)(nil)
 var _ fmt.Formatter = (*opaqueLeaf)(nil)
 var _ SafeFormatter = (*opaqueLeaf)(nil)
+
+var _ error = (*opaqueLeafCauses)(nil)
+var _ SafeDetailer = (*opaqueLeafCauses)(nil)
+var _ fmt.Formatter = (*opaqueLeafCauses)(nil)
+var _ SafeFormatter = (*opaqueLeafCauses)(nil)
 
 // opaqueWrapper is used when receiving an unknown wrapper type.
 // Its important property is that if it is communicated
@@ -70,8 +89,12 @@ func (e *opaqueWrapper) Unwrap() error { return e.cause }
 func (e *opaqueLeaf) SafeDetails() []string    { return e.details.ReportablePayload }
 func (e *opaqueWrapper) SafeDetails() []string { return e.details.ReportablePayload }
 
-func (e *opaqueLeaf) Format(s fmt.State, verb rune)    { FormatError(e, s, verb) }
-func (e *opaqueWrapper) Format(s fmt.State, verb rune) { FormatError(e, s, verb) }
+func (e *opaqueLeaf) Format(s fmt.State, verb rune)       { FormatError(e, s, verb) }
+func (e *opaqueLeafCauses) Format(s fmt.State, verb rune) { FormatError(e, s, verb) }
+func (e *opaqueWrapper) Format(s fmt.State, verb rune)    { FormatError(e, s, verb) }
+
+// opaqueLeafCauses is a multi-cause wrapper
+func (e *opaqueLeafCauses) Unwrap() []error { return e.causes }
 
 func (e *opaqueLeaf) SafeFormatError(p Printer) (next error) {
 	p.Print(e.msg)

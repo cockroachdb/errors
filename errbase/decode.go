@@ -66,6 +66,19 @@ func decodeLeaf(ctx context.Context, enc *errorspb.EncodedErrorLeaf) error {
 		}
 	}
 
+	if len(enc.Causes) > 0 {
+		causes := make([]error, len(enc.Causes))
+		for i, e := range enc.Causes {
+			causes[i] = DecodeError(ctx, *e)
+		}
+		leaf := &opaqueLeafCauses{
+			causes: causes,
+		}
+		leaf.msg = enc.Message
+		leaf.details = enc.Details
+		return leaf
+	}
+
 	// No decoder and no error type: we'll keep what we received and
 	// make it ready to re-encode exactly (if the error leaves over the
 	// network again).
