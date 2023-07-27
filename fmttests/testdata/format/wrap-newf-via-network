@@ -3604,6 +3604,151 @@ Title: "*errutil.leafError: ×\nvia *withstack.withStack"
 
 run
 newf innerone innertwo
+go-errorf-multi outerthree outerfour
+opaque
+
+accept %\+v via Formattable.*IRREGULAR: not same as %\+v
+accept %\#v via Formattable.*IRREGULAR: not same as %\#v
+
+require (?s)outerthree.*outerfour.*innerone.*innertwo
+----
+&errbase.opaqueLeafCauses{
+    opaqueLeaf: errbase.opaqueLeaf{
+        msg:     "outerthree\nouterfour - new-style innerone\ninnertwo sibling error in wrapper",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName:  "fmt/*fmt.wrapErrors",
+            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapErrors", Extension:""},
+            ReportablePayload: nil,
+            FullDetails:       (*types.Any)(nil),
+        },
+    },
+    causes: {
+        &errbase.opaqueWrapper{
+            cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
+            prefix:  "",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
+            },
+            messageType: 0,
+        },
+        &errbase.opaqueLeaf{
+            msg:     "sibling error in wrapper",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
+            },
+        },
+    },
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&errbase.opaqueLeafCauses{
+    opaqueLeaf: errbase.opaqueLeaf{
+        msg:     "outerthree\nouterfour - new-style innerone\ninnertwo sibling error in wrapper",
+        details: errorspb.EncodedErrorDetails{
+            OriginalTypeName:  "fmt/*fmt.wrapErrors",
+            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapErrors", Extension:""},
+            ReportablePayload: nil,
+            FullDetails:       (*types.Any)(nil),
+        },
+    },
+    causes: {
+        &errbase.opaqueWrapper{
+            cause:   &errutil.leafError{msg:"new-style ‹innerone›\n‹innertwo›"},
+            prefix:  "",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
+            },
+            messageType: 0,
+        },
+        &errbase.opaqueLeaf{
+            msg:     "sibling error in wrapper",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
+            },
+        },
+    },
+}
+== Error()
+outerthree
+outerfour - new-style innerone
+innertwo sibling error in wrapper
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+outerthree
+(1) outerthree
+  | outerfour - new-style innerone
+  | innertwo sibling error in wrapper
+  |
+  | (opaque error leaf)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueLeafCauses
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+‹outerthree›
+‹outerfour - new-style innerone›
+‹innertwo sibling error in wrapper›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+‹outerthree›
+(1) ‹outerthree›
+  | ‹outerfour - new-style innerone›
+  | ‹innertwo sibling error in wrapper›
+  |
+  | (opaque error leaf)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueLeafCauses
+=====
+===== Sentry reporting
+=====
+== Message payload
+×
+(1) ×
+  | ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueLeafCauses
+-- report composition:
+*fmt.wrapErrors
+== Extra "error types"
+fmt/*fmt.wrapErrors (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*fmt.wrapErrors"
+Title: "×"
+(NO STACKTRACE)
+
+run
+newf innerone innertwo
 go-errorf-suffix outerthree outerfour
 opaque
 
