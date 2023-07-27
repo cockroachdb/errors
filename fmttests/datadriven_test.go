@@ -157,6 +157,9 @@ var wrapCommands = map[string]commandFn{
 	"go-errorf-suffix": func(e error, args []arg) error {
 		return fmt.Errorf("%w - %s", e, strfy(args))
 	},
+	"go-errorf-multi": func(err error, args []arg) error {
+		return fmt.Errorf("%s - %w %w", strfy(args), err, pkgErr.New("sibling error in wrapper"))
+	},
 	"opaque": func(err error, _ []arg) error {
 		return errbase.DecodeError(context.Background(),
 			errbase.EncodeError(context.Background(), err))
@@ -300,7 +303,7 @@ func init() {
 		// too. Most implementation of Format() are incomplete and unable to
 		// emit a "Go representation", so this breaks.
 		//
-		"goerr", "go-errorf", "go-errorf-suffix", "fmt-old", "fmt-old-delegate",
+		"goerr", "go-errorf", "go-errorf-suffix", "go-errorf-multi", "fmt-old", "fmt-old-delegate",
 		"os-syscall",
 		"os-link",
 		"os-path",
