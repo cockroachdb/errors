@@ -33,12 +33,15 @@ func EncodeError(ctx context.Context, err error) EncodedError {
 	if cause := UnwrapOnce(err); cause != nil {
 		return encodeWrapper(ctx, err, cause)
 	}
+	if causes := UnwrapMulti(err); causes != nil {
+		return encodeLeaf(ctx, err, causes)
+	}
 	// Not a causer.
-	return encodeLeaf(ctx, err)
+	return encodeLeaf(ctx, err, nil)
 }
 
 // encodeLeaf encodes a leaf error.
-func encodeLeaf(ctx context.Context, err error) EncodedError {
+func encodeLeaf(ctx context.Context, err error, causes []error) EncodedError {
 	var msg string
 	var details errorspb.EncodedErrorDetails
 
@@ -74,11 +77,18 @@ func encodeLeaf(ctx context.Context, err error) EncodedError {
 		details.FullDetails = encodeAsAny(ctx, err, payload)
 	}
 
+	cs := make([]*EncodedError, len(causes))
+	for i, ee := range causes {
+		ee := EncodeError(ctx, ee)
+		cs[i] = &ee
+	}
+
 	return EncodedError{
 		Error: &errorspb.EncodedError_Leaf{
 			Leaf: &errorspb.EncodedErrorLeaf{
 				Message: msg,
 				Details: details,
+				Causes:  cs,
 			},
 		},
 	}
@@ -120,6 +130,7 @@ func encodeWrapper(ctx context.Context, err, cause error) EncodedError {
 	if e, ok := err.(*opaqueWrapper); ok {
 		msg, ownError = extractPrefix(err, cause)
 		details = e.details
+		ownError = e.ownsErrorString
 	} else {
 		details.OriginalTypeName, details.ErrorTypeMark.FamilyName, details.ErrorTypeMark.Extension = getTypeDetails(err, false /*onlyFamily*/)
 

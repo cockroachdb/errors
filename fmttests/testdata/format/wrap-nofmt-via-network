@@ -17,6 +17,8 @@ require (?s)innerone.*innertwo
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
                 },
+                causes: {
+                },
             },
         },
         prefix:  "",
@@ -44,6 +46,8 @@ require (?s)innerone.*innertwo
                     ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
+                },
+                causes: {
                 },
             },
         },
@@ -269,6 +273,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                         ReportablePayload: nil,
                         FullDetails:       (*types.Any)(nil),
                     },
+                    causes: {
+                    },
                 },
             },
             prefix: "assertmsg: ‹outerthree›\n‹outerfour›",
@@ -299,6 +305,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                         ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                         ReportablePayload: nil,
                         FullDetails:       (*types.Any)(nil),
+                    },
+                    causes: {
                     },
                 },
             },
@@ -533,6 +541,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
 }
 =====
@@ -548,6 +558,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
 }
@@ -642,6 +654,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outerthree\nouterfour",
     details: errorspb.EncodedErrorDetails{
@@ -664,6 +678,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outerthree\nouterfour",
@@ -770,6 +786,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
@@ -792,6 +810,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "",
@@ -890,6 +910,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
@@ -912,6 +934,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "",
@@ -1010,6 +1034,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     detail: "outerthree\nouterfour",
 }
@@ -1025,6 +1051,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     detail: "outerthree\nouterfour",
@@ -1113,6 +1141,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     domain: "mydomain",
 }
@@ -1128,6 +1158,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     domain: "mydomain",
@@ -1213,6 +1245,8 @@ require (?s)outerthree.*outerfour
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     msg: "outerthree\nouterfour",
 }
@@ -1228,6 +1262,8 @@ require (?s)outerthree.*outerfour
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     msg: "outerthree\nouterfour",
@@ -1316,6 +1352,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
@@ -1338,6 +1376,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "",
@@ -1436,6 +1476,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outerthree\nouterfour",
     details: errorspb.EncodedErrorDetails{
@@ -1458,6 +1500,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outerthree\nouterfour",
@@ -1567,6 +1611,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outerthree\nouterfour",
     details: errorspb.EncodedErrorDetails{
@@ -1589,6 +1635,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outerthree\nouterfour",
@@ -1698,6 +1746,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outerthree\nouterfour",
     details: errorspb.EncodedErrorDetails{
@@ -1720,6 +1770,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outerthree\nouterfour",
@@ -1826,6 +1878,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outerthree\nouterfour",
     details: errorspb.EncodedErrorDetails{
@@ -1848,6 +1902,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outerthree\nouterfour",
@@ -1957,6 +2013,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outerthree\nouterfour - innerone\ninnertwo",
     details: errorspb.EncodedErrorDetails{
@@ -1979,6 +2037,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outerthree\nouterfour - innerone\ninnertwo",
@@ -2074,6 +2134,151 @@ Title: "×"
 
 run
 nofmt innerone innertwo
+go-errorf-multi outerthree outerfour
+opaque
+
+accept %\+v via Formattable.*IRREGULAR: not same as %\+v
+accept %\#v via Formattable.*IRREGULAR: not same as %\#v
+
+require (?s)outerthree.*outerfour.*innerone.*innertwo
+----
+&errbase.opaqueLeaf{
+    msg:     "outerthree\nouterfour - innerone\ninnertwo sibling error in wrapper",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName:  "fmt/*fmt.wrapErrors",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapErrors", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
+    },
+    causes: {
+        &errbase.opaqueLeaf{
+            msg:     "innerone\ninnertwo",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+                ReportablePayload: nil,
+                FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
+            },
+        },
+        &errbase.opaqueLeaf{
+            msg:     "sibling error in wrapper",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
+            },
+        },
+    },
+}
+=====
+===== non-redactable formats
+=====
+== %#v
+&errbase.opaqueLeaf{
+    msg:     "outerthree\nouterfour - innerone\ninnertwo sibling error in wrapper",
+    details: errorspb.EncodedErrorDetails{
+        OriginalTypeName:  "fmt/*fmt.wrapErrors",
+        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapErrors", Extension:""},
+        ReportablePayload: nil,
+        FullDetails:       (*types.Any)(nil),
+    },
+    causes: {
+        &errbase.opaqueLeaf{
+            msg:     "innerone\ninnertwo",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+                ReportablePayload: nil,
+                FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
+            },
+        },
+        &errbase.opaqueLeaf{
+            msg:     "sibling error in wrapper",
+            details: errorspb.EncodedErrorDetails{
+                OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+                ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.glob...funcNN...\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
+                FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
+            },
+        },
+    },
+}
+== Error()
+outerthree
+outerfour - innerone
+innertwo sibling error in wrapper
+== %v = Error(), good
+== %s = Error(), good
+== %q = quoted Error(), good
+== %x = hex Error(), good
+== %X = HEX Error(), good
+== %+v
+outerthree
+(1) outerthree
+  | outerfour - innerone
+  | innertwo sibling error in wrapper
+  |
+  | (opaque error leaf)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueLeaf
+== %#v via Formattable() = %#v, good
+== %v via Formattable() = Error(), good
+== %s via Formattable() = %v via Formattable(), good
+== %q via Formattable() = quoted %v via Formattable(), good
+== %+v via Formattable() == %+v, good
+=====
+===== redactable formats
+=====
+== printed via redact Print(), ok - congruent with %v
+‹outerthree›
+‹outerfour - innerone›
+‹innertwo sibling error in wrapper›
+== printed via redact Printf() %v = Print(), good
+== printed via redact Printf() %s = Print(), good
+== printed via redact Printf() %q, refused - good
+== printed via redact Printf() %x, refused - good
+== printed via redact Printf() %X, refused - good
+== printed via redact Printf() %+v, ok - congruent with %+v
+‹outerthree›
+(1) ‹outerthree›
+  | ‹outerfour - innerone›
+  | ‹innertwo sibling error in wrapper›
+  |
+  | (opaque error leaf)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueLeaf
+=====
+===== Sentry reporting
+=====
+== Message payload
+×
+(1) ×
+  | ×
+  | ×
+  |
+  | (opaque error leaf)
+  | type name: fmt/*fmt.wrapErrors
+Error types: (1) *errbase.opaqueLeaf
+-- report composition:
+*fmt.wrapErrors
+== Extra "error types"
+fmt/*fmt.wrapErrors (*::)
+== Exception 1 (Module: "error domain: <none>")
+Type: "*fmt.wrapErrors"
+Title: "×"
+(NO STACKTRACE)
+
+run
+nofmt innerone innertwo
 go-errorf-suffix outerthree outerfour
 opaque
 
@@ -2090,6 +2295,8 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "innerone\ninnertwo - outerthree\nouterfour",
@@ -2113,6 +2320,8 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "innerone\ninnertwo - outerthree\nouterfour",
@@ -2225,6 +2434,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outerthree\nouterfour",
     details: errorspb.EncodedErrorDetails{
@@ -2247,6 +2458,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outerthree\nouterfour",
@@ -2355,6 +2568,8 @@ require (?s)innerone.*innertwo
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
             },
+            causes: {
+            },
         },
     },
     domain: "error domain: pkg <path>",
@@ -2373,6 +2588,8 @@ require (?s)innerone.*innertwo
                 ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
             },
         },
     },
@@ -2474,6 +2691,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     hint: "outerthree\nouterfour",
 }
@@ -2489,6 +2708,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     hint: "outerthree\nouterfour",
@@ -2577,6 +2798,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     IssueLink: issuelink.IssueLink{IssueURL:"https://mysite", Detail:"outerthree\nouterfour"},
 }
@@ -2592,6 +2815,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     IssueLink: issuelink.IssueLink{IssueURL:"https://mysite", Detail:"outerthree\nouterfour"},
@@ -2683,6 +2908,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
@@ -2705,6 +2932,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "",
@@ -2803,6 +3032,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix: "outerthree\nouterfour",
 }
@@ -2818,6 +3049,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix: "outerthree\nouterfour",
@@ -2910,6 +3143,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
                 },
+                causes: {
+                },
             },
             message: "new-style (‹outerthree›\n‹outerfour›) :: ‹innerone›\n‹innertwo› ::",
         },
@@ -2920,6 +3155,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
             },
         },
     },
@@ -2947,6 +3184,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
                 },
+                causes: {
+                },
             },
             message: "new-style (‹outerthree›\n‹outerfour›) :: ‹innerone›\n‹innertwo› ::",
         },
@@ -2957,6 +3196,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
             },
         },
     },
@@ -3198,6 +3439,8 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
                 },
+                causes: {
+                },
             },
             message: ":: ‹innerone›\n‹innertwo› :: new-style (‹outerthree›\n‹outerfour›)",
         },
@@ -3208,6 +3451,8 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
                 ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
             },
         },
     },
@@ -3235,6 +3480,8 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
                 },
+                causes: {
+                },
             },
             message: ":: ‹innerone›\n‹innertwo› :: new-style (‹outerthree›\n‹outerfour›)",
         },
@@ -3245,6 +3492,8 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
                 ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
             },
         },
     },
@@ -3487,6 +3736,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outerthree\nouterfour",
     details: errorspb.EncodedErrorDetails{
@@ -3509,6 +3760,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outerthree\nouterfour",
@@ -3621,6 +3874,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
 }
 =====
@@ -3634,6 +3889,8 @@ require (?s)innerone.*innertwo
         ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
+    },
+    causes: {
     },
 }}
 == Error()
@@ -3657,6 +3914,8 @@ innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
 }
@@ -3734,6 +3993,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "send tcp unixhello",
     details: errorspb.EncodedErrorDetails{
@@ -3756,6 +4017,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "send tcp unixhello",
@@ -3862,6 +4125,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
 }
 =====
@@ -3875,6 +4140,8 @@ require (?s)innerone.*innertwo
         ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
+    },
+    causes: {
     },
 }}
 == Error()
@@ -3897,6 +4164,8 @@ innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
 }
@@ -3975,6 +4244,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
 }
 =====
@@ -3988,6 +4259,8 @@ require (?s)innerone.*innertwo
         ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
+    },
+    causes: {
     },
 }}
 == Error()
@@ -4009,6 +4282,8 @@ innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
 }
@@ -4088,6 +4363,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     msg: "outerthree\nouterfour",
 }
@@ -4131,6 +4408,8 @@ outerfour
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     msg: "outerthree\nouterfour",
@@ -4215,6 +4494,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
@@ -4237,6 +4518,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "",
@@ -4436,6 +4719,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     safeDetails: {"safe ×\n×"},
 }
@@ -4451,6 +4736,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     safeDetails: {"safe ×\n×"},
@@ -4539,6 +4826,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "safe outerthree\nouterfour",
     details: errorspb.EncodedErrorDetails{
@@ -4561,6 +4850,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "safe outerthree\nouterfour",
@@ -4667,6 +4958,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     secondaryError: &errbase.opaqueWrapper{
         cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
@@ -4692,6 +4985,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     secondaryError: &errbase.opaqueWrapper{
@@ -4886,6 +5181,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "",
     details: errorspb.EncodedErrorDetails{
@@ -4908,6 +5205,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "",
@@ -5107,6 +5406,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     tags: &logtags.Buffer{
         tags: {
@@ -5146,6 +5447,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     tags: &logtags.Buffer{
@@ -5255,6 +5558,8 @@ require (?s)innerone.*innertwo
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     keys: {"somekey", "outerthree\nouterfour"},
 }
@@ -5270,6 +5575,8 @@ require (?s)innerone.*innertwo
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     keys: {"somekey", "outerthree\nouterfour"},
@@ -5359,6 +5666,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
             },
+            causes: {
+            },
         },
         prefix: "new-stylew ‹outerthree›\n‹outerfour›",
     },
@@ -5384,6 +5693,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
             },
         },
         prefix: "new-stylew ‹outerthree›\n‹outerfour›",
@@ -5597,6 +5908,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
                 },
+                causes: {
+                },
             },
             prefix: "new-style ‹outerthree›\n‹outerfour› (payload)",
         },
@@ -5635,6 +5948,8 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                     ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
+                },
+                causes: {
                 },
             },
             prefix: "new-style ‹outerthree›\n‹outerfour› (payload)",

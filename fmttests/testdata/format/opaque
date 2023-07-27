@@ -10,6 +10,8 @@ opaque
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
     },
+    causes: {
+    },
 }
 =====
 ===== non-redactable formats
@@ -22,6 +24,8 @@ opaque
         ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
         ReportablePayload: nil,
         FullDetails:       (*types.Any)(nil),
+    },
+    causes: {
     },
 }
 == Error()
@@ -98,6 +102,8 @@ fmt outer outer2ndline
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     msg: "outer\nouter2ndline",
 }
@@ -113,6 +119,8 @@ fmt outer outer2ndline
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     msg: "outer\nouter2ndline",
@@ -210,6 +218,8 @@ opaque
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
         },
+        causes: {
+        },
     },
     prefix:  "outer\nouter2ndline",
     details: errorspb.EncodedErrorDetails{
@@ -232,6 +242,8 @@ opaque
             ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
             ReportablePayload: nil,
             FullDetails:       (*types.Any)(nil),
+        },
+        causes: {
         },
     },
     prefix:  "outer\nouter2ndline",
@@ -338,6 +350,8 @@ fmt outer outer2ndline
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
             },
+            causes: {
+            },
         },
         prefix:  "middle\nmiddle2ndline",
         details: errorspb.EncodedErrorDetails{
@@ -363,6 +377,8 @@ fmt outer outer2ndline
                 ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
             },
         },
         prefix:  "middle\nmiddle2ndline",
@@ -490,6 +506,8 @@ opaque
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
             },
+            causes: {
+            },
         },
         prefix:  "middle\nmiddle2ndline",
         details: errorspb.EncodedErrorDetails{
@@ -522,6 +540,8 @@ opaque
                 ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                 ReportablePayload: nil,
                 FullDetails:       (*types.Any)(nil),
+            },
+            causes: {
             },
         },
         prefix:  "middle\nmiddle2ndline",
@@ -658,6 +678,8 @@ fmt extern extern2ndline
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
                 },
+                causes: {
+                },
             },
             prefix:  "middle\nmiddle2ndline",
             details: errorspb.EncodedErrorDetails{
@@ -693,6 +715,8 @@ fmt extern extern2ndline
                     ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
                     ReportablePayload: nil,
                     FullDetails:       (*types.Any)(nil),
+                },
+                causes: {
                 },
             },
             prefix:  "middle\nmiddle2ndline",
