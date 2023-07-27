@@ -28,6 +28,7 @@ import (
 type opaqueLeaf struct {
 	msg     string
 	details errorspb.EncodedErrorDetails
+	causes  []error
 }
 
 var _ error = (*opaqueLeaf)(nil)
@@ -72,6 +73,9 @@ func (e *opaqueWrapper) SafeDetails() []string { return e.details.ReportablePayl
 
 func (e *opaqueLeaf) Format(s fmt.State, verb rune)    { FormatError(e, s, verb) }
 func (e *opaqueWrapper) Format(s fmt.State, verb rune) { FormatError(e, s, verb) }
+
+// opaque leaf can be a multi-wrapper
+func (e *opaqueLeaf) Unwrap() []error { return e.causes }
 
 func (e *opaqueLeaf) SafeFormatError(p Printer) (next error) {
 	p.Print(e.msg)

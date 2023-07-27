@@ -17,7 +17,7 @@ message EncodedError {
 }
 
 // EncodedErrorLeaf is the wire-encodable representation
-// of an error leaf.
+// of an error leaf or a multi-cause wrapper from go 1.20+
 message EncodedErrorLeaf {
   // The main error message (mandatory), that can be printed to human
   // users and may contain PII. This contains the value of the leaf
@@ -26,6 +26,12 @@ message EncodedErrorLeaf {
 
   // The error details.
   EncodedErrorDetails details = 2 [(gogoproto.nullable) = false];
+
+  // causes is a list of errors that contain the causal tree
+  // of this leaf. If this field is not empty, then this leaf
+  // encodes an error from go 1.20 or later that encodes multiple
+  // causes in its chain.
+  repeated EncodedError causes = 3 [(gogoproto.);
 }
 
 message EncodedErrorDetails {
@@ -67,7 +73,7 @@ message EncodedWrapper {
   EncodedError cause = 1 [(gogoproto.nullable) = false];
 
   // The wrapper message prefix (which may be empty). This
-  // isbprinted before the cause's own message when
+  // is printed before the cause's own message when
   // constructing a full message. This may contain PII.
   //
   // This is extracted automatically:
