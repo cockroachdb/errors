@@ -34,7 +34,7 @@ import (
 //
 // A Sentry report is displayed visually in the Sentry UI as follows:
 //
-////////////////
+// //////////////
 // Title: (1) some prefix in bold (2) one line for a stack trace
 // (3) a single-line subtitle
 //
@@ -44,21 +44,24 @@ import (
 // (5) a "message"
 //
 // (6) zero or more "exceptions", each composed of:
-//    (7) a bold title
-//    (8) some freeform text
-//    (9) a stack trace
+//
+//	(7) a bold title
+//	(8) some freeform text
+//	(9) a stack trace
 //
 // (10) metadata fields: environment, arch, etc
 //
 // (11) "Additional data" fields
 //
 // (12) SDK version
-/////////////////
+// ///////////////
 //
 // These visual items map to the Sentry Event object as follows:
 //
 // (1) the Type field of the 1st Exception object, if any
-//     otherwise the Message field
+//
+//	otherwise the Message field
+//
 // (2) the topmost entry from the Stacktrace field of the 1st Exception object, if any
 // (3) the Value field of the 1st Exception object, if any, unwrapped as a single line
 // (4) the Tags field
@@ -78,7 +81,9 @@ import (
 // (3)/(8): first line of verbose error printout
 // (4): not populated in this function, caller is to manage this
 // (5): detailed structure of the entire error object, with references to
-//      additional "exception" objects
+//
+//	additional "exception" objects
+//
 // (9): generated from innermost stack trace
 // (6): every exception object after the 1st reports additional stack trace contexts
 // (11): the detailed error types and their error mark.
@@ -92,7 +97,6 @@ import (
 // is included in the Sentry report. This does not affect error types
 // provided by the library, but could impact error types defined by
 // 3rd parties. This limitation may be lifted in a later version.
-//
 func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]interface{}) {
 	if err == nil {
 		// No error: do nothing.

@@ -15,10 +15,87 @@
 package errbase
 
 import (
+	goErr "errors"
+	"fmt"
 	"testing"
 
 	"github.com/cockroachdb/redact"
 )
+
+type wrapMini struct {
+	msg   string
+	cause error
+}
+
+func (e *wrapMini) Error() string {
+	return e.msg
+}
+
+func (e *wrapMini) Unwrap() error {
+	return e.cause
+}
+
+func TestFormatErrorInternal(t *testing.T) {
+	tests := []struct {
+		name     string
+		err      error
+		fmtStr   string
+		expected string
+	}{
+		{
+			name:     "single wrapper",
+			err:      fmt.Errorf("%w", fmt.Errorf("a%w", goErr.New("b"))),
+			fmtStr:   "%s",
+			expected: "ab",
+		},
+		{
+			name:     "simple multi-wrapper",
+			err:      goErr.Join(goErr.New("a"), goErr.New("b")),
+			fmtStr:   "%s",
+			expected: "a\nb",
+		},
+		{
+			name:     "simple multi-wrapper with single-cause chains inside",
+			err:      goErr.Join(fmt.Errorf("a%w", goErr.New("b")), fmt.Errorf("c%w", goErr.New("d"))),
+			fmtStr:   "%s",
+			expected: "ab\ncd",
+		},
+		{
+			name:   "simple multi-wrapper with single-cause chains inside (verbose)",
+			err:    goErr.Join(fmt.Errorf("a%w", goErr.New("b")), fmt.Errorf("c%w", goErr.New("d"))),
+			fmtStr: "%+v",
+			expected: `ab
+(1) ab
+  | cd
+Wraps: (2) cd
+| Wraps: (3) d
+Wraps: (4) ab
+| Wraps: (5) b
+Error types: (1) *errors.joinError (2) *fmt.wrapError (3) *errors.errorString (4) *fmt.wrapError (5) *errors.errorString`,
+		},
+		{
+			name:     "test wrapMini",
+			err:      &wrapMini{"whoa: d", goErr.New("d")},
+			fmtStr:   "%s",
+			expected: "whoa: d",
+		},
+		{
+			name:     "multi-wrapper where not all children should be elided during printing",
+			err:      fmt.Errorf(""),
+			fmtStr:   "%s",
+			expected: "whoa: d\nwhoa: d zz",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fe := Formattable(tt.err)
+			s := fmt.Sprintf(tt.fmtStr, fe)
+			if s != tt.expected {
+				t.Errorf("\nexpected: \n%s\nbut got:\n%s\n", tt.expected, s)
+			}
+		})
+	}
+}
 
 func TestPrintEntry(t *testing.T) {
 	b := func(s string) []byte { return []byte(s) }
