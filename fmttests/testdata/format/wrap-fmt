@@ -1658,7 +1658,37 @@ outerthree
 (1) outerthree
   | outerfour - innerone
   | innertwo sibling error in wrapper
-Error types: (1) *fmt.wrapErrors
+Wraps: (2) sibling error in wrapper
+  | github.com/cockroachdb/errors/fmttests.glob...funcNN...
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective.func1
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirective
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.runTestInternal
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.RunTest
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk
+  | <tab><path>:<lineno>
+  | github.com/cockroachdb/datadriven.Walk.func1
+  | <tab><path>:<lineno>
+  | testing.tRunner
+  | <tab><path>:<lineno>
+  | runtime.goexit
+  | <tab><path>:<lineno>
+Wraps: (3) innerone
+  | innertwo
+  | -- this is innerone
+  | innertwo's
+  | multi-line leaf payload
+Error types: (1) *fmt.wrapErrors (2) *errors.fundamental (3) *fmttests.errFmt
 =====
 ===== redactable formats
 =====
@@ -1676,7 +1706,37 @@ Error types: (1) *fmt.wrapErrors
 (1) ‹outerthree›
 ‹  | outerfour - innerone›
 ‹  | innertwo sibling error in wrapper›
-Error types: (1) *fmt.wrapErrors
+Wraps: (2) ‹sibling error in wrapper›
+‹  | github.com/cockroachdb/errors/fmttests.glob..func23›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.runDirective.func1›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.runDirective›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.runDirectiveOrSubTest›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.runTestInternal›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.RunTest›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/errors/fmttests.TestDatadriven.func2›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.Walk›
+‹  | <tab><path>:<lineno>›
+‹  | github.com/cockroachdb/datadriven.Walk.func1›
+‹  | <tab><path>:<lineno>›
+‹  | testing.tRunner›
+‹  | <tab><path>:<lineno>›
+‹  | runtime.goexit›
+‹  | <tab><path>:<lineno>›
+Wraps: (3) ‹innerone›
+‹  | innertwo›
+‹  | -- this is innerone›
+‹  | innertwo's›
+‹  | multi-line leaf payload›
+Error types: (1) *fmt.wrapErrors (2) *errors.fundamental (3) *fmttests.errFmt
 =====
 ===== Sentry reporting
 =====
@@ -1685,7 +1745,37 @@ Error types: (1) *fmt.wrapErrors
 (1) ×
 ×
 ×
-Error types: (1) *fmt.wrapErrors
+Wraps: (2) ×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+×
+Wraps: (3) ×
+×
+×
+×
+×
+Error types: (1) *fmt.wrapErrors (2) *errors.fundamental (3) *fmttests.errFmt
 -- report composition:
 *fmt.wrapErrors
 == Extra "error types"
