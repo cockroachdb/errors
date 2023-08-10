@@ -209,12 +209,12 @@ return errors.Wrap(foo(), "foo")
   - how to access the detail: `Error()`, regular Go formatting, Sentry Report.
 
 - `WithDetail(error, string) error`, `WithDetailf(error, string, ...interface{}) error`, user-facing detail with contextual information.
-  - **when to use: need to embark a message string to output when the error is presented to a human.**
+  - **when to use: need to embark a message string to output when the error is presented to a developer.**
   - what it does: captures detail strings.
   - how to access the detail: `errors.GetAllDetails()`, `errors.FlattenDetails()` (all details are preserved), format with `%+v`. Not included in Sentry reports.
 
 - `WithHint(error, string) error`, `WithHintf(error, string, ...interface{}) error`: user-facing detail with suggestion for action to take.
-  - **when to use: need to embark a message string to output when the error is presented to a human.**
+  - **when to use: need to embark a message string to output when the error is presented to an end user.**
   - what it does: captures hint strings.
   - how to access the detail: `errors.GetAllHints()`, `errors.FlattenHints()` (hints are de-duplicated), format with `%+v`. Not included in Sentry reports.
 
