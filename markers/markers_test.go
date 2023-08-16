@@ -254,7 +254,7 @@ func TestGoMultiErrWrappedEquivalence(t *testing.T) {
 
 	err1 := errors.New("hello")
 	err2 := errors.New("world")
-	err3 := fmt.Errorf("an error %w and %w", err1, err2)
+	err3 := &myJoin{causes: []error{err1, err2}}
 
 	tt.Check(markers.Is(err3, err1))
 	tt.Check(markers.Is(err3, err2))
@@ -276,13 +276,36 @@ func (e *myErr) Error() string {
 	return e.msg
 }
 
+type myJoin struct {
+	msg    string
+	causes []error
+}
+
+func newMyJoin(msg string, causes []error) *myJoin {
+	return &myJoin{
+		msg:    msg,
+		causes: causes,
+	}
+}
+
+func (e *myJoin) Error() string {
+	if e.msg != "" {
+		return e.msg
+	}
+	return fmt.Sprintf("%v", e.causes)
+}
+
+func (e *myJoin) Unwrap() []error {
+	return e.causes
+}
+
 // This test demonstrates that it is possible to recognize standard
 // multierrors that have been sent over the network.
 func TestStandardFmtMultierrorRemoteEquivalence(t *testing.T) {
 	tt := testutils.T{T: t}
 
-	err1 := fmt.Errorf("hello %w %w", goErr.New("world"), goErr.New("one"))
-	err2 := fmt.Errorf("hello %w %w", goErr.New("world"), goErr.New("two"))
+	err1 := &myJoin{causes: []error{goErr.New("world"), goErr.New("one")}}
+	err2 := &myJoin{causes: []error{goErr.New("world"), goErr.New("two")}}
 
 	newErr1 := network(err1)
 
@@ -292,7 +315,7 @@ func TestStandardFmtMultierrorRemoteEquivalence(t *testing.T) {
 	tt.Check(!markers.Is(newErr1, err2))
 
 	// Check multiple levels of causal nesting
-	err3 := fmt.Errorf("err: %w", goErr.Join(err1, err2, &myErr{msg: "hi"}))
+	err3 := fmt.Errorf("err: %w", &myJoin{causes: []error{err1, err2, &myErr{msg: "hi"}}})
 	newErr3 := network(err3)
 	myErrV := &myErr{msg: "hi"}
 
@@ -326,31 +349,6 @@ func TestDifferentMultiErrorTypesCompareDifferentOverNetwork(t *testing.T) {
 	de2 := network(e2)
 
 	tt.Check(!markers.Is(de1, de2))
-}
-
-// This test demonstrates that errors from the join
-// and fmt constructors are properly considered as distinct.
-func TestStandardFmtMultierrorRemoteRecursiveEquivalence(t *testing.T) {
-	tt := testutils.T{T: t}
-
-	baseErr := goErr.New("world")
-	err1 := fmt.Errorf("%w %w", baseErr, baseErr)
-	err2 := goErr.Join(baseErr, baseErr)
-
-	tt.Check(markers.Is(err1, baseErr))
-	tt.Check(!markers.Is(err1, err2))
-	tt.Check(!markers.Is(err2, err1))
-
-	newErr1 := network(err1)
-	newErr2 := network(err2)
-
-	tt.Check(markers.Is(newErr1, baseErr))
-	tt.Check(markers.Is(newErr2, baseErr))
-	tt.Check(!markers.Is(newErr1, newErr2))
-	tt.Check(!markers.Is(err1, newErr2))
-	tt.Check(!markers.Is(err2, newErr1))
-	tt.Check(!markers.Is(newErr2, err1))
-	tt.Check(!markers.Is(newErr1, err2))
 }
 
 // This check verifies that IsAny() works.

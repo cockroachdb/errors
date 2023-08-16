@@ -16,7 +16,6 @@ package errbase_test
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	"github.com/cockroachdb/errors/errbase"
@@ -57,18 +56,6 @@ func TestMixedErrorWrapping(t *testing.T) {
 
 	tt.CheckEqual(errbase.UnwrapOnce(err3), err2)
 	tt.CheckEqual(errbase.UnwrapAll(err3), err)
-}
-
-func TestMultiErrorUnwrap(t *testing.T) {
-	tt := testutils.T{T: t}
-
-	err := errors.New("hello")
-	err2 := pkgErr.WithMessage(err, "woo")
-	err3 := fmt.Errorf("%w %w", err, err2)
-
-	tt.CheckEqual(errbase.UnwrapOnce(err3), nil)
-	tt.CheckEqual(errbase.UnwrapAll(err3), err3)
-	tt.CheckDeepEqual(errbase.UnwrapMulti(err3), []error{err, err2})
 }
 
 type myWrapper struct{ cause error }
