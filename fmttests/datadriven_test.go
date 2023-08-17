@@ -37,6 +37,7 @@ import (
 	"github.com/cockroachdb/errors/errutil"
 	"github.com/cockroachdb/errors/hintdetail"
 	"github.com/cockroachdb/errors/issuelink"
+	"github.com/cockroachdb/errors/join"
 	"github.com/cockroachdb/errors/report"
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/secondary"
@@ -262,6 +263,9 @@ var wrapCommands = map[string]commandFn{
 		ctx = logtags.AddTag(ctx, "safe", redact.Safe(456))
 		return contexttags.WithContextTags(err, ctx)
 	},
+	"join": func(err error, args []arg) error {
+		return join.Join(err, errutil.New(strfy(args)))
+	},
 }
 
 var noPrefixWrappers = map[string]bool{
@@ -286,6 +290,7 @@ var noPrefixWrappers = map[string]bool{
 	"stack":             true,
 	"tags":              true,
 	"telemetry":         true,
+	"join":              true,
 }
 
 var wrapOnlyExceptions = map[string]string{}
@@ -315,6 +320,7 @@ func init() {
 		// means they don't match.
 		"nofmt",
 		"errorf",
+		"join",
 	} {
 		wrapOnlyExceptions[v] = `
 accept %\+v via Formattable.*IRREGULAR: not same as %\+v

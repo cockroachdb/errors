@@ -18,6 +18,7 @@ import (
 	"github.com/cockroachdb/errors/barriers"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errutil"
+	"github.com/cockroachdb/errors/join"
 )
 
 // New creates an error with a simple error message.
@@ -192,3 +193,13 @@ func HandleAsAssertionFailureDepth(depth int, origErr error) error {
 // - it also supports recursing through causes with Cause().
 // - if it detects an API use error, its panic object is a valid error.
 func As(err error, target interface{}) bool { return errutil.As(err, target) }
+
+// Join returns an error that wraps the given errors.
+// Any nil error values are discarded.
+// Join returns nil if errs contains no non-nil values.
+// The error formats as the concatenation of the strings obtained
+// by calling the Error method of each element of errs, with a newline
+// between each string.
+func Join(errs ...error) error {
+	return join.Join(errs...)
+}
