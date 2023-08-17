@@ -106,13 +106,13 @@ func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]
 	// First step is to collect the details.
 	var stacks []*withstack.ReportableStackTrace
 	var details []errbase.SafeDetailPayload
-	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
+	visitAllMulti(err, func(c error) {
 		st := withstack.GetReportableStackTrace(c)
 		stacks = append(stacks, st)
 
 		sd := errbase.GetSafeDetails(c)
 		details = append(details, sd)
-	}
+	})
 	module := string(domains.GetDomain(err))
 
 	// firstDetailLine is the first detail string encountered.
@@ -399,5 +399,15 @@ func lastPathComponent(tn string) string {
 func reverseExceptionOrder(ex []sentry.Exception) {
 	for i := 0; i < len(ex)/2; i++ {
 		ex[i], ex[len(ex)-i-1] = ex[len(ex)-i-1], ex[i]
+	}
+}
+
+func visitAllMulti(err error, f func(error)) {
+	f(err)
+	if e := errbase.UnwrapOnce(err); e != nil {
+		visitAllMulti(e, f)
+	}
+	for _, e := range errbase.UnwrapMulti(err) {
+		visitAllMulti(e, f)
 	}
 }
