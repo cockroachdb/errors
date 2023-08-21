@@ -733,3 +733,55 @@ func (w *werrSafeFormat) SafeFormatError(p errbase.Printer) (next error) {
 	p.Printf("safe %s", w.msg)
 	return w.cause
 }
+
+type errMultiCause struct {
+	causes []error
+	msg    string
+	elide  bool
+}
+
+func newMultiCause(msg string, elide bool, causes ...error) *errMultiCause {
+	return &errMultiCause{
+		causes: causes,
+		msg:    msg,
+		elide:  elide,
+	}
+}
+
+func (e *errMultiCause) Error() string                 { return fmt.Sprint(e) }
+func (e *errMultiCause) Format(s fmt.State, verb rune) { errbase.FormatError(e, s, verb) }
+func (e *errMultiCause) SafeFormatError(p errbase.Printer) (next error) {
+	p.Printf("%s", e.msg)
+	if e.elide {
+		return nil
+	} else {
+		return e.causes[0]
+	}
+}
+func (e *errMultiCause) Unwrap() []error { return e.causes }
+
+func init() {
+	errbase.RegisterMultiCauseEncoder(errbase.GetTypeKey(&errMultiCause{}), encodeWithMultiCause)
+	errbase.RegisterMultiCauseDecoder(errbase.GetTypeKey(&errMultiCause{}), decodeWithMultiCause)
+}
+
+func encodeWithMultiCause(
+	_ context.Context, err error,
+) (string, []string, proto.Message) {
+	m := err.(*errMultiCause)
+	if m.elide {
+		return m.msg, []string{"elide"}, nil
+	} else {
+		return m.msg, nil, nil
+	}
+}
+
+func decodeWithMultiCause(
+	_ context.Context, causes []error, msg string, details []string, _ proto.Message,
+) error {
+	elide := false
+	if len(details) == 1 && details[0] == "elide" {
+		elide = true
+	}
+	return &errMultiCause{causes, msg, elide}
+}

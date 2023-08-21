@@ -502,7 +502,10 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail, withDepth bo
 }
 
 // elideShortChildren takes a number of entries to set `elideShort` to
-// false. The reason a number of entries is needed is because
+// false. The reason a number of entries is needed is that we may be
+// eliding a subtree of causes in the case of a multi-cause error. In
+// the multi-cause case, we need to know how many of the prior errors
+// in the list of entries is a child of this subtree.
 func (s *state) elideShortChildren(newEntries int) {
 	for i := 0; i < newEntries; i++ {
 		s.entries[len(s.entries)-1-i].elideShort = true
