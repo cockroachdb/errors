@@ -328,6 +328,28 @@ type LeafEncoder = func(ctx context.Context, err error) (msg string, safeDetails
 // registry for RegisterLeafEncoder.
 var leafEncoders = map[TypeKey]LeafEncoder{}
 
+// RegisterMultiCauseEncoder can be used to register new multi-cause
+// error types to the library. Registered types will be encoded using
+// their own Go type when an error is encoded. Multi-cause wrappers
+// that have not been registered will be encoded using the
+// opaqueWrapper type.
+func RegisterMultiCauseEncoder(theType TypeKey, encoder MultiCauseEncoder) {
+	// This implementation is a simple wrapper around `LeafEncoder`
+	// because we implemented multi-cause error wrapper encoding into a
+	// `Leaf` instead of a `Wrapper` for smoother backwards
+	// compatibility support. Exposing this detail to consumers of the
+	// API is confusing and hence avoided. The causes of the error are
+	// encoded separately regardless of this encoder's implementation.
+	RegisterLeafEncoder(theType, encoder)
+}
+
+// MultiCauseEncoder is to be provided (via RegisterMultiCauseEncoder
+// above) by additional multi-cause wrapper types not yet known to this
+// library. The encoder will automatically extract and encode the
+// causes of this error by calling `Unwrap()` and expecting a slice of
+// errors.
+type MultiCauseEncoder = func(ctx context.Context, err error) (msg string, safeDetails []string, payload proto.Message)
+
 // RegisterWrapperEncoder can be used to register new wrapper types to
 // the library. Registered wrappers will be encoded using their own
 // Go type when an error is encoded. Wrappers that have not been

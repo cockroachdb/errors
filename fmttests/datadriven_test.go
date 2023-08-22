@@ -207,6 +207,20 @@ var wrapCommands = map[string]commandFn{
 	// werrWithElidedClause overrides its cause's Error() from its own
 	// short message.
 	"elided-cause": func(err error, args []arg) error { return &werrWithElidedCause{err, strfy(args)} },
+	"multi-cause": func(err error, args []arg) error {
+		return newMultiCause("A", false, /* elide */
+			newMultiCause("C", false /* elide */, err, errutil.New(strfy(args))),
+			newMultiCause("B", false /* elide */, errutil.New("included 1"), errutil.New("included 2")),
+		)
+	},
+	// This iteration elides the causes in the second child error,
+	// which omits them from the format string.
+	"multi-elided-cause": func(err error, args []arg) error {
+		return newMultiCause("A", false, /* elide */
+			newMultiCause("C", false /* elide */, err, errutil.New(strfy(args))),
+			newMultiCause("B", true /* elide */, errutil.New("elided 1"), errutil.New("elided 2")),
+		)
+	},
 
 	// stack attaches a simple stack trace.
 	"stack": func(err error, _ []arg) error { return withstack.WithStack(err) },
