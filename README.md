@@ -536,7 +536,8 @@ Example use:
 | `WrapWithDepthf`                   | `WithMessagef` + `WithStackDepth`                                                 |
 | `AssertionFailedWithDepthf`        | `NewWithDepthf` + `WithAssertionFailure`                                          |
 | `NewAssertionErrorWithWrappedErrf` | `HandledWithMessagef` (barrier) + `WrapWithDepthf` +  `WithAssertionFailure`      |
-
+| `Join`                             | `JoinWithDepth` (see below)                                                       |
+| `JoinWithDepth`                    | multi-cause wrapper + `WithStackDepth`                                            |
 ## API (not constructing error objects)
 
 The following is a summary of the non-constructor API functions, grouped by category.
@@ -574,11 +575,15 @@ func RegisterLeafEncoder(typeName TypeKey, encoder LeafEncoder)
 func RegisterWrapperDecoder(typeName TypeKey, decoder WrapperDecoder)
 func RegisterWrapperEncoder(typeName TypeKey, encoder WrapperEncoder)
 func RegisterWrapperEncoderWithMessageOverride (typeName TypeKey, encoder WrapperEncoderWithMessageOverride)
+func RegisterMultiCauseEncoder(theType TypeKey, encoder MultiCauseEncoder)
+func RegisterMultiCauseDecoder(theType TypeKey, decoder MultiCauseDecoder)
 type LeafEncoder = func(ctx context.Context, err error) (msg string, safeDetails []string, payload proto.Message)
 type LeafDecoder = func(ctx context.Context, msg string, safeDetails []string, payload proto.Message) error
 type WrapperEncoder = func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message)
 type WrapperEncoderWithMessageOverride = func(ctx context.Context, err error) (msgPrefix string, safeDetails []string, payload proto.Message, overrideError bool)
 type WrapperDecoder = func(ctx context.Context, cause error, msgPrefix string, safeDetails []string, payload proto.Message) error
+type MultiCauseEncoder = func(ctx context.Context, err error) (msg string, safeDetails []string, payload proto.Message)
+type MultiCauseDecoder = func(ctx context.Context, causes []error, msgPrefix string, safeDetails []string, payload proto.Message) error
 
 // Registering package renames for custom error types.
 func RegisterTypeMigration(previousPkgPath, previousTypeName string, newType error)
