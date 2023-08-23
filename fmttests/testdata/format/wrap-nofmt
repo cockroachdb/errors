@@ -1623,13 +1623,40 @@ Wraps: (3) ×
 ×
 Error types: (1) *fmt.wrapErrors (2) *errors.fundamental (3) *fmttests.errNoFmt
 -- report composition:
+<path>:<lineno>: *errors.fundamental (top exception)
+*fmttests.errNoFmt
 *fmt.wrapErrors
 == Extra "error types"
+github.com/pkg/errors/*errors.fundamental (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
 fmt/*fmt.wrapErrors (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "*fmt.wrapErrors"
-Title: "×"
-(NO STACKTRACE)
+Type: "<path>:<lineno> ...funcNN...
+Title: "*errors.fundamental: ×"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
 
 run
 nofmt innerone innertwo
@@ -2226,13 +2253,42 @@ Wraps: (4) ×
 ×
 Error types: (1) *join.joinError (2) *withstack.withStack (3) *errutil.leafError (4) *fmttests.errNoFmt
 -- report composition:
+*errutil.leafError: outerthree
+<path>:<lineno>: *withstack.withStack (top exception)
+*fmttests.errNoFmt
 *join.joinError
 == Extra "error types"
+github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
 github.com/cockroachdb/errors/join/*join.joinError (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "*join.joinError"
-Title: "×"
-(NO STACKTRACE)
+Type: "<path>:<lineno> ...funcNN...
+Title: "*errutil.leafError: ×\nvia *withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
 
 run
 nofmt innerone innertwo
@@ -2688,13 +2744,109 @@ Wraps: (7) ×
 ×
 Error types: (1) *fmttests.errMultiCause (2) *fmttests.errMultiCause (3) *withstack.withStack (4) *errutil.leafError (5) *withstack.withStack (6) *errutil.leafError (7) *fmttests.errMultiCause (8) *withstack.withStack (9) *errutil.leafError (10) *fmttests.errNoFmt
 -- report composition:
+*errutil.leafError: included 2
+<path>:<lineno>: *withstack.withStack (top exception)
+*errutil.leafError: included 1
+<path>:<lineno>: *withstack.withStack (1)
 *fmttests.errMultiCause
+*errutil.leafError: outerthree
+<path>:<lineno>: *withstack.withStack (2)
+*fmttests.errNoFmt
+*fmttests.errMultiCause
+*fmttests.errMultiCause
+(check the extra data payloads)
 == Extra "error types"
+github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.errMultiCause (*::)
+github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.errMultiCause (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.errMultiCause (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "*fmttests.errMultiCause"
-Title: "×: ×: included 2: included 1: ×: outerthree: ×"
-(NO STACKTRACE)
+Type: "(2) <path>:<lineno> ...funcNN...
+Title: "*withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
+== Exception 2 (Module: "error domain: <none>")
+Type: "(1) <path>:<lineno> ...funcNN...
+Title: "*withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
+== Exception 3 (Module: "error domain: <none>")
+Type: "<path>:<lineno> ...funcNN...
+Title: "*errutil.leafError: ×: ×: included 2: included 1: ×: outerthree: ×\nvia *withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
 
 run
 nofmt innerone innertwo
@@ -2999,13 +3151,109 @@ Wraps: (7) ×
 ×
 Error types: (1) *fmttests.errMultiCause (2) *fmttests.errMultiCause (3) *withstack.withStack (4) *errutil.leafError (5) *withstack.withStack (6) *errutil.leafError (7) *fmttests.errMultiCause (8) *withstack.withStack (9) *errutil.leafError (10) *fmttests.errNoFmt
 -- report composition:
+*errutil.leafError: elided 2
+<path>:<lineno>: *withstack.withStack (top exception)
+*errutil.leafError: elided 1
+<path>:<lineno>: *withstack.withStack (1)
 *fmttests.errMultiCause
+*errutil.leafError: outerthree
+<path>:<lineno>: *withstack.withStack (2)
+*fmttests.errNoFmt
+*fmttests.errMultiCause
+*fmttests.errMultiCause
+(check the extra data payloads)
 == Extra "error types"
+github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.errMultiCause (*::)
+github.com/cockroachdb/errors/errutil/*errutil.leafError (*::)
+github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt (*::)
+github.com/cockroachdb/errors/fmttests/*fmttests.errMultiCause (*::)
 github.com/cockroachdb/errors/fmttests/*fmttests.errMultiCause (*::)
 == Exception 1 (Module: "error domain: <none>")
-Type: "*fmttests.errMultiCause"
-Title: "×: ×: ×: outerthree: ×"
-(NO STACKTRACE)
+Type: "(2) <path>:<lineno> ...funcNN...
+Title: "*withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
+== Exception 2 (Module: "error domain: <none>")
+Type: "(1) <path>:<lineno> ...funcNN...
+Title: "*withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
+== Exception 3 (Module: "error domain: <none>")
+Type: "<path>:<lineno> ...funcNN...
+Title: "*errutil.leafError: ×: ×: ×: outerthree: ×\nvia *withstack.withStack"
+<path>:<lineno>:
+   (runtime) goexit()
+<path>:<lineno>:
+   (testing) tRunner()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.Walk)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) Walk()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) RunTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runTestInternal()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirectiveOrSubTest()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven) runDirective()
+<path>:<lineno>:
+   (github.com/cockroachdb/datadriven.runDirective)...funcNN...
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.TestDatadriven.func2) 1()
+<path>:<lineno>:
+   (github.com/cockroachdb/errors/fmttests.glob.)...funcNN...
 
 run
 nofmt innerone innertwo
