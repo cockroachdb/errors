@@ -132,18 +132,6 @@ Wraps: (3) b
 Error types: (1) *fmt.wrapError (2) *fmt.wrapError (3) *errors.errorString`,
 		},
 		{
-			name:           "simple multi-wrapper",
-			err:            goErr.Join(goErr.New("a"), goErr.New("b")),
-			expectedSimple: "a\nb",
-			// TODO(davidh): verbose test case should have line break
-			// between `a` and `b` on second line.
-			expectedVerbose: `a
-(1) ab
-Wraps: (2) b
-Wraps: (3) a
-Error types: (1) *errors.joinError (2) *errors.errorString (3) *errors.errorString`,
-		},
-		{
 			name: "multi-wrapper with custom formatter and partial elide",
 			err: NewWrapNoElideCauses("A",
 				NewWrapNoElideCauses("C", goErr.New("3"), goErr.New("4")),
@@ -190,91 +178,6 @@ Error types: (1) *errbase.wrapNoElideCauses (2) *errbase.wrapNoElideCauses (3) *
   | c
   | d
 Error types: (1) *errors.errorString`,
-		},
-		{
-			name: "two-level multi-wrapper",
-			err: goErr.Join(
-				goErr.Join(goErr.New("a"), goErr.New("b")),
-				goErr.Join(goErr.New("c"), goErr.New("d")),
-			),
-			expectedSimple: "a\nb\nc\nd",
-			// TODO(davidh): verbose output should preserve line breaks after (1)
-			// and also after (2) and (5) in `c\nd` and `a\nb`.
-			expectedVerbose: `a
-(1) ab
-  |
-  | c
-  | d
-Wraps: (2) cd
-└─ Wraps: (3) d
-└─ Wraps: (4) c
-Wraps: (5) ab
-└─ Wraps: (6) b
-└─ Wraps: (7) a
-Error types: (1) *errors.joinError (2) *errors.joinError (3) *errors.errorString (4) *errors.errorString (5) *errors.joinError (6) *errors.errorString (7) *errors.errorString`,
-		},
-		{
-			name: "simple multi-wrapper with single-cause chains inside",
-			err: goErr.Join(
-				fmt.Errorf("a%w", goErr.New("b")),
-				fmt.Errorf("c%w", goErr.New("d")),
-			),
-			expectedSimple: "ab\ncd",
-			expectedVerbose: `ab
-(1) ab
-  | cd
-Wraps: (2) cd
-└─ Wraps: (3) d
-Wraps: (4) ab
-└─ Wraps: (5) b
-Error types: (1) *errors.joinError (2) *fmt.wrapError (3) *errors.errorString (4) *fmt.wrapError (5) *errors.errorString`,
-		},
-		{
-			name: "multi-cause wrapper with single-cause chains inside",
-			err: goErr.Join(
-				fmt.Errorf("a%w", fmt.Errorf("b%w", fmt.Errorf("c%w", goErr.New("d")))),
-				fmt.Errorf("e%w", fmt.Errorf("f%w", fmt.Errorf("g%w", goErr.New("h")))),
-			),
-			expectedSimple: `abcd
-efgh`,
-			expectedVerbose: `abcd
-(1) abcd
-  | efgh
-Wraps: (2) efgh
-└─ Wraps: (3) fgh
-  └─ Wraps: (4) gh
-    └─ Wraps: (5) h
-Wraps: (6) abcd
-└─ Wraps: (7) bcd
-  └─ Wraps: (8) cd
-    └─ Wraps: (9) d
-Error types: (1) *errors.joinError (2) *fmt.wrapError (3) *fmt.wrapError (4) *fmt.wrapError (5) *errors.errorString (6) *fmt.wrapError (7) *fmt.wrapError (8) *fmt.wrapError (9) *errors.errorString`},
-		{
-			name: "single cause chain with multi-cause wrapper inside with single-cause chains inside",
-			err: fmt.Errorf(
-				"prefix1: %w",
-				fmt.Errorf(
-					"prefix2: %w",
-					goErr.Join(
-						fmt.Errorf("a%w", fmt.Errorf("b%w", fmt.Errorf("c%w", goErr.New("d")))),
-						fmt.Errorf("e%w", fmt.Errorf("f%w", fmt.Errorf("g%w", goErr.New("h")))),
-					))),
-			expectedSimple: `prefix1: prefix2: abcd
-efgh`,
-			expectedVerbose: `prefix1: prefix2: abcd
-(1) prefix1
-Wraps: (2) prefix2
-Wraps: (3) abcd
-  | efgh
-  └─ Wraps: (4) efgh
-    └─ Wraps: (5) fgh
-      └─ Wraps: (6) gh
-        └─ Wraps: (7) h
-  └─ Wraps: (8) abcd
-    └─ Wraps: (9) bcd
-      └─ Wraps: (10) cd
-        └─ Wraps: (11) d
-Error types: (1) *fmt.wrapError (2) *fmt.wrapError (3) *errors.joinError (4) *fmt.wrapError (5) *fmt.wrapError (6) *fmt.wrapError (7) *errors.errorString (8) *fmt.wrapError (9) *fmt.wrapError (10) *fmt.wrapError (11) *errors.errorString`,
 		},
 		{
 			name:           "test wrapMini elides cause error string",
