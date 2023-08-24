@@ -37,6 +37,7 @@ import (
 	"github.com/cockroachdb/errors/errutil"
 	"github.com/cockroachdb/errors/hintdetail"
 	"github.com/cockroachdb/errors/issuelink"
+	"github.com/cockroachdb/errors/join"
 	"github.com/cockroachdb/errors/report"
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/secondary"
@@ -157,6 +158,9 @@ var wrapCommands = map[string]commandFn{
 	"go-errorf-suffix": func(e error, args []arg) error {
 		return fmt.Errorf("%w - %s", e, strfy(args))
 	},
+	"go-errorf-multi": func(err error, args []arg) error {
+		return fmt.Errorf("%s - %w %w", strfy(args), err, pkgErr.New("sibling error in wrapper"))
+	},
 	"opaque": func(err error, _ []arg) error {
 		return errbase.DecodeError(context.Background(),
 			errbase.EncodeError(context.Background(), err))
@@ -204,6 +208,20 @@ var wrapCommands = map[string]commandFn{
 	// werrWithElidedClause overrides its cause's Error() from its own
 	// short message.
 	"elided-cause": func(err error, args []arg) error { return &werrWithElidedCause{err, strfy(args)} },
+	"multi-cause": func(err error, args []arg) error {
+		return newMultiCause("A", false, /* elide */
+			newMultiCause("C", false /* elide */, err, errutil.New(strfy(args))),
+			newMultiCause("B", false /* elide */, errutil.New("included 1"), errutil.New("included 2")),
+		)
+	},
+	// This iteration elides the causes in the second child error,
+	// which omits them from the format string.
+	"multi-elided-cause": func(err error, args []arg) error {
+		return newMultiCause("A", false, /* elide */
+			newMultiCause("C", false /* elide */, err, errutil.New(strfy(args))),
+			newMultiCause("B", true /* elide */, errutil.New("elided 1"), errutil.New("elided 2")),
+		)
+	},
 
 	// stack attaches a simple stack trace.
 	"stack": func(err error, _ []arg) error { return withstack.WithStack(err) },
@@ -259,6 +277,9 @@ var wrapCommands = map[string]commandFn{
 		ctx = logtags.AddTag(ctx, "safe", redact.Safe(456))
 		return contexttags.WithContextTags(err, ctx)
 	},
+	"join": func(err error, args []arg) error {
+		return join.Join(err, errutil.New(strfy(args)))
+	},
 }
 
 var noPrefixWrappers = map[string]bool{
@@ -283,6 +304,7 @@ var noPrefixWrappers = map[string]bool{
 	"stack":             true,
 	"tags":              true,
 	"telemetry":         true,
+	"join":              true,
 }
 
 var wrapOnlyExceptions = map[string]string{}
@@ -300,7 +322,7 @@ func init() {
 		// too. Most implementation of Format() are incomplete and unable to
 		// emit a "Go representation", so this breaks.
 		//
-		"goerr", "go-errorf", "go-errorf-suffix", "fmt-old", "fmt-old-delegate",
+		"goerr", "go-errorf", "go-errorf-suffix", "go-errorf-multi", "fmt-old", "fmt-old-delegate",
 		"os-syscall",
 		"os-link",
 		"os-path",
@@ -312,6 +334,7 @@ func init() {
 		// means they don't match.
 		"nofmt",
 		"errorf",
+		"join",
 	} {
 		wrapOnlyExceptions[v] = `
 accept %\+v via Formattable.*IRREGULAR: not same as %\+v

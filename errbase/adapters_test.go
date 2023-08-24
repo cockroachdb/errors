@@ -64,7 +64,33 @@ func TestAdaptGoSingleWrapErr(t *testing.T) {
 	tt := testutils.T{T: t}
 	// The library preserves the cause. It's not possible to preserve the fmt
 	// string.
+	tt.CheckEqual(newErr.Error(), origErr.Error())
 	tt.CheckContains(newErr.Error(), "hello")
+}
+
+func TestAdaptBaseGoJoinErr(t *testing.T) {
+	origErr := goErr.Join(goErr.New("hello"), goErr.New("world"))
+	t.Logf("start err: %# v", pretty.Formatter(origErr))
+
+	newErr := network(t, origErr)
+
+	tt := testutils.T{T: t}
+	// The library preserves the error message.
+	tt.CheckEqual(newErr.Error(), origErr.Error())
+
+}
+
+func TestAdaptGoMultiWrapErr(t *testing.T) {
+	origErr := fmt.Errorf("an error %w and also %w", goErr.New("hello"), goErr.New("world"))
+	t.Logf("start err: %# v", pretty.Formatter(origErr))
+
+	newErr := network(t, origErr)
+
+	tt := testutils.T{T: t}
+	// The library preserves the causes. It's not possible to preserve the fmt string.
+	tt.CheckEqual(newErr.Error(), origErr.Error())
+	tt.CheckContains(newErr.Error(), "hello")
+	tt.CheckContains(newErr.Error(), "world")
 }
 
 func TestAdaptPkgWithMessage(t *testing.T) {
