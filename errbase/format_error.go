@@ -648,7 +648,7 @@ type state struct {
 
 	// entries collect the result of formatRecursive(). They are
 	// consumed by formatSingleLineOutput() and formatEntries() to
-	// procude the contents of finalBuf.
+	// produce the contents of finalBuf.
 	entries []formatEntry
 
 	// buf collects the details of the current error object at a given
@@ -928,7 +928,7 @@ func (s *safePrinter) enhanceArgs(args []interface{}) {
 			args[i] = redact.Safe(thisStack)
 			lastSeen = st
 		}
-		// In contrast with (*printer).enhanceArgs(), we dont use a
+		// In contrast with (*printer).enhanceArgs(), we don't use a
 		// special case for `error` here, because the redact package
 		// already helps us recursing into a safe print for
 		// error objects.
