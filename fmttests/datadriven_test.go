@@ -20,7 +20,6 @@ import (
 	goErr "errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"os"
 	"regexp"
@@ -385,7 +384,7 @@ func generateFiles() {
 		}
 		leafTests.WriteString("----\n\n")
 	}
-	ioutil.WriteFile(testPath+"/leaves", leafTests.Bytes(), 0666)
+	os.WriteFile(testPath+"/leaves", leafTests.Bytes(), 0666)
 
 	// Generate the "leaves-via-network" input file, which tests
 	// formatting for leaf-only error types after being brought over
@@ -405,7 +404,7 @@ func generateFiles() {
 		}
 		leafTests.WriteString("----\n\n")
 	}
-	ioutil.WriteFile(testPath+"/leaves-via-network", leafTests.Bytes(), 0666)
+	os.WriteFile(testPath+"/leaves-via-network", leafTests.Bytes(), 0666)
 
 	// Leaf types for which we want to test all wrappers:
 	wrapperLeafTypes := []string{"fmt", "goerr", "nofmt", "pkgerr", "newf"}
@@ -449,7 +448,7 @@ func generateFiles() {
 			}
 			wrapTests.WriteString("----\n\n")
 		}
-		ioutil.WriteFile(
+		os.WriteFile(
 			fmt.Sprintf(testPath+"/wrap-%s", leafName),
 			wrapTests.Bytes(), 0666)
 	}
@@ -490,7 +489,7 @@ func generateFiles() {
 			}
 			wrapTests.WriteString("----\n\n")
 		}
-		ioutil.WriteFile(
+		os.WriteFile(
 			fmt.Sprintf(testPath+"/wrap-%s-via-network", leafName),
 			wrapTests.Bytes(), 0666)
 	}

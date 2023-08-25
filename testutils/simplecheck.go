@@ -17,7 +17,7 @@ package testutils
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"reflect"
 	"regexp"
 	"runtime"
@@ -212,7 +212,7 @@ func fileContext(filename string, line, context int) ([][]byte, int) {
 	defer fileCacheLock.Unlock()
 	lines, ok := fileCache[filename]
 	if !ok {
-		data, err := ioutil.ReadFile(filename)
+		data, err := os.ReadFile(filename)
 		if err != nil {
 			// cache errors as nil slice: code below handles it correctly
 			// otherwise when missing the source or running as a different user, we try
