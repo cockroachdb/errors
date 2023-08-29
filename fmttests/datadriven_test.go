@@ -244,7 +244,7 @@ var wrapCommands = map[string]commandFn{
 	"assertwrap": func(err error, args []arg) error {
 		return errutil.NewAssertionErrorWithWrappedErrf(err, "assertmsg: %s", strfy(args))
 	},
-	// barirer is a simpler barrier
+	// barrier is a simpler barrier
 	"barrier": func(err error, _ []arg) error { return barriers.Handled(err) },
 	// domains are hidden annotations. Tested here for sentry reporting.
 	"domain": func(err error, _ []arg) error { return domains.WithDomain(err, "mydomain") },
