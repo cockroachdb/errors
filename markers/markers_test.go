@@ -727,9 +727,9 @@ func (e *invalidError) Cause() error  { return e.emptyRef }
 func TestDelegateToIsMethod(t *testing.T) {
 	tt := testutils.T{T: t}
 
-	efoo := &errWithIs{msg: "foo", seecret: "foo"}
-	efoo2 := &errWithIs{msg: "foo", seecret: "bar"}
-	ebar := &errWithIs{msg: "bar", seecret: "foo"}
+	efoo := &errWithIs{msg: "foo", secret: "foo"}
+	efoo2 := &errWithIs{msg: "foo", secret: "bar"}
+	ebar := &errWithIs{msg: "bar", secret: "foo"}
 
 	tt.Check(markers.Is(efoo, efoo2))  // equality based on message
 	tt.Check(markers.Is(efoo, ebar))   // equality based on method
@@ -741,15 +741,15 @@ func TestDelegateToIsMethod(t *testing.T) {
 }
 
 type errWithIs struct {
-	msg     string
-	seecret string
+	msg    string
+	secret string
 }
 
 func (e *errWithIs) Error() string { return e.msg }
 
 func (e *errWithIs) Is(o error) bool {
 	if ex, ok := o.(*errWithIs); ok {
-		return e.seecret == ex.seecret
+		return e.secret == ex.secret
 	}
 	return false
 }
