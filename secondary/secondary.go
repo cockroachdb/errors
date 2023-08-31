@@ -14,6 +14,8 @@
 
 package secondary
 
+import "github.com/cockroachdb/errors/errbase"
+
 // WithSecondaryError enhances the error given as first argument with
 // an annotation that carries the error given as second argument.  The
 // second error does not participate in cause analysis (Is, etc) and
@@ -43,4 +45,41 @@ func CombineErrors(err error, otherErr error) error {
 		return otherErr
 	}
 	return WithSecondaryError(err, otherErr)
+}
+
+// SummarizeErrors reduces a collection of errors to a single
+// error with the rest as secondary errors, making an effort
+// at deduplication. Use when it's not clear, or not deterministic,
+// which of many errors will be the root cause.
+func SummarizeErrors(errs ...error) error {
+	if len(errs) == 0 {
+		return nil
+	}
+	uniqArgsInOrder := make([]error, 0, len(errs))
+	uniqArgsMap := make(map[error]struct{}, len(errs))
+	refCount := make(map[error]int)
+	for _, e := range errs {
+		if _, dup := uniqArgsMap[e]; !dup {
+			uniqArgsMap[e] = struct{}{}
+			uniqArgsInOrder = append(uniqArgsInOrder, e)
+			walk(e, func(w error) { refCount[w] = refCount[w] + 1 })
+		}
+	}
+	var retVal error
+	for _, e := range uniqArgsInOrder {
+		if refCount[e] == 1 {
+			retVal = CombineErrors(retVal, e)
+		}
+	}
+	return retVal
+}
+
+func walk(err error, fn func(error)) {
+	if err != nil {
+		fn(err)
+		walk(errbase.UnwrapOnce(err), fn)
+		if se, ok := err.(*withSecondaryError); ok {
+			walk(se.secondaryError, fn)
+		}
+	}
 }

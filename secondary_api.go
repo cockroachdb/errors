@@ -40,3 +40,11 @@ func WithSecondaryError(err error, additionalErr error) error {
 func CombineErrors(err, otherErr error) error {
 	return secondary.CombineErrors(err, otherErr)
 }
+
+// SummarizeErrors reduces a collection of errors to a single
+// error with the rest as secondary errors, making an effort
+// at deduplication. Use when it's not clear, or not deterministic,
+// which of many errors will be the root cause.
+func SummarizeErrors(errs ...error) error {
+	return secondary.SummarizeErrors(errs...)
+}

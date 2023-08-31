@@ -102,6 +102,33 @@ func TestCombineErrors(t *testing.T) {
 	}
 }
 
+// This test asserts SummarizeErrors output in terms of CombineErrors output.
+func TestSummarizeErrors(t *testing.T) {
+	tt := testutils.T{T: t}
+	err1 := errors.New("err1")
+	err2 := errors.New("err2")
+	chainWith2 := &werrFmt{err2, "chainWith2"}
+	chainWith1And2 := secondary.CombineErrors(chainWith2, err1)
+
+	testData := []struct {
+		args    []error
+		summary error
+	}{
+		{[]error{err1, err2}, secondary.CombineErrors(err1, err2)},
+		{[]error{err2, err1}, secondary.CombineErrors(err2, err1)},
+		{[]error{err1, err2, err1}, secondary.CombineErrors(err1, err2)},
+		{[]error{chainWith2, err2}, chainWith2},
+		{[]error{err2, chainWith2}, chainWith2},
+		{[]error{chainWith2, err1, err2}, secondary.CombineErrors(chainWith2, err1)},
+		{[]error{chainWith2, chainWith1And2, err1, err2}, chainWith1And2},
+	}
+
+	for _, test := range testData {
+		err := secondary.SummarizeErrors(test.args...)
+		tt.CheckDeepEqual(err, test.summary)
+	}
+}
+
 func TestFormat(t *testing.T) {
 	tt := testutils.T{t}
 
