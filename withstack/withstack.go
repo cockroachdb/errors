@@ -84,9 +84,9 @@ func (w *withStack) LogValue() slog.Value {
 			name = fn.Name()
 			attrs = append(attrs, slog.Group(
 				name,
-				slog.Any("file", file),
-				slog.Any("name", name),
-				slog.Any("line", line),
+				slog.String("file", file),
+				slog.String("name", name),
+				slog.Int("line", line),
 			))
 		}
 		return attrs
