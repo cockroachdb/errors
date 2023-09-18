@@ -20,7 +20,6 @@ import (
 	goErr "errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"os"
 	"regexp"
@@ -37,6 +36,7 @@ import (
 	"github.com/cockroachdb/errors/errutil"
 	"github.com/cockroachdb/errors/hintdetail"
 	"github.com/cockroachdb/errors/issuelink"
+	"github.com/cockroachdb/errors/join"
 	"github.com/cockroachdb/errors/report"
 	"github.com/cockroachdb/errors/safedetails"
 	"github.com/cockroachdb/errors/secondary"
@@ -148,6 +148,18 @@ accept %\+v via Formattable.*IRREGULAR: not same as %\+v`
 
 var wrapCommands = map[string]commandFn{
 	"goerr": func(err error, args []arg) error { return fmt.Errorf("%s: %w", strfy(args), err) },
+	// errorf constructs a wrapper that encodes as an opaqueWrapper with
+	// `ownsErrorString` set to true. This is because the error string of the
+	// wrapper is not a strict prefix with `: ` of the wrapped error.
+	"go-errorf": func(e error, args []arg) error {
+		return fmt.Errorf("%s - %w", strfy(args), e)
+	},
+	"go-errorf-suffix": func(e error, args []arg) error {
+		return fmt.Errorf("%w - %s", e, strfy(args))
+	},
+	"go-errorf-multi": func(err error, args []arg) error {
+		return fmt.Errorf("%s - %w %w", strfy(args), err, pkgErr.New("sibling error in wrapper"))
+	},
 	"opaque": func(err error, _ []arg) error {
 		return errbase.DecodeError(context.Background(),
 			errbase.EncodeError(context.Background(), err))
@@ -195,6 +207,20 @@ var wrapCommands = map[string]commandFn{
 	// werrWithElidedClause overrides its cause's Error() from its own
 	// short message.
 	"elided-cause": func(err error, args []arg) error { return &werrWithElidedCause{err, strfy(args)} },
+	"multi-cause": func(err error, args []arg) error {
+		return newMultiCause("A", false, /* elide */
+			newMultiCause("C", false /* elide */, err, errutil.New(strfy(args))),
+			newMultiCause("B", false /* elide */, errutil.New("included 1"), errutil.New("included 2")),
+		)
+	},
+	// This iteration elides the causes in the second child error,
+	// which omits them from the format string.
+	"multi-elided-cause": func(err error, args []arg) error {
+		return newMultiCause("A", false, /* elide */
+			newMultiCause("C", false /* elide */, err, errutil.New(strfy(args))),
+			newMultiCause("B", true /* elide */, errutil.New("elided 1"), errutil.New("elided 2")),
+		)
+	},
 
 	// stack attaches a simple stack trace.
 	"stack": func(err error, _ []arg) error { return withstack.WithStack(err) },
@@ -206,6 +232,10 @@ var wrapCommands = map[string]commandFn{
 	// newfw is errors.Newf("%w") which is the fmt-standard way to wrap an error.
 	"newfw": func(err error, args []arg) error { return errutil.Newf("new-style (%s) :: %w ::", strfy(args), err) },
 
+	// newfw-suffix is like newfw, except the cause is printed before
+	// the prefix.
+	"newfw-suffix": func(err error, args []arg) error { return errutil.Newf(":: %w :: new-style (%s)", err, strfy(args)) },
+
 	// errutil.Wrap implements multi-layer wrappers.
 	"wrapf": func(err error, args []arg) error { return errutil.Wrapf(err, "new-stylew %s", strfy(args)) },
 	// assertions mask their cause from the barriers, but otherwise format as-is.
@@ -214,7 +244,7 @@ var wrapCommands = map[string]commandFn{
 	"assertwrap": func(err error, args []arg) error {
 		return errutil.NewAssertionErrorWithWrappedErrf(err, "assertmsg: %s", strfy(args))
 	},
-	// barirer is a simpler barrier
+	// barrier is a simpler barrier
 	"barrier": func(err error, _ []arg) error { return barriers.Handled(err) },
 	// domains are hidden annotations. Tested here for sentry reporting.
 	"domain": func(err error, _ []arg) error { return domains.WithDomain(err, "mydomain") },
@@ -246,6 +276,9 @@ var wrapCommands = map[string]commandFn{
 		ctx = logtags.AddTag(ctx, "safe", redact.Safe(456))
 		return contexttags.WithContextTags(err, ctx)
 	},
+	"join": func(err error, args []arg) error {
+		return join.Join(err, errutil.New(strfy(args)))
+	},
 }
 
 var noPrefixWrappers = map[string]bool{
@@ -270,6 +303,7 @@ var noPrefixWrappers = map[string]bool{
 	"stack":             true,
 	"tags":              true,
 	"telemetry":         true,
+	"join":              true,
 }
 
 var wrapOnlyExceptions = map[string]string{}
@@ -287,7 +321,7 @@ func init() {
 		// too. Most implementation of Format() are incomplete and unable to
 		// emit a "Go representation", so this breaks.
 		//
-		"goerr", "fmt-old", "fmt-old-delegate",
+		"goerr", "go-errorf", "go-errorf-suffix", "go-errorf-multi", "fmt-old", "fmt-old-delegate",
 		"os-syscall",
 		"os-link",
 		"os-path",
@@ -298,6 +332,8 @@ func init() {
 		// Formattable() implementation is able to report more, but that
 		// means they don't match.
 		"nofmt",
+		"errorf",
+		"join",
 	} {
 		wrapOnlyExceptions[v] = `
 accept %\+v via Formattable.*IRREGULAR: not same as %\+v
@@ -348,7 +384,7 @@ func generateFiles() {
 		}
 		leafTests.WriteString("----\n\n")
 	}
-	ioutil.WriteFile(testPath+"/leaves", leafTests.Bytes(), 0666)
+	os.WriteFile(testPath+"/leaves", leafTests.Bytes(), 0666)
 
 	// Generate the "leaves-via-network" input file, which tests
 	// formatting for leaf-only error types after being brought over
@@ -368,7 +404,7 @@ func generateFiles() {
 		}
 		leafTests.WriteString("----\n\n")
 	}
-	ioutil.WriteFile(testPath+"/leaves-via-network", leafTests.Bytes(), 0666)
+	os.WriteFile(testPath+"/leaves-via-network", leafTests.Bytes(), 0666)
 
 	// Leaf types for which we want to test all wrappers:
 	wrapperLeafTypes := []string{"fmt", "goerr", "nofmt", "pkgerr", "newf"}
@@ -401,6 +437,10 @@ func generateFiles() {
 			} else if wrapName == "elided-cause" {
 				// This wrapper type hides the inner error.
 				wrapTests.WriteString("require (?s)outerthree.*outerfour\n")
+			} else if strings.HasSuffix(wrapName, "-suffix") {
+				// Wrapper with message override: the test cases place
+				// the leaf before the prefix.
+				fmt.Fprintf(&wrapTests, "require (?s)%s.*outerthree.*outerfour\n", expectedLeafString)
 			} else {
 				// Wrapper with prefix: all renderings need to contain at
 				// least the words from the leaf and the wrapper.
@@ -408,7 +448,7 @@ func generateFiles() {
 			}
 			wrapTests.WriteString("----\n\n")
 		}
-		ioutil.WriteFile(
+		os.WriteFile(
 			fmt.Sprintf(testPath+"/wrap-%s", leafName),
 			wrapTests.Bytes(), 0666)
 	}
@@ -438,6 +478,10 @@ func generateFiles() {
 			} else if wrapName == "elided-cause" {
 				// This wrapper type hides the inner error.
 				wrapTests.WriteString("require (?s)outerthree.*outerfour\n")
+			} else if strings.HasSuffix(wrapName, "-suffix") {
+				// Wrapper with message override: the test cases place
+				// the leaf before the prefix.
+				wrapTests.WriteString("require (?s)innerone.*innertwo.*outerthree.*outerfour\n")
 			} else {
 				// Wrapper with prefix: all renderings need to contain at
 				// least the words from the leaf and the wrapper.
@@ -445,7 +489,7 @@ func generateFiles() {
 			}
 			wrapTests.WriteString("----\n\n")
 		}
-		ioutil.WriteFile(
+		os.WriteFile(
 			fmt.Sprintf(testPath+"/wrap-%s-via-network", leafName),
 			wrapTests.Bytes(), 0666)
 	}
@@ -457,21 +501,20 @@ func generateFiles() {
 // The test DSL accepts a single directive "run" with a sub-DSL
 // for each test. The sub-DSL accepts 3 types of directive:
 //
-//    accept <regexp>
-//          Tells the test that a "problem" or "irregularity"
-//          is not to be considered a test failure if it matches
-//          the provided <regexp>
+//	accept <regexp>
+//	      Tells the test that a "problem" or "irregularity"
+//	      is not to be considered a test failure if it matches
+//	      the provided <regexp>
 //
-//    require <regexp>
-//          Requires the result of both Error() and %+v formatting
-//          to match <regexp>
+//	require <regexp>
+//	      Requires the result of both Error() and %+v formatting
+//	      to match <regexp>
 //
-//    <error constructor>
-//          The remaining directives in the sub-DSL construct
-//          an error object to format using a stack: the first directive
-//          creates a leaf error; the 2nd one wraps it a first time,
-//          the 3rd one wraps it a second time, and so forth.
-//
+//	<error constructor>
+//	      The remaining directives in the sub-DSL construct
+//	      an error object to format using a stack: the first directive
+//	      creates a leaf error; the 2nd one wraps it a first time,
+//	      the 3rd one wraps it a second time, and so forth.
 func TestDatadriven(t *testing.T) {
 	if *generateTestFiles {
 		generateFiles()

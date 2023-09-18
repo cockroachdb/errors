@@ -96,6 +96,7 @@ func TestRemoteErrorEquivalence(t *testing.T) {
 	newErr1 := network(err1)
 
 	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
 	tt.Check(!markers.Is(err2, newErr1))
 }
 
@@ -110,7 +111,24 @@ func TestStandardErrorRemoteEquivalence(t *testing.T) {
 	newErr1 := network(err1)
 
 	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
 	tt.Check(!markers.Is(err2, newErr1))
+}
+
+// This test demonstrates that it is possible to recognize standard
+// errors that have been sent over the network.
+func TestStandardFmtErrorRemoteEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := fmt.Errorf("hello")
+	err2 := fmt.Errorf("world")
+
+	newErr1 := network(err1)
+
+	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
+	tt.Check(!markers.Is(err2, newErr1))
+	tt.Check(!markers.Is(newErr1, err2))
 }
 
 // This test demonstrates that when the error library does not know
@@ -162,6 +180,20 @@ func TestKnownErrorTypeDifference(t *testing.T) {
 	tt.Check(!markers.Is(newErr1, newErr2))
 }
 
+func TestStandardFmtSingleWrapRemoteEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := fmt.Errorf("hello %w", goErr.New("world"))
+	err2 := fmt.Errorf("hello %w", goErr.New("earth"))
+
+	newErr1 := network(err1)
+
+	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
+	tt.Check(!markers.Is(err2, newErr1))
+	tt.Check(!markers.Is(newErr1, err2))
+}
+
 // This test demonstrates that two errors that are structurally
 // different can be made to become equivalent by using the same
 // marker.
@@ -197,6 +229,128 @@ func TestWrappedEquivalence(t *testing.T) {
 	err2w := markers.Mark(err2, m2)
 
 	tt.Check(markers.Is(err2w, err1))
+}
+
+// This test demonstrates that equivalence can be "peeked" through
+// behind multiple layers of wrapping.
+func TestGoErrWrappedEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := errors.New("hello")
+	err2 := fmt.Errorf("an error %w", err1)
+
+	tt.Check(markers.Is(err2, err1))
+
+	m2 := errors.New("m2")
+	err2w := markers.Mark(err2, m2)
+
+	tt.Check(markers.Is(err2w, m2))
+}
+
+// This test demonstrates that equivalence can be "peeked" through
+// behind multiple layers of wrapping.
+func TestGoMultiErrWrappedEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := errors.New("hello")
+	err2 := errors.New("world")
+	err3 := fmt.Errorf("an error %w and %w", err1, err2)
+
+	tt.Check(markers.Is(err3, err1))
+	tt.Check(markers.Is(err3, err2))
+
+	m3 := errors.New("m3")
+	err3w := markers.Mark(err3, m3)
+
+	tt.Check(markers.Is(err3w, m3))
+
+	err4 := fmt.Errorf("error: %w", err3)
+
+	tt.Check(markers.Is(err4, err1))
+	tt.Check(markers.Is(err4, err2))
+}
+
+type myErr struct{ msg string }
+
+func (e *myErr) Error() string {
+	return e.msg
+}
+
+// This test demonstrates that it is possible to recognize standard
+// multierrors that have been sent over the network.
+func TestStandardFmtMultierrorRemoteEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	err1 := fmt.Errorf("hello %w %w", goErr.New("world"), goErr.New("one"))
+	err2 := fmt.Errorf("hello %w %w", goErr.New("world"), goErr.New("two"))
+
+	newErr1 := network(err1)
+
+	tt.Check(markers.Is(err1, newErr1))
+	tt.Check(markers.Is(newErr1, err1))
+	tt.Check(!markers.Is(err2, newErr1))
+	tt.Check(!markers.Is(newErr1, err2))
+
+	// Check multiple levels of causal nesting
+	err3 := fmt.Errorf("err: %w", goErr.Join(err1, err2, &myErr{msg: "hi"}))
+	newErr3 := network(err3)
+	myErrV := &myErr{msg: "hi"}
+
+	tt.Check(markers.Is(err3, newErr3))
+	tt.Check(markers.Is(newErr3, err3))
+
+	tt.Check(markers.Is(err3, myErrV))
+	tt.Check(markers.Is(newErr3, myErrV))
+}
+
+type myMultiError struct{ cause error }
+
+func (e myMultiError) Error() string   { return e.cause.Error() }
+func (e myMultiError) Unwrap() []error { return []error{e.cause} }
+
+type myOtherMultiError struct{ cause error }
+
+func (e myOtherMultiError) Error() string   { return e.cause.Error() }
+func (e myOtherMultiError) Unwrap() []error { return []error{e.cause} }
+
+func TestDifferentMultiErrorTypesCompareDifferentOverNetwork(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	base := goErr.New("woo")
+	e1 := myMultiError{base}
+	e2 := myOtherMultiError{base}
+
+	tt.Check(!markers.Is(e1, e2))
+
+	de1 := network(e1)
+	de2 := network(e2)
+
+	tt.Check(!markers.Is(de1, de2))
+}
+
+// This test demonstrates that errors from the join
+// and fmt constructors are properly considered as distinct.
+func TestStandardFmtMultierrorRemoteRecursiveEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	baseErr := goErr.New("world")
+	err1 := fmt.Errorf("%w %w", baseErr, baseErr)
+	err2 := goErr.Join(baseErr, baseErr)
+
+	tt.Check(markers.Is(err1, baseErr))
+	tt.Check(!markers.Is(err1, err2))
+	tt.Check(!markers.Is(err2, err1))
+
+	newErr1 := network(err1)
+	newErr2 := network(err2)
+
+	tt.Check(markers.Is(newErr1, baseErr))
+	tt.Check(markers.Is(newErr2, baseErr))
+	tt.Check(!markers.Is(newErr1, newErr2))
+	tt.Check(!markers.Is(err1, newErr2))
+	tt.Check(!markers.Is(err2, newErr1))
+	tt.Check(!markers.Is(newErr2, err1))
+	tt.Check(!markers.Is(newErr1, err2))
 }
 
 // This check verifies that IsAny() works.
@@ -573,9 +727,9 @@ func (e *invalidError) Cause() error  { return e.emptyRef }
 func TestDelegateToIsMethod(t *testing.T) {
 	tt := testutils.T{T: t}
 
-	efoo := &errWithIs{msg: "foo", seecret: "foo"}
-	efoo2 := &errWithIs{msg: "foo", seecret: "bar"}
-	ebar := &errWithIs{msg: "bar", seecret: "foo"}
+	efoo := &errWithIs{msg: "foo", secret: "foo"}
+	efoo2 := &errWithIs{msg: "foo", secret: "bar"}
+	ebar := &errWithIs{msg: "bar", secret: "foo"}
 
 	tt.Check(markers.Is(efoo, efoo2))  // equality based on message
 	tt.Check(markers.Is(efoo, ebar))   // equality based on method
@@ -587,15 +741,15 @@ func TestDelegateToIsMethod(t *testing.T) {
 }
 
 type errWithIs struct {
-	msg     string
-	seecret string
+	msg    string
+	secret string
 }
 
 func (e *errWithIs) Error() string { return e.msg }
 
 func (e *errWithIs) Is(o error) bool {
 	if ex, ok := o.(*errWithIs); ok {
-		return e.seecret == ex.seecret
+		return e.secret == ex.secret
 	}
 	return false
 }

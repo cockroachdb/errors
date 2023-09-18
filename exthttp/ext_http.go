@@ -65,7 +65,7 @@ func (w *withHTTPCode) Unwrap() error { return w.cause }
 func (w *withHTTPCode) Format(s fmt.State, verb rune) { errors.FormatError(w, s, verb) }
 
 // SafeFormatter implements errors.SafeFormatter.
-// Note: see the documentat ion of errbase.SafeFormatter for details
+// Note: see the documentation of errbase.SafeFormatter for details
 // on how to implement this. In particular beware of not emitting
 // unsafe strings.
 func (w *withHTTPCode) SafeFormatError(p errors.Printer) (next error) {

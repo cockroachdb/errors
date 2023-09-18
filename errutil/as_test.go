@@ -15,6 +15,7 @@
 package errutil_test
 
 import (
+	goErr "errors"
 	"fmt"
 	"testing"
 
@@ -53,6 +54,40 @@ func TestAs(t *testing.T) {
 	mywSlot = nil
 	tt.Check(errors.As(wwErr, &mywSlot))
 	tt.Check(errors.Is(mywSlot, refwErr))
+
+	// Check that it works even if hidden in wrapError
+	multiWrapErr := fmt.Errorf("test %w test", errors.Wrap(refwErr, "hidden"))
+	mywSlot = nil
+	tt.Check(errors.As(multiWrapErr, &mywSlot))
+	tt.Check(errors.Is(mywSlot, refwErr))
+
+	// Check that it works even if hidden in multi-cause wrapErrors
+	multiWrapErr = fmt.Errorf("error: %w and %w", errors.Wrap(refwErr, "hidden"), errors.New("world"))
+	mywSlot = nil
+	tt.Check(errors.As(multiWrapErr, &mywSlot))
+	tt.Check(errors.Is(mywSlot, refwErr))
+
+	// Check that it works even if hidden in custom multi-error
+	multiWrapErr = &myMultiWrapper{
+		causes: []error{errors.Wrap(refwErr, "hidden"), errors.New("world")},
+		msg:    "errors",
+	}
+	mywSlot = nil
+	tt.Check(errors.As(multiWrapErr, &mywSlot))
+	tt.Check(errors.Is(mywSlot, refwErr))
+
+	// Check that it works even if hidden in a multi-level multi-cause chain
+	multiWrapErr = fmt.Errorf("error: %w and %w",
+		&myMultiWrapper{
+			causes: []error{errors.New("ignoreme"), errors.New("also ignore")},
+			msg:    "red herring",
+		}, &myMultiWrapper{
+			causes: []error{errors.Wrap(refwErr, "hidden"), errors.New("world")},
+			msg:    "errors",
+		})
+	mywSlot = nil
+	tt.Check(errors.As(multiWrapErr, &mywSlot))
+	tt.Check(errors.Is(mywSlot, refwErr))
 }
 
 type myType struct{ msg string }
@@ -65,3 +100,14 @@ type myWrapper struct {
 }
 
 func (m *myWrapper) Error() string { return fmt.Sprintf("%s: %v", m.msg, m.cause) }
+
+type myMultiWrapper struct {
+	causes []error
+	msg    string
+}
+
+func (m *myMultiWrapper) Error() string { return fmt.Sprintf("%s: %v", m.msg, goErr.Join(m.causes...)) }
+
+func (m *myMultiWrapper) Unwrap() []error {
+	return m.causes
+}
