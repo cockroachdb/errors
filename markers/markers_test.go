@@ -17,7 +17,6 @@ package markers_test
 import (
 	"context"
 	"errors"
-	goErr "errors"
 	"fmt"
 	"io"
 	"net"
@@ -183,8 +182,8 @@ func TestKnownErrorTypeDifference(t *testing.T) {
 func TestStandardFmtSingleWrapRemoteEquivalence(t *testing.T) {
 	tt := testutils.T{T: t}
 
-	err1 := fmt.Errorf("hello %w", goErr.New("world"))
-	err2 := fmt.Errorf("hello %w", goErr.New("earth"))
+	err1 := fmt.Errorf("hello %w", errors.New("world"))
+	err2 := fmt.Errorf("hello %w", errors.New("earth"))
 
 	newErr1 := network(err1)
 
@@ -281,8 +280,8 @@ func (e *myErr) Error() string {
 func TestStandardFmtMultierrorRemoteEquivalence(t *testing.T) {
 	tt := testutils.T{T: t}
 
-	err1 := fmt.Errorf("hello %w %w", goErr.New("world"), goErr.New("one"))
-	err2 := fmt.Errorf("hello %w %w", goErr.New("world"), goErr.New("two"))
+	err1 := fmt.Errorf("hello %w %w", errors.New("world"), errors.New("one"))
+	err2 := fmt.Errorf("hello %w %w", errors.New("world"), errors.New("two"))
 
 	newErr1 := network(err1)
 
@@ -292,7 +291,7 @@ func TestStandardFmtMultierrorRemoteEquivalence(t *testing.T) {
 	tt.Check(!markers.Is(newErr1, err2))
 
 	// Check multiple levels of causal nesting
-	err3 := fmt.Errorf("err: %w", goErr.Join(err1, err2, &myErr{msg: "hi"}))
+	err3 := fmt.Errorf("err: %w", errors.Join(err1, err2, &myErr{msg: "hi"}))
 	newErr3 := network(err3)
 	myErrV := &myErr{msg: "hi"}
 
@@ -316,7 +315,7 @@ func (e myOtherMultiError) Unwrap() []error { return []error{e.cause} }
 func TestDifferentMultiErrorTypesCompareDifferentOverNetwork(t *testing.T) {
 	tt := testutils.T{T: t}
 
-	base := goErr.New("woo")
+	base := errors.New("woo")
 	e1 := myMultiError{base}
 	e2 := myOtherMultiError{base}
 
@@ -333,9 +332,9 @@ func TestDifferentMultiErrorTypesCompareDifferentOverNetwork(t *testing.T) {
 func TestStandardFmtMultierrorRemoteRecursiveEquivalence(t *testing.T) {
 	tt := testutils.T{T: t}
 
-	baseErr := goErr.New("world")
+	baseErr := errors.New("world")
 	err1 := fmt.Errorf("%w %w", baseErr, baseErr)
-	err2 := goErr.Join(baseErr, baseErr)
+	err2 := errors.Join(baseErr, baseErr)
 
 	tt.Check(markers.Is(err1, baseErr))
 	tt.Check(!markers.Is(err1, err2))
@@ -621,7 +620,7 @@ func (e *myErrType2) Error() string { return e.msg }
 func TestFormat(t *testing.T) {
 	tt := testutils.T{t}
 
-	refErr := goErr.New("foo")
+	refErr := errors.New("foo")
 	const woo = `woo`
 	const waawoo = `waa: woo`
 	testCases := []struct {
@@ -631,7 +630,7 @@ func TestFormat(t *testing.T) {
 		expFmtVerbose string
 	}{
 		{"marked",
-			markers.Mark(goErr.New("woo"), refErr),
+			markers.Mark(errors.New("woo"), refErr),
 			woo, `
 woo
 (1) forced error mark
@@ -641,7 +640,7 @@ Wraps: (2) woo
 Error types: (1) *markers.withMark (2) *errors.errorString`},
 
 		{"marked + wrapper",
-			markers.Mark(&werrFmt{goErr.New("woo"), "waa"}, refErr),
+			markers.Mark(&werrFmt{errors.New("woo"), "waa"}, refErr),
 			waawoo, `
 waa: woo
 (1) forced error mark
@@ -654,7 +653,7 @@ Wraps: (3) woo
 Error types: (1) *markers.withMark (2) *markers_test.werrFmt (3) *errors.errorString`},
 
 		{"wrapper + marked",
-			&werrFmt{markers.Mark(goErr.New("woo"), refErr), "waa"},
+			&werrFmt{markers.Mark(errors.New("woo"), refErr), "waa"},
 			waawoo, `
 waa: woo
 (1) waa
