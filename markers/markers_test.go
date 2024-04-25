@@ -373,6 +373,38 @@ func TestIsAny(t *testing.T) {
 	tt.Check(!markers.IsAny(nilErr, err2, err1))
 }
 
+// This test demonstrates that equivalence can be "peeked" through
+// behind multiple layers of wrapping.
+func TestIsAnyGoMultiErrWrappedEquivalence(t *testing.T) {
+	tt := testutils.T{T: t}
+
+	other := errors.New("other")
+	err1 := errors.New("hello")
+	err2 := errors.New("world")
+	err3 := fmt.Errorf("an error %w and %w", err1, err2)
+
+	tt.Check(markers.IsAny(err3, err1))
+	tt.Check(markers.IsAny(err3, err2))
+	tt.Check(markers.IsAny(err3, err1, err2))
+	tt.Check(markers.IsAny(err3, err1, other))
+	tt.Check(markers.IsAny(err3, other, err1))
+
+	m3 := errors.New("m3")
+	err3w := markers.Mark(err3, m3)
+
+	tt.Check(markers.IsAny(err3w, m3))
+	tt.Check(markers.IsAny(err3w, m3, other))
+	tt.Check(markers.IsAny(err3w, other, m3))
+
+	err4 := fmt.Errorf("error: %w", err3)
+
+	tt.Check(markers.IsAny(err4, err1))
+	tt.Check(markers.IsAny(err4, err2))
+	tt.Check(markers.IsAny(err4, err1, err2))
+	tt.Check(markers.IsAny(err4, err1, other))
+	tt.Check(markers.IsAny(err4, other, err1))
+}
+
 // This test demonstrates that two errors that are structurally
 // equivalent can be made to become non-equivalent through markers.Is()
 // by using markers.

@@ -178,6 +178,13 @@ func IsAny(err error, references ...error) bool {
 			if tryDelegateToIsMethod(c, refErr) {
 				return true
 			}
+
+			// Recursively try multi-error causes, if applicable.
+			for _, me := range errbase.UnwrapMulti(c) {
+				if IsAny(me, references...) {
+					return true
+				}
+			}
 		}
 	}
 
