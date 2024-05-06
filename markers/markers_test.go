@@ -24,10 +24,11 @@ import (
 	"strings"
 	"testing"
 
+	pkgErr "github.com/pkg/errors"
+
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
 	"github.com/cockroachdb/errors/testutils"
-	pkgErr "github.com/pkg/errors"
 )
 
 // This test demonstrates that Is() returns true if passed the same
@@ -361,6 +362,9 @@ func TestIsAny(t *testing.T) {
 	err2 := errors.New("world")
 	err3 := pkgErr.Wrap(err1, "world")
 	err4 := pkgErr.Wrap(err2, "universe")
+	err5 := errors.Join(err1, errors.New("gopher"))
+	err6 := errors.Join(errors.New("gopher"), err2)
+	err7 := errors.Join(err1, err2)
 	var nilErr error
 
 	tt.Check(markers.IsAny(err1, err1))
@@ -371,6 +375,11 @@ func TestIsAny(t *testing.T) {
 	tt.Check(markers.IsAny(err3, err2, nilErr, err1))
 	tt.Check(markers.IsAny(nilErr, err2, nilErr, err1))
 	tt.Check(!markers.IsAny(nilErr, err2, err1))
+	tt.Check(markers.IsAny(err5, err1))
+	tt.Check(markers.IsAny(err6, err2))
+	tt.Check(markers.IsAny(err7, err1))
+	tt.Check(markers.IsAny(err7, err2))
+	tt.Check(markers.IsAny(err7, err1, err2))
 }
 
 // This test demonstrates that two errors that are structurally
