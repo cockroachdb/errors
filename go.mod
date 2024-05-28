@@ -6,14 +6,14 @@ require (
 	github.com/cockroachdb/datadriven v1.0.2
 	github.com/cockroachdb/logtags v0.0.0-20230118201751-21c54148d20b
 	github.com/cockroachdb/redact v1.1.5
-	github.com/getsentry/sentry-go v0.18.0
+	github.com/getsentry/sentry-go v0.27.0
 	github.com/gogo/googleapis v1.4.1 // gogoproto 1.2-compatible, for CRDB
 	github.com/gogo/protobuf v1.3.2
 	github.com/gogo/status v1.1.0
 	github.com/hydrogen18/memlistener v1.0.0
 	github.com/kr/pretty v0.3.1
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	google.golang.org/grpc v1.56.3
 	google.golang.org/protobuf v1.33.0
 )
