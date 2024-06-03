@@ -26,7 +26,7 @@ type ExampleError struct{ msg string }
 
 func (e *ExampleError) Error() string { return e.msg }
 
-func ExampleIsType() {
+func ExampleHasType() {
 	base := &ExampleError{"world"}
 	err := errors.Wrap(base, "hello")
 	fmt.Println(markers.HasType(err, (*ExampleError)(nil)))
@@ -40,7 +40,7 @@ func ExampleIsType() {
 	// false
 }
 
-func ExampleIsInterface() {
+func ExampleHasInterface() {
 	base := &net.AddrError{
 		Addr: "ndn",
 		Err:  "ndn doesn't really exists :(",
