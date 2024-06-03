@@ -16,6 +16,8 @@ package withstack
 
 import (
 	"fmt"
+	"log/slog"
+	"runtime"
 
 	"github.com/cockroachdb/errors/errbase"
 )
@@ -64,6 +66,36 @@ var _ errbase.SafeDetailer = (*withStack)(nil)
 func (w *withStack) Error() string { return w.cause.Error() }
 func (w *withStack) Cause() error  { return w.cause }
 func (w *withStack) Unwrap() error { return w.cause }
+
+func (w *withStack) LogValue() slog.Value {
+	genTraces := func(frames errbase.StackTrace) []slog.Attr {
+		var attrs []slog.Attr
+		for _, frame := range frames {
+			// copied logic from pkg/errors
+			// https://github.com/pkg/errors/blob/master/stack.go#L23-L50
+			ptr := uintptr(frame) - 1
+			var file, name string
+			var line int
+			fn := runtime.FuncForPC(ptr)
+			if fn == nil {
+				file = "unknown"
+			}
+			file, line = fn.FileLine(ptr)
+			name = fn.Name()
+			attrs = append(attrs, slog.Group(
+				name,
+				slog.String("file", file),
+				slog.String("name", name),
+				slog.Int("line", line),
+			))
+		}
+		return attrs
+	}
+	return slog.GroupValue(
+		slog.String("message", w.cause.Error()),
+		slog.Any("stacktrace", genTraces(w.StackTrace())),
+	)
+}
 
 // Format implements the fmt.Formatter interface.
 func (w *withStack) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
