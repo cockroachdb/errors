@@ -75,20 +75,38 @@ func Is(err, reference error) bool {
 		return false
 	}
 
-	// Not directly equal. Try harder, using error marks. We don't do
-	// this during the loop above as it may be more expensive.
-	//
-	// Note: there is a more effective recursive algorithm that ensures
-	// that any pair of string only gets compared once. Should the
-	// following code become a performance bottleneck, that algorithm
-	// can be considered instead.
-	refMark := getMark(reference)
-	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
-		if equalMarks(getMark(c), refMark) {
+	return checkMark(err, reference)
+}
+
+func checkMark(err, reference error) bool {
+	for errNext := err; errNext != nil; errNext = errbase.UnwrapOnce(errNext) {
+		if isMarkEqual(errNext, reference) {
 			return true
 		}
 	}
 	return false
+}
+
+func isMarkEqual(err, reference error) bool {
+	_, errIsMark := err.(*withMark)
+	_, refIsMark := reference.(*withMark)
+	if errIsMark || refIsMark {
+		// If either error is a mark, use the more general
+		// equalMarks() function.
+		return equalMarks(getMark(err), getMark(reference))
+	}
+
+	m1 := err
+	m2 := reference
+	for m1 != nil {
+		if !errbase.EqualTypeMark(m1, m2) {
+			return false
+		}
+		m1 = errbase.UnwrapOnce(m1)
+		m2 = errbase.UnwrapOnce(m2)
+	}
+
+	return safeGetErrMsg(err) == safeGetErrMsg(reference)
 }
 
 func tryDelegateToIsMethod(err, reference error) bool {
@@ -222,6 +240,8 @@ func equalMarks(m1, m2 errorMark) bool {
 		return false
 	}
 	for i, t := range m1.types {
+		// TODO(jeffswenson): I think there is a bug here. What if the chains
+		// are of different lengths?
 		if !t.Equals(m2.types[i]) {
 			return false
 		}
@@ -234,7 +254,10 @@ func getMark(err error) errorMark {
 	if m, ok := err.(*withMark); ok {
 		return m.mark
 	}
-	m := errorMark{msg: safeGetErrMsg(err), types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)}}
+	m := errorMark{
+		msg:   safeGetErrMsg(err),
+		types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)},
+	}
 	for c := errbase.UnwrapOnce(err); c != nil; c = errbase.UnwrapOnce(c) {
 		m.types = append(m.types, errbase.GetTypeMark(c))
 	}
