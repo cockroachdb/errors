@@ -68,27 +68,40 @@ func Is(err, reference error) bool {
 		}
 	}
 
-	if err == nil {
-		// Err is nil and reference is non-nil, so it cannot match. We
-		// want to short-circuit the loop below in this case, otherwise
-		// we're paying the expense of getMark() without need.
-		return false
-	}
-
-	// Not directly equal. Try harder, using error marks. We don't do
-	// this during the loop above as it may be more expensive.
-	//
-	// Note: there is a more effective recursive algorithm that ensures
-	// that any pair of string only gets compared once. Should the
-	// following code become a performance bottleneck, that algorithm
-	// can be considered instead.
-	refMark := getMark(reference)
-	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
-		if equalMarks(getMark(c), refMark) {
+	for errNext := err; errNext != nil; errNext = errbase.UnwrapOnce(errNext) {
+		if isMarkEqual(errNext, reference) {
 			return true
 		}
 	}
+
 	return false
+}
+
+func isMarkEqual(err, reference error) bool {
+	_, errIsMark := err.(*withMark)
+	_, refIsMark := reference.(*withMark)
+	if errIsMark || refIsMark {
+		// If either error is a mark, use the more general
+		// equalMarks() function.
+		return equalMarks(getMark(err), getMark(reference))
+	}
+
+	m1 := err
+	m2 := reference
+	for m1 != nil && m2 != nil {
+		if !errbase.EqualTypeMark(m1, m2) {
+			return false
+		}
+		m1 = errbase.UnwrapOnce(m1)
+		m2 = errbase.UnwrapOnce(m2)
+	}
+
+	// The two chains have different lengths, so they cannot be equal.
+	if m1 != nil || m2 != nil {
+		return false
+	}
+
+	return safeGetErrMsg(err) == safeGetErrMsg(reference)
 }
 
 func tryDelegateToIsMethod(err, reference error) bool {
@@ -150,62 +163,9 @@ func If(err error, pred func(err error) (interface{}, bool)) (interface{}, bool)
 // package location or a different type, ensure that
 // RegisterTypeMigration() was called prior to IsAny().
 func IsAny(err error, references ...error) bool {
-	if err == nil {
-		for _, refErr := range references {
-			if refErr == nil {
-				return true
-			}
-		}
-		// The mark-based comparison below will never match anything if
-		// the error is nil, so don't bother with computing the marks in
-		// that case. This avoids the computational expense of computing
-		// the reference marks upfront.
-		return false
-	}
-
-	// First try using direct reference comparison.
-	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
-		for _, refErr := range references {
-			if refErr == nil {
-				continue
-			}
-			isComparable := reflect.TypeOf(refErr).Comparable()
-			if isComparable && c == refErr {
-				return true
-			}
-			// Compatibility with std go errors: if the error object itself
-			// implements Is(), try to use that.
-			if tryDelegateToIsMethod(c, refErr) {
-				return true
-			}
-		}
-
-		// Recursively try multi-error causes, if applicable.
-		for _, me := range errbase.UnwrapMulti(c) {
-			if IsAny(me, references...) {
-				return true
-			}
-		}
-	}
-
-	// Try harder with marks.
-	// Note: there is a more effective recursive algorithm that ensures
-	// that any pair of string only gets compared once. Should this
-	// become a performance bottleneck, that algorithm can be considered
-	// instead.
-	refMarks := make([]errorMark, 0, len(references))
-	for _, refErr := range references {
-		if refErr == nil {
-			continue
-		}
-		refMarks = append(refMarks, getMark(refErr))
-	}
-	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
-		errMark := getMark(c)
-		for _, refMark := range refMarks {
-			if equalMarks(errMark, refMark) {
-				return true
-			}
+	for _, reference := range references {
+		if Is(err, reference) {
+			return true
 		}
 	}
 	return false
@@ -221,6 +181,9 @@ func equalMarks(m1, m2 errorMark) bool {
 	if m1.msg != m2.msg {
 		return false
 	}
+	if len(m1.types) != len(m2.types) {
+		return false
+	}
 	for i, t := range m1.types {
 		if !t.Equals(m2.types[i]) {
 			return false
@@ -234,7 +197,10 @@ func getMark(err error) errorMark {
 	if m, ok := err.(*withMark); ok {
 		return m.mark
 	}
-	m := errorMark{msg: safeGetErrMsg(err), types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)}}
+	m := errorMark{
+		msg:   safeGetErrMsg(err),
+		types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)},
+	}
 	for c := errbase.UnwrapOnce(err); c != nil; c = errbase.UnwrapOnce(c) {
 		m.types = append(m.types, errbase.GetTypeMark(c))
 	}

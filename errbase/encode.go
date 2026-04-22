@@ -305,6 +305,30 @@ func GetTypeMark(err error) errorspb.ErrorTypeMark {
 	return errorspb.ErrorTypeMark{FamilyName: familyName, Extension: extension}
 }
 
+// EqualTypeMark checks whether `GetTypeMark(e1).Equals(GetTypeMark(e2))`. It
+// is written to be be optimized for the case where neither error has
+// serialized type information.
+func EqualTypeMark(e1, e2 error) bool {
+	slowPath := func(err error) bool {
+		switch err.(type) {
+		case *opaqueLeaf:
+			return true
+		case *opaqueLeafCauses:
+			return true
+		case *opaqueWrapper:
+			return true
+		case TypeKeyMarker:
+			return true
+		}
+		return false
+	}
+	if slowPath(e1) || slowPath(e2) {
+		return GetTypeMark(e1).Equals(GetTypeMark(e2))
+	}
+
+	return reflect.TypeOf(e1) == reflect.TypeOf(e2)
+}
+
 // RegisterLeafEncoder can be used to register new leaf error types to
 // the library. Registered types will be encoded using their own
 // Go type when an error is encoded. Wrappers that have not been
@@ -385,9 +409,7 @@ func RegisterWrapperEncoder(theType TypeKey, encoder WrapperEncoder) {
 // Note: if the error type has been migrated from a previous location
 // or a different type, ensure that RegisterTypeMigration() was called
 // prior to RegisterWrapperEncoder().
-func RegisterWrapperEncoderWithMessageType(
-	theType TypeKey, encoder WrapperEncoderWithMessageType,
-) {
+func RegisterWrapperEncoderWithMessageType(theType TypeKey, encoder WrapperEncoderWithMessageType) {
 	if encoder == nil {
 		delete(encoders, theType)
 	} else {
