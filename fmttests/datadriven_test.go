@@ -105,7 +105,7 @@ var leafCommands = map[string]commandFn{
 	},
 
 	"unimplemented": func(_ error, args []arg) error {
-		return issuelink.UnimplementedErrorf(issuelink.IssueLink{IssueURL: "https://mysite", Detail: "issuedetails"}, strfy(args))
+		return issuelink.UnimplementedErrorf(issuelink.IssueLink{IssueURL: "https://mysite", Detail: "issuedetails"}, "%s", strfy(args))
 	},
 }
 
