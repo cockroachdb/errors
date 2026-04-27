@@ -790,14 +790,19 @@ func TestDatadriven(t *testing.T) {
 
 				fmt.Fprintf(&buf, "== Message payload\n%s\n", se.Message)
 
-				// Make the extra key deterministic.
-				extraNames := make([]string, 0, len(se.Extra))
-				for ek := range se.Extra {
-					extraNames = append(extraNames, ek)
+				// Make the extra key deterministic. Only print entries
+				// that carry our merged "value" sub-key so that Sentry's
+				// built-in default contexts (device/os/runtime/trace) do
+				// not leak into fixtures.
+				extraNames := make([]string, 0, len(se.Contexts))
+				for ek, ev := range se.Contexts {
+					if _, ok := ev["value"]; ok {
+						extraNames = append(extraNames, ek)
+					}
 				}
 				sort.Strings(extraNames)
 				for _, ek := range extraNames {
-					extraS := fmt.Sprintf("%v", se.Extra[ek])
+					extraS := fmt.Sprintf("%v", se.Contexts[ek]["value"])
 					fmt.Fprintf(&buf, "== Extra %q\n%s\n", ek, strings.TrimSpace(extraS))
 				}
 
@@ -880,9 +885,17 @@ func (it interceptingTransport) Flush(time.Duration) bool {
 	return true
 }
 
+// FlushWithContext implements the sentry.Transport interface.
+func (it interceptingTransport) FlushWithContext(context.Context) bool {
+	return true
+}
+
 // Configure implements the sentry.Transport interface.
 func (it interceptingTransport) Configure(sentry.ClientOptions) {
 }
+
+// Close implements the sentry.Transport interface.
+func (it interceptingTransport) Close() {}
 
 // SendEvent implements the sentry.Transport interface.
 func (it interceptingTransport) SendEvent(event *sentry.Event) {

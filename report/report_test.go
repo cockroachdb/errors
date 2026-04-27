@@ -15,6 +15,7 @@
 package report_test
 
 import (
+	"context"
 	goErr "errors"
 	"fmt"
 	"strings"
@@ -126,7 +127,7 @@ github.com/cockroachdb/errors/withstack/*withstack.withStack (*::)
 github.com/cockroachdb/errors/domains/*domains.withDomain (*::error domain: "thisdomain")
 github.com/cockroachdb/errors/report_test/*report_test.myWrapper (some/previous/path/prevpkg.prevType::)
 `
-		types := fmt.Sprintf("%s", e.Extra["error types"])
+		types := fmt.Sprintf("%s", e.Contexts["error types"]["value"])
 		tt.CheckEqual(types, expectedTypes)
 	})
 
@@ -183,6 +184,11 @@ func (it interceptingTransport) Flush(time.Duration) bool {
 	return true
 }
 
+// FlushWithContext implements the sentry.Transport interface.
+func (it interceptingTransport) FlushWithContext(context.Context) bool {
+	return true
+}
+
 // Configure implements the sentry.Transport interface.
 func (it interceptingTransport) Configure(sentry.ClientOptions) {
 }
@@ -191,3 +197,6 @@ func (it interceptingTransport) Configure(sentry.ClientOptions) {
 func (it interceptingTransport) SendEvent(event *sentry.Event) {
 	it.SendFunc(event)
 }
+
+// Close implements the sentry.Transport interface.
+func (it interceptingTransport) Close() {}

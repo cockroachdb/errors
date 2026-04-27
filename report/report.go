@@ -365,8 +365,11 @@ var redactedMarker = redact.RedactableString(redact.RedactedMarker()).StripMarke
 func ReportError(err error) (eventID string) {
 	event, extraDetails := BuildSentryReport(err)
 
+	if event.Contexts == nil {
+		event.Contexts = make(map[string]sentry.Context)
+	}
 	for extraKey, extraValue := range extraDetails {
-		event.Extra[extraKey] = extraValue
+		event.Contexts[extraKey] = sentry.Context{"value": extraValue}
 	}
 
 	// Avoid leaking the machine's hostname by injecting the literal "<redacted>".
