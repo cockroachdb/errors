@@ -15,10 +15,18 @@
 package errors
 
 import (
+	"errors"
+
 	"github.com/cockroachdb/errors/barriers"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errutil"
 )
+
+// ErrUnsupported indicates that a requested operation cannot be
+// performed, because it is unsupported. This is the same value as
+// the standard library's errors.ErrUnsupported, re-exported here
+// for drop-in compatibility.
+var ErrUnsupported = errors.ErrUnsupported
 
 // New creates an error with a simple error message.
 // A stack trace is retained.
