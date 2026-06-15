@@ -38,7 +38,7 @@ func TestAssert(t *testing.T) {
 
 	tt.Check(assert.HasAssertionFailure(err))
 
-	if _, ok := markers.If(err, func(err error) (interface{}, bool) { return nil, assert.IsAssertionFailure(err) }); !ok {
+	if _, ok := markers.If(err, func(err error) (any, bool) { return nil, assert.IsAssertionFailure(err) }); !ok {
 		t.Error("woops")
 	}
 
@@ -51,7 +51,7 @@ func TestAssert(t *testing.T) {
 
 	tt.Check(assert.HasAssertionFailure(newErr))
 
-	if _, ok := markers.If(newErr, func(err error) (interface{}, bool) { return nil, assert.IsAssertionFailure(err) }); !ok {
+	if _, ok := markers.If(newErr, func(err error) (any, bool) { return nil, assert.IsAssertionFailure(err) }); !ok {
 		t.Error("woops")
 	}
 

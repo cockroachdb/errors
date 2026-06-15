@@ -100,13 +100,13 @@ An error *leaf* is an object that implements the `error` interface,
 but does not refer to another error via a `Unwrap()` or `Cause()`
 method.
 
-- `New(string) error`, `Newf(string, ...interface{}) error`, `Errorf(string, ...interface{}) error`: leaf errors with message
+- `New(string) error`, `Newf(string, ...any) error`, `Errorf(string, ...any) error`: leaf errors with message
   - **when to use: common error cases.**
   - what it does: also captures the stack trace at point of call and redacts the provided message for safe reporting.
   - how to access the detail: `Error()`, regular Go formatting. **Details in Sentry report.**
   - see also: Section [Error composition](#Error-composition-summary) below. `errors.NewWithDepth()` variants to customize at which call depth the stack trace is captured.
 
-- `AssertionFailedf(string, ...interface{}) error`, `NewAssertionFailureWithWrappedErrf(error, string, ...interface{}) error`: signals an assertion failure / programming error.
+- `AssertionFailedf(string, ...any) error`, `NewAssertionFailureWithWrappedErrf(error, string, ...any) error`: signals an assertion failure / programming error.
   - **when to use: when an invariant is violated; when an unreachable code path is reached.**
   - what it does: also captures the stack trace at point of call, redacts the provided strings for safe reporting, prepares a hint to inform a human user.
   - how to access the detail: `IsAssertionFailure()`/`HasAssertionFailure()`, format with `%+v`, Safe details included in Sentry reports.
@@ -143,7 +143,7 @@ they behave as no-ops in this case:
 return errors.Wrap(foo(), "foo")
 ```
 
-- `Wrap(error, string) error`, `Wrapf(error, string, ...interface{}) error`:
+- `Wrap(error, string) error`, `Wrapf(error, string, ...any) error`:
   - **when to use: on error return paths.**
   - what it does: combines `WithMessage()`, `WithStack()`, `WithSafeDetails()`.
   - how to access the details: `Error()`, regular Go formatting. **Details in Sentry report.**
@@ -198,22 +198,22 @@ return errors.Wrap(foo(), "foo")
   - how to access the details: format with `%+v`, `errors.GetSafeDetails()`, Sentry reports. The stack trace is considered safe for reporting.
   - see also: `WithStackDepth()` to customize the call depth at which the stack trace is captured.
 
-- `WithSafeDetails(error, string, ...interface{}) error`: safe details for reporting.
+- `WithSafeDetails(error, string, ...any) error`: safe details for reporting.
   - when to use: probably never. Use `errors.Wrap()`/`errors.Wrapf()` instead.
   - what it does: saves some strings for safe reporting.
   - how to access the detail: format with `%+v`, `errors.GetSafeDetails()`, Sentry report.
 
-- `WithMessage(error, string) error`, `WithMessagef(error, string, ...interface{}) error`: message prefix.
+- `WithMessage(error, string) error`, `WithMessagef(error, string, ...any) error`: message prefix.
   - when to use: probably never. Use `errors.Wrap()`/`errors.Wrapf()` instead.
   - what it does: adds a message prefix.
   - how to access the detail: `Error()`, regular Go formatting, Sentry Report.
 
-- `WithDetail(error, string) error`, `WithDetailf(error, string, ...interface{}) error`, user-facing detail with contextual information.
+- `WithDetail(error, string) error`, `WithDetailf(error, string, ...any) error`, user-facing detail with contextual information.
   - **when to use: need to embark a message string to output when the error is presented to a developer.**
   - what it does: captures detail strings.
   - how to access the detail: `errors.GetAllDetails()`, `errors.FlattenDetails()` (all details are preserved), format with `%+v`. Not included in Sentry reports.
 
-- `WithHint(error, string) error`, `WithHintf(error, string, ...interface{}) error`: user-facing detail with suggestion for action to take.
+- `WithHint(error, string) error`, `WithHintf(error, string, ...any) error`: user-facing detail with suggestion for action to take.
   - **when to use: need to embark a message string to output when the error is presented to an end user.**
   - what it does: captures hint strings.
   - how to access the detail: `errors.GetAllHints()`, `errors.FlattenHints()` (hints are de-duplicated), format with `%+v`. Not included in Sentry reports.
@@ -279,7 +279,7 @@ It is possible to opt additional in to Sentry reporting, using either of the fol
   - it also makes it available via `errors.GetSafeDetails()`/`GetAllSafeDetails()`.
   - the value 123 is also part of the main error message returned by `Error()`.
 
-- attach additional arbitrary strings with `errors.WithSafeDetails(error, string, ...interface{}) error` and
+- attach additional arbitrary strings with `errors.WithSafeDetails(error, string, ...any) error` and
   also use `errors.Safe()`.
   For example: `err = errors.WithSafeDetails(err, "additional data: %s", errors.Safe("hello"))`.
   - in this example, the string "hello" will be included in Sentry reports.
@@ -561,8 +561,8 @@ func Formattable(err error) fmt.Formatter
 // Identify errors.
 func Is(err, reference error) bool
 func IsAny(err error, references ...error) bool
-func If(err error, pred func(err error) (interface{}, bool)) (interface{}, bool)
-func As(err error, target interface{}) bool
+func If(err error, pred func(err error) (any, bool)) (any, bool)
+func As(err error, target any) bool
 
 // Encode/decode errors.
 type EncodedError // this is protobuf-encodable
@@ -589,7 +589,7 @@ type MultiCauseDecoder = func(ctx context.Context, causes []error, msgPrefix str
 func RegisterTypeMigration(previousPkgPath, previousTypeName string, newType error)
 
 // Sentry reports.
-func BuildSentryReport(err error) (*sentry.Event, map[string]interface{})
+func BuildSentryReport(err error) (*sentry.Event, map[string]any)
 func ReportError(err error) (string)
 
 // Stack trace captures.
@@ -604,10 +604,10 @@ func GetSafeDetails(err error) (payload SafeDetailPayload)
 
 // Obsolete APIs.
 type SafeMessager interface { ... }
-func Redact(r interface{}) string
+func Redact(r any) string
 
 // Aliases redact.Safe.
-func Safe(v interface{}) SafeMessager
+func Safe(v any) SafeMessager
 
 // Assertion failures.
 func HasAssertionFailure(err error) bool

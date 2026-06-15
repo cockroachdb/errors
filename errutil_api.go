@@ -49,17 +49,17 @@ func NewWithDepth(depth int, msg string) error { return errutil.NewWithDepth(dep
 // strings that may contain PII information.
 //
 // See the doc of `New()` for more details.
-func Newf(format string, args ...interface{}) error { return errutil.NewWithDepthf(1, format, args...) }
+func Newf(format string, args ...any) error { return errutil.NewWithDepthf(1, format, args...) }
 
 // NewWithDepthf is like Newf() except the depth to capture the stack
 // trace is configurable.
 // See the doc of `New()` for more details.
-func NewWithDepthf(depth int, format string, args ...interface{}) error {
+func NewWithDepthf(depth int, format string, args ...any) error {
 	return errutil.NewWithDepthf(depth+1, format, args...)
 }
 
 // Errorf aliases Newf().
-func Errorf(format string, args ...interface{}) error {
+func Errorf(format string, args ...any) error {
 	return errutil.NewWithDepthf(1, format, args...)
 }
 
@@ -87,7 +87,7 @@ func WithMessage(err error, msg string) error { return errutil.WithMessage(err, 
 // If err is nil, WithMessagef returns nil.
 // The message is formatted as per redact.Sprintf,
 // to separate safe and unsafe strings for Sentry reporting.
-func WithMessagef(err error, format string, args ...interface{}) error {
+func WithMessagef(err error, format string, args ...any) error {
 	return errutil.WithMessagef(err, format, args...)
 }
 
@@ -127,14 +127,14 @@ func WrapWithDepth(depth int, err error, msg string) error {
 // - everything when formatting with `%+v`.
 // - stack trace, format, and redacted details via `errors.GetSafeDetails()`.
 // - stack trace, format, and redacted details in Sentry reports.
-func Wrapf(err error, format string, args ...interface{}) error {
+func Wrapf(err error, format string, args ...any) error {
 	return errutil.WrapWithDepthf(1, err, format, args...)
 }
 
 // WrapWithDepthf is like Wrapf except the depth to capture the stack
 // trace is configurable.
 // The the doc of `Wrapf()` for more details.
-func WrapWithDepthf(depth int, err error, format string, args ...interface{}) error {
+func WrapWithDepthf(depth int, err error, format string, args ...any) error {
 	return errutil.WrapWithDepthf(depth+1, err, format, args...)
 }
 
@@ -144,14 +144,14 @@ func WrapWithDepthf(depth int, err error, format string, args ...interface{}) er
 // - via `errors.GetSafeDetails()`, shows redacted strings.
 // - when formatting with `%+v`.
 // - in Sentry reports.
-func AssertionFailedf(format string, args ...interface{}) error {
+func AssertionFailedf(format string, args ...any) error {
 	return errutil.AssertionFailedWithDepthf(1, format, args...)
 }
 
 // AssertionFailedWithDepthf creates an internal error
 // with a stack trace collected at the specified depth.
 // See the doc of `AssertionFailedf()` for more details.
-func AssertionFailedWithDepthf(depth int, format string, args ...interface{}) error {
+func AssertionFailedWithDepthf(depth int, format string, args ...any) error {
 	return errutil.AssertionFailedWithDepthf(depth+1, format, args...)
 }
 
@@ -160,7 +160,7 @@ func AssertionFailedWithDepthf(depth int, format string, args ...interface{}) er
 // context of the caller are preserved. The original error is not
 // visible as cause any more. The original error message is preserved.
 // See the doc of `AssertionFailedf()` for more details.
-func NewAssertionErrorWithWrappedErrf(origErr error, format string, args ...interface{}) error {
+func NewAssertionErrorWithWrappedErrf(origErr error, format string, args ...any) error {
 	return errutil.NewAssertionErrorWithWrappedErrDepthf(1, origErr, format, args...)
 }
 
@@ -182,7 +182,7 @@ func HandleAsAssertionFailureDepth(depth int, origErr error) error {
 // As finds the first error in err's chain that matches the type to which target
 // points, and if so, sets the target to its value and returns true. An error
 // matches a type if it is assignable to the target type, or if it has a method
-// As(interface{}) bool such that As(target) returns true. As will panic if target
+// As(any) bool such that As(target) returns true. As will panic if target
 // is not a non-nil pointer to a type which implements error or is of interface type.
 //
 // The As method should set the target to its value and return true if err
@@ -191,7 +191,7 @@ func HandleAsAssertionFailureDepth(depth int, origErr error) error {
 // Note: this implementation differs from that of xerrors as follows:
 // - it also supports recursing through causes with Cause().
 // - if it detects an API use error, its panic object is a valid error.
-func As(err error, target interface{}) bool { return errutil.As(err, target) }
+func As(err error, target any) bool { return errutil.As(err, target) }
 
 // Join returns an error that wraps the given errors.
 // Any nil error values are discarded.

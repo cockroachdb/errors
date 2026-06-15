@@ -97,7 +97,7 @@ import (
 // is included in the Sentry report. This does not affect error types
 // provided by the library, but could impact error types defined by
 // 3rd parties. This limitation may be lifted in a later version.
-func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]interface{}) {
+func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]any) {
 	if err == nil {
 		// No error: do nothing.
 		return
@@ -144,7 +144,7 @@ func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]
 	sep := ""
 
 	// extras will become the per-layer "Additional data" fields.
-	extras := make(map[string]interface{})
+	extras := make(map[string]any)
 
 	// extraNum counts the number of "Additional data" payloads and is
 	// used to generate the cross-reference counters in the Message

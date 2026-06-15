@@ -102,12 +102,12 @@ func encodeLeaf(ctx context.Context, err error, causes []error) EncodedError {
 
 // warningFn can be overridden with a suitable logging function using
 // SetWarningFn() below.
-var warningFn = func(_ context.Context, format string, args ...interface{}) {
+var warningFn = func(_ context.Context, format string, args ...any) {
 	log.Printf(format, args...)
 }
 
 // SetWarningFn enables configuration of the warning function.
-func SetWarningFn(fn func(context.Context, string, ...interface{})) {
+func SetWarningFn(fn func(context.Context, string, ...any)) {
 	warningFn = fn
 }
 

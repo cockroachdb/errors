@@ -92,7 +92,7 @@ func (t *T) Assert(cond bool) {
 }
 
 // AssertEqual asserts that the value is equal to some reference.
-func (t *T) AssertEqual(val, ref interface{}) {
+func (t *T) AssertEqual(val, ref any) {
 	t.Helper()
 	if val != ref {
 		t.failWithf(true, "assertion failed: values not equal\ngot: %# v\nexpected: %# v",
@@ -101,7 +101,7 @@ func (t *T) AssertEqual(val, ref interface{}) {
 }
 
 // AssertDeepEqual asserts that the value is equal to some reference.
-func (t *T) AssertDeepEqual(val, ref interface{}) {
+func (t *T) AssertDeepEqual(val, ref any) {
 	t.Helper()
 	if !reflect.DeepEqual(val, ref) {
 		t.failWithf(true, "assertion failed: values not equal\ngot: %# v\nexpected: %# v",
@@ -119,7 +119,7 @@ func (t *T) Check(cond bool) {
 }
 
 // CheckEqual checks that the value is equal to some reference.
-func (t *T) CheckEqual(val, ref interface{}) {
+func (t *T) CheckEqual(val, ref any) {
 	t.Helper()
 	if val != ref {
 		t.failWithf(false, "values not equal\n     got: %# v\nexpected: %# v",
@@ -156,7 +156,7 @@ func (t *T) CheckStringEqual(val, ref string) {
 }
 
 // CheckDeepEqual checks that the value is equal to some reference.
-func (t *T) CheckDeepEqual(val, ref interface{}) {
+func (t *T) CheckDeepEqual(val, ref any) {
 	t.Helper()
 	if !reflect.DeepEqual(val, ref) {
 		t.failWithf(false, "values not equal\ngot: %# v\nexpected: %# v",
@@ -178,7 +178,7 @@ func (t *T) CheckRegexpEqual(val, regexs string) {
 	}
 }
 
-func (t *T) failWithf(failTest bool, format string, args ...interface{}) {
+func (t *T) failWithf(failTest bool, format string, args ...any) {
 	t.Helper()
 	_, file, line, _ := runtime.Caller(2)
 	var msg bytes.Buffer
