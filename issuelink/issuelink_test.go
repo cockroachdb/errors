@@ -47,7 +47,7 @@ func TestIssueLink(t *testing.T) {
 		tt.CheckStringEqual(err.Error(), "hello: world")
 
 		tt.Check(issuelink.HasIssueLink(err))
-		if _, ok := markers.If(err, func(err error) (interface{}, bool) { return nil, issuelink.IsIssueLink(err) }); !ok {
+		if _, ok := markers.If(err, func(err error) (any, bool) { return nil, issuelink.IsIssueLink(err) }); !ok {
 			t.Error("woops")
 		}
 

@@ -85,10 +85,10 @@ type SafeFormatter interface {
 // typically provide their own implementations.
 type Printer interface {
 	// Print appends args to the message output.
-	Print(args ...interface{})
+	Print(args ...any)
 
 	// Printf writes a formatted string.
-	Printf(format string, args ...interface{})
+	Printf(format string, args ...any)
 
 	// Detail reports whether error detail is requested.
 	// After the first call to Detail, all text written to the Printer

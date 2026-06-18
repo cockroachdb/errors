@@ -185,7 +185,7 @@ func RegisterMultiCauseEncoder(typeName TypeKey, encoder MultiCauseEncoder) {
 type MultiCauseEncoder = errbase.MultiCauseEncoder
 
 // SetWarningFn enables configuration of the warning function.
-func SetWarningFn(fn func(context.Context, string, ...interface{})) { errbase.SetWarningFn(fn) }
+func SetWarningFn(fn func(context.Context, string, ...any)) { errbase.SetWarningFn(fn) }
 
 // A Formatter formats error messages.
 //

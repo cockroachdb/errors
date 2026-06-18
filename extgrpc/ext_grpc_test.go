@@ -83,7 +83,7 @@ func (p *dummyProto) ProtoMessage()  {}
 type statusIface interface {
 	Code() codes.Code
 	Message() string
-	Details() []interface{}
+	Details() []any
 	Err() error
 }
 
@@ -92,7 +92,7 @@ func TestEncodeDecodeStatus(t *testing.T) {
 		desc          string
 		makeStatus    func(*testing.T, codes.Code, string, []proto.Message) statusIface
 		fromError     func(err error) statusIface
-		expectDetails []interface{} // nil elements signify errors
+		expectDetails []any // nil elements signify errors
 	}{
 		{
 			desc: "gogo status",
@@ -104,7 +104,7 @@ func TestEncodeDecodeStatus(t *testing.T) {
 			fromError: func(err error) statusIface {
 				return gogostatus.Convert(err)
 			},
-			expectDetails: []interface{}{
+			expectDetails: []any{
 				nil, // Protobuf decode fails
 				&errorspb.StringsPayload{Details: []string{"foo", "bar"}}, // gogoproto succeeds
 				nil, // dummy decode fails
@@ -124,10 +124,10 @@ func TestEncodeDecodeStatus(t *testing.T) {
 			fromError: func(err error) statusIface {
 				return grpcstatus.Convert(err)
 			},
-			expectDetails: []interface{}{
+			expectDetails: []any{
 				// Protobuf succeeds
-				func() interface{} {
-					var st interface{} = grpcstatus.New(codes.Internal, "status").Proto()
+				func() any {
+					var st any = grpcstatus.New(codes.Internal, "status").Proto()
 					res := reflect.New(reflect.TypeOf(st).Elem()).Interface()
 					copyPublicFields(res, st)
 					return res
@@ -218,7 +218,7 @@ func TestEncodeDecodeStatus(t *testing.T) {
 	}
 }
 
-func copyPublicFields(dst, src interface{}) {
+func copyPublicFields(dst, src any) {
 	srcval := reflect.Indirect(reflect.ValueOf(src))
 	dstval := reflect.Indirect(reflect.ValueOf(dst))
 	typ := srcval.Type()

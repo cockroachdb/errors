@@ -42,7 +42,7 @@ func HasType(err, referenceType error) bool { return markers.HasType(err, refere
 // interface pointed to by referenceInterface. The type of referenceInterface
 // must be a pointer to an interface type. If referenceInterface is not a
 // pointer to an interface, this function will panic.
-func HasInterface(err error, referenceInterface interface{}) bool {
+func HasInterface(err error, referenceInterface any) bool {
 	return markers.HasInterface(err, referenceInterface)
 }
 
@@ -52,7 +52,7 @@ func HasInterface(err error, referenceInterface interface{}) bool {
 // Note: if any of the error types has been migrated from a previous
 // package location or a different type, ensure that
 // RegisterTypeMigration() was called prior to If().
-func If(err error, pred func(err error) (interface{}, bool)) (interface{}, bool) {
+func If(err error, pred func(err error) (any, bool)) (any, bool) {
 	return markers.If(err, pred)
 }
 

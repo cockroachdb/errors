@@ -113,7 +113,7 @@ func IsNotExist(err error) bool {
 func IsTimeout(err error) bool {
 	// os.IsTimeout() cannot peek through Unwrap. We need errors.If()
 	// for that.
-	_, ok := errors.If(err, func(err error) (interface{}, bool) {
+	_, ok := errors.If(err, func(err error) (any, bool) {
 		return nil, os.IsTimeout(err)
 	})
 	return ok

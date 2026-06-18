@@ -46,7 +46,7 @@ func UnimplementedError(issueLink IssueLink, msg string) error {
 
 // UnimplementedErrorf creates a new leaf error that indicates that
 // some feature was not (yet) implemented. The message is formatted.
-func UnimplementedErrorf(issueLink IssueLink, format string, args ...interface{}) error {
+func UnimplementedErrorf(issueLink IssueLink, format string, args ...any) error {
 	return issuelink.UnimplementedErrorf(issueLink, format, args...)
 }
 

@@ -20,6 +20,6 @@ import "github.com/cockroachdb/redact"
 // anonymized reporting.
 //
 // NB: this interface is obsolete. Use redact.Sprint() directly.
-func Redact(r interface{}) string {
+func Redact(r any) string {
 	return redact.Sprint(r).Redact().StripMarkers()
 }

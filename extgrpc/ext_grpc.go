@@ -73,7 +73,7 @@ func GetGrpcCode(err error) codes.Code {
 	if err == nil {
 		return codes.OK
 	}
-	if v, ok := markers.If(err, func(err error) (interface{}, bool) {
+	if v, ok := markers.If(err, func(err error) (any, bool) {
 		if w, ok := err.(*withGrpcCode); ok {
 			return w.code, true
 		}

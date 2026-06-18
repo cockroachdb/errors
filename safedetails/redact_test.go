@@ -35,7 +35,7 @@ func TestRedact(t *testing.T) {
 	rm := string(redact.RedactableBytes(redact.RedactedMarker()).StripMarkers())
 
 	testData := []struct {
-		obj      interface{}
+		obj      any
 		expected string
 	}{
 		// Redacting non-error values.
@@ -121,7 +121,7 @@ func makeTypeAssertionErr() (result runtime.Error) {
 		e := recover()
 		result = e.(runtime.Error)
 	}()
-	var x interface{}
+	var x any
 	_ = x.(int)
 	return nil
 }
