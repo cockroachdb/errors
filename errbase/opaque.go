@@ -27,7 +27,7 @@ import (
 // the type, the original object can be restored.
 type opaqueLeaf struct {
 	msg     string
-	details errorspb.EncodedErrorDetails
+	details *errorspb.EncodedErrorDetails
 }
 
 // opaqueLeafCauses is used when receiving an unknown multi-cause
@@ -61,7 +61,7 @@ var _ SafeFormatter = (*opaqueLeafCauses)(nil)
 type opaqueWrapper struct {
 	cause       error
 	prefix      string
-	details     errorspb.EncodedErrorDetails
+	details     *errorspb.EncodedErrorDetails
 	messageType MessageType
 }
 
@@ -86,8 +86,8 @@ func (e *opaqueWrapper) Error() string {
 func (e *opaqueWrapper) Cause() error  { return e.cause }
 func (e *opaqueWrapper) Unwrap() error { return e.cause }
 
-func (e *opaqueLeaf) SafeDetails() []string    { return e.details.ReportablePayload }
-func (e *opaqueWrapper) SafeDetails() []string { return e.details.ReportablePayload }
+func (e *opaqueLeaf) SafeDetails() []string    { return e.details.GetReportablePayload() }
+func (e *opaqueWrapper) SafeDetails() []string { return e.details.GetReportablePayload() }
 
 func (e *opaqueLeaf) Format(s fmt.State, verb rune)       { FormatError(e, s, verb) }
 func (e *opaqueLeafCauses) Format(s fmt.State, verb rune) { FormatError(e, s, verb) }
@@ -100,12 +100,12 @@ func (e *opaqueLeaf) SafeFormatError(p Printer) (next error) {
 	p.Print(e.msg)
 	if p.Detail() {
 		p.Printf("\n(opaque error leaf)")
-		p.Printf("\ntype name: %s", redact.Safe(e.details.OriginalTypeName))
-		for i, d := range e.details.ReportablePayload {
+		p.Printf("\ntype name: %s", redact.Safe(e.details.GetOriginalTypeName()))
+		for i, d := range e.details.GetReportablePayload() {
 			p.Printf("\nreportable %d:\n%s", redact.Safe(i), redact.Safe(d))
 		}
-		if e.details.FullDetails != nil {
-			p.Printf("\npayload type: %s", redact.Safe(e.details.FullDetails.TypeUrl))
+		if fd := e.details.GetFullDetails(); fd != nil {
+			p.Printf("\npayload type: %s", redact.Safe(fd.TypeUrl))
 		}
 	}
 	return nil
@@ -122,12 +122,12 @@ func (e *opaqueWrapper) SafeFormatError(p Printer) (next error) {
 	}
 	if p.Detail() {
 		p.Printf("\n(opaque error wrapper)")
-		p.Printf("\ntype name: %s", redact.Safe(e.details.OriginalTypeName))
-		for i, d := range e.details.ReportablePayload {
+		p.Printf("\ntype name: %s", redact.Safe(e.details.GetOriginalTypeName()))
+		for i, d := range e.details.GetReportablePayload() {
 			p.Printf("\nreportable %d:\n%s", redact.Safe(i), redact.Safe(d))
 		}
-		if e.details.FullDetails != nil {
-			p.Printf("\npayload type: %s", redact.Safe(e.details.FullDetails.TypeUrl))
+		if fd := e.details.GetFullDetails(); fd != nil {
+			p.Printf("\npayload type: %s", redact.Safe(fd.TypeUrl))
 		}
 	}
 	if e.messageType == FullMessage {

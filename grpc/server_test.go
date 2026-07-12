@@ -14,6 +14,7 @@ var ErrTooLong = errors.New("text is too long")
 var ErrInternal = errors.New("internal error!")
 
 type EchoServer struct {
+	UnimplementedEchoerServer
 }
 
 func (srv *EchoServer) Echo(ctx context.Context, req *EchoRequest) (*EchoReply, error) {

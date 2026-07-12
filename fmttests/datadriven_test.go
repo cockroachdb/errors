@@ -161,8 +161,8 @@ var wrapCommands = map[string]commandFn{
 		return fmt.Errorf("%s - %w %w", strfy(args), err, pkgErr.New("sibling error in wrapper"))
 	},
 	"opaque": func(err error, _ []arg) error {
-		return errbase.DecodeError(context.Background(),
-			errbase.EncodeError(context.Background(), err))
+		enc := errbase.EncodeError(context.Background(), err)
+		return errbase.DecodeError(context.Background(), &enc)
 	},
 	"os-syscall": func(err error, _ []arg) error { return os.NewSyscallError("open", err) },
 	"os-link": func(err error, _ []arg) error {

@@ -20,7 +20,7 @@ import (
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/redact"
-	"github.com/gogo/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 // Handled swallows the provided error and hides it from the
@@ -123,13 +123,13 @@ func encodeBarrier(
 // A barrier error is decoded exactly.
 func decodeBarrier(ctx context.Context, msg string, _ []string, payload proto.Message) error {
 	enc := payload.(*errbase.EncodedError)
-	return &barrierErr{smsg: redact.RedactableString(msg), maskedErr: errbase.DecodeError(ctx, *enc)}
+	return &barrierErr{smsg: redact.RedactableString(msg), maskedErr: errbase.DecodeError(ctx, enc)}
 }
 
 // Previous versions of barrier errors.
 func decodeBarrierPrev(ctx context.Context, msg string, _ []string, payload proto.Message) error {
 	enc := payload.(*errbase.EncodedError)
-	return &barrierErr{smsg: redact.Sprint(msg), maskedErr: errbase.DecodeError(ctx, *enc)}
+	return &barrierErr{smsg: redact.Sprint(msg), maskedErr: errbase.DecodeError(ctx, enc)}
 }
 
 // barrierError is the "old" type name of barrierErr. We use a new

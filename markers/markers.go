@@ -22,7 +22,7 @@ import (
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errorspb"
 	"github.com/cockroachdb/redact"
-	"github.com/gogo/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 // Is determines whether one of the causes of the given error or any
@@ -173,7 +173,7 @@ func IsAny(err error, references ...error) bool {
 
 type errorMark struct {
 	msg   string
-	types []errorspb.ErrorTypeMark
+	types []*errorspb.ErrorTypeMark
 }
 
 // equalMarks compares two error markers.
@@ -199,7 +199,7 @@ func getMark(err error) errorMark {
 	}
 	m := errorMark{
 		msg:   safeGetErrMsg(err),
-		types: []errorspb.ErrorTypeMark{errbase.GetTypeMark(err)},
+		types: []*errorspb.ErrorTypeMark{errbase.GetTypeMark(err)},
 	}
 	for c := errbase.UnwrapOnce(err); c != nil; c = errbase.UnwrapOnce(c) {
 		m.types = append(m.types, errbase.GetTypeMark(c))

@@ -21,7 +21,7 @@ import (
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
 	"github.com/cockroachdb/errors/stdstrings"
-	"github.com/gogo/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 // WithAssertionFailure decorates the error with an assertion failure marker.

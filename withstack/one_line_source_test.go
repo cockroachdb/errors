@@ -26,17 +26,24 @@ import (
 	pkgErr "github.com/pkg/errors"
 )
 
+// network simulates a network round-trip of an error: it encodes then
+// decodes it, exercising the same path a remote node would.
+func network(err error) error {
+	enc := errbase.EncodeError(context.Background(), err)
+	return errbase.DecodeError(context.Background(), &enc)
+}
+
 func TestOneLineSource(t *testing.T) {
 	tt := testutils.T{T: t}
 
 	simpleErr := errors.New("hello")
 	testData := []error{
 		withstack.WithStack(simpleErr),
-		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), withstack.WithStack(simpleErr))),
+		network(withstack.WithStack(simpleErr)),
 		pkgErr.WithStack(simpleErr),
-		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), pkgErr.WithStack(simpleErr))),
+		network(pkgErr.WithStack(simpleErr)),
 		pkgErr.New("woo"),
-		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), pkgErr.New("woo"))),
+		network(pkgErr.New("woo")),
 	}
 
 	for _, err := range testData {
@@ -65,9 +72,9 @@ func TestOneLineSourceInner(t *testing.T) {
 	// innermost context, not this one.
 	testData := []error{
 		withstack.WithStack(simpleErr),
-		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), withstack.WithStack(simpleErr))),
+		network(withstack.WithStack(simpleErr)),
 		pkgErr.WithStack(simpleErr),
-		errbase.DecodeError(context.Background(), errbase.EncodeError(context.Background(), pkgErr.WithStack(simpleErr))),
+		network(pkgErr.WithStack(simpleErr)),
 	}
 
 	for _, err := range testData {

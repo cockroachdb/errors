@@ -33,9 +33,9 @@ func TestUnknownWrapperTraversalWithMessageOverride(t *testing.T) {
 
 	// Encode the error, this will use the encoder.
 	enc := EncodeError(context.Background(), origErr)
-	t.Logf("encoded: %# v", pretty.Formatter(enc))
+	t.Logf("encoded: %# v", pretty.Formatter(&enc))
 
-	newErr := DecodeError(context.Background(), enc)
+	newErr := DecodeError(context.Background(), &enc)
 	t.Logf("decoded: %# v", pretty.Formatter(newErr))
 
 	// simulate node not knowing about `messageType` field
@@ -43,10 +43,10 @@ func TestUnknownWrapperTraversalWithMessageOverride(t *testing.T) {
 
 	// Encode it again, to simulate the error passed on to another system.
 	enc2 := EncodeError(context.Background(), newErr)
-	t.Logf("encoded2: %# v", pretty.Formatter(enc))
+	t.Logf("encoded2: %# v", pretty.Formatter(&enc2))
 
 	// Then decode again.
-	newErr2 := DecodeError(context.Background(), enc2)
+	newErr2 := DecodeError(context.Background(), &enc2)
 	t.Logf("decoded: %# v", pretty.Formatter(newErr2))
 
 	tt := testutils.T{T: t}

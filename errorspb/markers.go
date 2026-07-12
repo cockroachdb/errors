@@ -14,6 +14,6 @@
 
 package errorspb
 
-func (m ErrorTypeMark) Equals(o ErrorTypeMark) bool {
+func (m *ErrorTypeMark) Equals(o *ErrorTypeMark) bool {
 	return m.FamilyName == o.FamilyName && m.Extension == o.Extension
 }

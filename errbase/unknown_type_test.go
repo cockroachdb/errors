@@ -25,8 +25,8 @@ import (
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errbase/internal"
 	"github.com/cockroachdb/errors/testutils"
-	"github.com/gogo/protobuf/proto"
 	"github.com/kr/pretty"
+	"google.golang.org/protobuf/proto"
 )
 
 // These tests demonstrate how the library makes a best effort at
@@ -75,7 +75,7 @@ func TestUnknownErrorTraversal(t *testing.T) {
 
 	// Encode the error, this will use the encoder.
 	enc := errbase.EncodeError(context.Background(), origErr)
-	t.Logf("encoded: %# v", pretty.Formatter(enc))
+	t.Logf("encoded: %# v", pretty.Formatter(&enc))
 
 	// Forget about the encoder.
 	errbase.RegisterLeafEncoder(tn, nil)
@@ -83,7 +83,7 @@ func TestUnknownErrorTraversal(t *testing.T) {
 	// Simulate the error traversing a node that knows nothing about the
 	// error (it doesn't know about the type)
 
-	newErr := errbase.DecodeError(context.Background(), enc)
+	newErr := errbase.DecodeError(context.Background(), &enc)
 	t.Logf("decoded: %# v", pretty.Formatter(newErr))
 
 	if _, ok := newErr.(*myError); ok {
@@ -92,7 +92,7 @@ func TestUnknownErrorTraversal(t *testing.T) {
 
 	// Encode it again, to simulate the error passed on to another system.
 	enc2 := errbase.EncodeError(context.Background(), newErr)
-	t.Logf("encoded2: %# v", pretty.Formatter(enc))
+	t.Logf("encoded2: %# v", pretty.Formatter(&enc2))
 
 	// Now register a temporary decoder.
 	myDecode := func(_ context.Context, _ string, _ []string, payload proto.Message) error {
@@ -101,7 +101,7 @@ func TestUnknownErrorTraversal(t *testing.T) {
 	errbase.RegisterLeafDecoder(tn, myDecode)
 
 	// Then decode again.
-	newErr2 := errbase.DecodeError(context.Background(), enc2)
+	newErr2 := errbase.DecodeError(context.Background(), &enc2)
 	t.Logf("decoded: %# v", pretty.Formatter(newErr2))
 
 	// Forget about the decoder so as to not pollute other tests.
@@ -171,7 +171,7 @@ func TestUnknownWrapperTraversal(t *testing.T) {
 
 	// Encode the error, this will use the encoder.
 	enc := errbase.EncodeError(context.Background(), origErr)
-	t.Logf("encoded: %# v", pretty.Formatter(enc))
+	t.Logf("encoded: %# v", pretty.Formatter(&enc))
 
 	// Forget about the encoder.
 	errbase.RegisterWrapperEncoder(tn, nil)
@@ -179,7 +179,7 @@ func TestUnknownWrapperTraversal(t *testing.T) {
 	// Simulate the error traversing a node that knows nothing about the
 	// error (it doesn't know about the type)
 
-	newErr := errbase.DecodeError(context.Background(), enc)
+	newErr := errbase.DecodeError(context.Background(), &enc)
 	t.Logf("decoded: %# v", pretty.Formatter(newErr))
 
 	if _, ok := newErr.(*myWrap); ok {
@@ -188,7 +188,7 @@ func TestUnknownWrapperTraversal(t *testing.T) {
 
 	// Encode it again, to simulate the error passed on to another system.
 	enc2 := errbase.EncodeError(context.Background(), newErr)
-	t.Logf("encoded2: %# v", pretty.Formatter(enc))
+	t.Logf("encoded2: %# v", pretty.Formatter(&enc2))
 
 	// Now register a temporary decoder.
 	myDecode := func(_ context.Context,
@@ -198,7 +198,7 @@ func TestUnknownWrapperTraversal(t *testing.T) {
 	errbase.RegisterWrapperDecoder(tn, myDecode)
 
 	// Then decode again.
-	newErr2 := errbase.DecodeError(context.Background(), enc2)
+	newErr2 := errbase.DecodeError(context.Background(), &enc2)
 	t.Logf("decoded: %# v", pretty.Formatter(newErr2))
 
 	// Forget about the decoder so as to not pollute other tests.

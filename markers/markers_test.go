@@ -81,7 +81,7 @@ func (e *fundamental) Error() string { return e.msg }
 
 func network(err error) error {
 	enc := errbase.EncodeError(context.Background(), err)
-	return errbase.DecodeError(context.Background(), enc)
+	return errbase.DecodeError(context.Background(), &enc)
 }
 
 // This test demonstrates that the equivalence

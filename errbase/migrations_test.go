@@ -21,7 +21,7 @@ import (
 
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
-	"github.com/gogo/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 // Scenario 1: simple migration, forward direction
@@ -48,7 +48,7 @@ func TestSimpleMigrationForward(t *testing.T) {
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}),
 		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return barErr{} })
 	// Receive the error from v1.
-	dec := errbase.DecodeError(context.Background(), enc)
+	dec := errbase.DecodeError(context.Background(), &enc)
 	// Clean up, so that type bar becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}), nil)
 
@@ -83,7 +83,7 @@ func TestSimpleMigrationBackward(t *testing.T) {
 		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return fooErr{} })
 
 	// Receive the error from v2.
-	dec := errbase.DecodeError(context.Background(), enc)
+	dec := errbase.DecodeError(context.Background(), &enc)
 	// Clean up, so that type foo becomes unknown.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(fooErr{}), nil)
 
@@ -115,7 +115,7 @@ func TestSimpleMigrationForwardPtr(t *testing.T) {
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey((*barErrP)(nil)),
 		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return (*barErrP)(nil) })
 	// Receive the error from v1.
-	dec := errbase.DecodeError(context.Background(), enc)
+	dec := errbase.DecodeError(context.Background(), &enc)
 	// Clean up, so that type bar becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey((*barErrP)(nil)), nil)
 
@@ -127,12 +127,12 @@ func TestSimpleMigrationForwardPtr(t *testing.T) {
 }
 
 // Scenario 2: simultaneous migration
-// - vA renames foo -> bar
-//   vA calls RegisterTypeMigration("foo", (*bar)(nil))
-// - vB renames foo -> qux
-//   vB calls RegisterTypeMigration("foo", (*qux)(nil))
-// - vA and vB are connected
-// - vA sends an error to vB:
+//   - vA renames foo -> bar
+//     vA calls RegisterTypeMigration("foo", (*bar)(nil))
+//   - vB renames foo -> qux
+//     vB calls RegisterTypeMigration("foo", (*qux)(nil))
+//   - vA and vB are connected
+//   - vA sends an error to vB:
 //   - vA translates the error key upon send from bar to foo's key
 //   - vB recognizes that "foo" refers to qux
 func TestSimultaneousMigration(t *testing.T) {
@@ -157,7 +157,7 @@ func TestSimultaneousMigration(t *testing.T) {
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(quxErr{}),
 		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return quxErr{} })
 	// Receive the error from vA.
-	dec := errbase.DecodeError(context.Background(), enc)
+	dec := errbase.DecodeError(context.Background(), &enc)
 	// Clean up, so that type qux becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(quxErr{}), nil)
 
@@ -191,7 +191,7 @@ func TestMigratedErrorPassingThrough(t *testing.T) {
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(fooErr{}),
 		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return fooErr{} })
 	// Receive the error from v2.b.
-	dec := errbase.DecodeError(context.Background(), enc)
+	dec := errbase.DecodeError(context.Background(), &enc)
 	// Send the error to v2.b.
 	enc2 := errbase.EncodeError(context.Background(), dec)
 	// Clean up, so that type foo becomes unknown.
@@ -203,7 +203,7 @@ func TestMigratedErrorPassingThrough(t *testing.T) {
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}),
 		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return barErr{} })
 	// Receive the error from v1.
-	dec2 := errbase.DecodeError(context.Background(), enc2)
+	dec2 := errbase.DecodeError(context.Background(), &enc2)
 	// Clean up the decoder, so that type becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}), nil)
 	// Erase the migration we have set up above, so that the test
@@ -219,10 +219,10 @@ func TestMigratedErrorPassingThrough(t *testing.T) {
 
 // Scenario 4: migrated error passing through node that
 // does not know about the error type whatsoever.
-// - v2 renames foo -> bar
-// - v2.a, v2.b and v0 are connected: v2.a -> v0 -> v2.b
-//   (v0 does not know about error foo at all)
-// - v2.a sends an error to v2.b via v0:
+//   - v2 renames foo -> bar
+//   - v2.a, v2.b and v0 are connected: v2.a -> v0 -> v2.b
+//     (v0 does not know about error foo at all)
+//   - v2.a sends an error to v2.b via v0:
 func TestMigratedErrorPassingThroughAsUnknown(t *testing.T) {
 	defer errbase.TestingWithEmptyMigrationRegistry()()
 
@@ -240,7 +240,7 @@ func TestMigratedErrorPassingThroughAsUnknown(t *testing.T) {
 
 	// == Scenario on v1 ==
 	// Receive the error from v2.b. Will decode as opaqueLeaf{}.
-	dec := errbase.DecodeError(context.Background(), enc)
+	dec := errbase.DecodeError(context.Background(), &enc)
 	// Send the error to v2.b.
 	enc2 := errbase.EncodeError(context.Background(), dec)
 
@@ -250,7 +250,7 @@ func TestMigratedErrorPassingThroughAsUnknown(t *testing.T) {
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}),
 		func(_ context.Context, _ string, _ []string, _ proto.Message) error { return barErr{} })
 	// Receive the error from v1.
-	dec2 := errbase.DecodeError(context.Background(), enc2)
+	dec2 := errbase.DecodeError(context.Background(), &enc2)
 	// Clean up the decoder, so that type becomes unknown for further tests.
 	errbase.RegisterLeafDecoder(errbase.GetTypeKey(barErr{}), nil)
 	// Erase the migration we have set up above, so that the test
@@ -287,8 +287,8 @@ func TestUnknownErrorComparisonAfterHeterogeneousMigration(t *testing.T) {
 
 	// == Scenario on v0 ==
 	// Receive the two errors.
-	dec1 := errbase.DecodeError(context.Background(), enc1)
-	dec2 := errbase.DecodeError(context.Background(), enc2)
+	dec1 := errbase.DecodeError(context.Background(), &enc1)
+	dec2 := errbase.DecodeError(context.Background(), &enc2)
 
 	// Main test: check that v0 recognizes the two errors as equivalent.
 	if !markers.Is(dec1, dec2) {

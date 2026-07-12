@@ -60,7 +60,7 @@ func TestDetailCapture(t *testing.T) {
 
 	// Same tests, across the network.
 	enc := errbase.EncodeError(context.Background(), err)
-	newErr := errbase.DecodeError(context.Background(), enc)
+	newErr := errbase.DecodeError(context.Background(), &enc)
 
 	t.Run("remote", func(t *testing.T) {
 		subTest(t, newErr)

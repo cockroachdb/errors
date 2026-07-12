@@ -45,7 +45,7 @@ func GetAllSafeDetails(err error) []SafeDetailPayload {
 func GetSafeDetails(err error) (payload SafeDetailPayload) {
 	origTypeName, famName, ext := getTypeDetails(err, false /*onlyFamily*/)
 	payload.OriginalTypeName = origTypeName
-	payload.ErrorTypeMark = errorspb.ErrorTypeMark{
+	payload.ErrorTypeMark = &errorspb.ErrorTypeMark{
 		FamilyName: famName,
 		Extension:  ext,
 	}
@@ -74,7 +74,7 @@ type SafeDetailPayload struct {
 	// ErrorTypeMark is the mark of the error that the details are
 	// coming from. This may contain a different type name than
 	// OriginalTypeName in case an error type was migrated.
-	ErrorTypeMark errorspb.ErrorTypeMark
+	ErrorTypeMark *errorspb.ErrorTypeMark
 	// SafeDetails are the PII-free strings.
 	SafeDetails []string
 }

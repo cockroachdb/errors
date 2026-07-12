@@ -12,11 +12,20 @@ require (?s)innerone.*innertwo
             maskedErr: &errors.errorString{s:"innerone\ninnertwo"},
         },
         prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func49\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -32,11 +41,20 @@ require (?s)innerone.*innertwo
             maskedErr: &errors.errorString{s:"innerone\ninnertwo"},
         },
         prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func49\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -241,11 +259,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             prefix: "assertmsg: ‹outerthree›\n‹outerfour›",
         },
         prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func50\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -264,11 +291,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
             prefix: "assertmsg: ‹outerthree›\n‹outerfour›",
         },
         prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func50\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -561,11 +597,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -576,11 +621,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegate",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -664,11 +718,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -679,11 +742,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateEmpty",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -759,11 +831,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -774,11 +855,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrDelegateNoPrefix",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1085,11 +1175,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1100,11 +1199,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrEmpty",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1180,11 +1288,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1195,11 +1312,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1286,11 +1412,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1301,11 +1436,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmto",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1392,11 +1536,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1407,11 +1560,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtoDelegate",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1495,11 +1657,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1510,11 +1681,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrFmtp",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -1601,11 +1781,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour - innerone\ninnertwo",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "fmt/*fmt.wrapError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapError", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "fmt/*fmt.wrapError",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "fmt/*fmt.wrapError",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 1,
 }
@@ -1616,11 +1805,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour - innerone\ninnertwo",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "fmt/*fmt.wrapError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapError", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "fmt/*fmt.wrapError",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "fmt/*fmt.wrapError",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 1,
 }
@@ -1710,22 +1908,40 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueLeafCauses{
     opaqueLeaf: errbase.opaqueLeaf{
         msg:     "outerthree\nouterfour - innerone\ninnertwo sibling error in wrapper",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "fmt/*fmt.wrapErrors",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapErrors", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "fmt/*fmt.wrapErrors",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "fmt/*fmt.wrapErrors",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
     },
     causes: {
         &errors.errorString{s:"innerone\ninnertwo"},
         &errbase.opaqueLeaf{
             msg:     "sibling error in wrapper",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/pkg/errors/*errors.fundamental",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func23\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
         },
     },
@@ -1737,22 +1953,40 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueLeafCauses{
     opaqueLeaf: errbase.opaqueLeaf{
         msg:     "outerthree\nouterfour - innerone\ninnertwo sibling error in wrapper",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "fmt/*fmt.wrapErrors",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapErrors", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "fmt/*fmt.wrapErrors",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "fmt/*fmt.wrapErrors",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
     },
     causes: {
         &errors.errorString{s:"innerone\ninnertwo"},
         &errbase.opaqueLeaf{
             msg:     "sibling error in wrapper",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/pkg/errors/*errors.fundamental",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.fundamental", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/pkg/errors/*errors.fundamental",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/pkg/errors/*errors.fundamental",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func23\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
         },
     },
@@ -1958,11 +2192,20 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "innerone\ninnertwo - outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "fmt/*fmt.wrapError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapError", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "fmt/*fmt.wrapError",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "fmt/*fmt.wrapError",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 1,
 }
@@ -1973,11 +2216,20 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "innerone\ninnertwo - outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "fmt/*fmt.wrapError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapError", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "fmt/*fmt.wrapError",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "fmt/*fmt.wrapError",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 1,
 }
@@ -2067,11 +2319,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "fmt/*fmt.wrapError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapError", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "fmt/*fmt.wrapError",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "fmt/*fmt.wrapError",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -2082,11 +2343,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "fmt/*fmt.wrapError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"fmt/*fmt.wrapError", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "fmt/*fmt.wrapError",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "fmt/*fmt.wrapError",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -2431,11 +2701,20 @@ require (?s)innerone.*innertwo
         &errbase.opaqueWrapper{
             cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
             prefix:  "",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func63\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
             messageType: 0,
         },
@@ -2451,11 +2730,20 @@ require (?s)innerone.*innertwo
         &errbase.opaqueWrapper{
             cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
             prefix:  "",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func63\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
             messageType: 0,
         },
@@ -2660,11 +2948,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrMigrated",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"some/previous/path/prevpkg.prevType", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrMigrated",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "some/previous/path/prevpkg.prevType",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -2675,11 +2972,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrMigrated",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"some/previous/path/prevpkg.prevType", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrMigrated",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "some/previous/path/prevpkg.prevType",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -2840,11 +3146,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func42\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
@@ -2857,22 +3172,40 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"included 1"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func42\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"included 2"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func42\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
@@ -2896,11 +3229,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func42\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
@@ -2913,22 +3255,40 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"included 1"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func42\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"included 2"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func42\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
@@ -3386,11 +3746,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func43\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
@@ -3403,22 +3772,40 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"elided 1"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func43\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"elided 2"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func43\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
@@ -3442,11 +3829,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func43\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
@@ -3459,22 +3855,40 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"elided 1"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func43\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
                 &errbase.opaqueWrapper{
                     cause:   &errutil.leafError{msg:"elided 2"},
                     prefix:  "",
-                    details: errorspb.EncodedErrorDetails{
-                        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+                    details: &errorspb.EncodedErrorDetails{
+                        state:            impl.MessageState{},
+                        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                            state:         impl.MessageState{},
+                            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                            Extension:     "",
+                            unknownFields: nil,
+                            sizeCache:     0,
+                        },
                         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func43\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                        FullDetails:       (*types.Any)(nil),
+                        FullDetails:       (*anypb.Any)(nil),
+                        unknownFields:     nil,
+                        sizeCache:         0,
                     },
                     messageType: 0,
                 },
@@ -3933,11 +4347,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         secondaryError: &errors.errorString{s:"innerone\ninnertwo"},
     },
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func46\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -3954,11 +4377,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         secondaryError: &errors.errorString{s:"innerone\ninnertwo"},
     },
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func46\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -4171,11 +4603,20 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
         secondaryError: &errors.errorString{s:"innerone\ninnertwo"},
     },
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func47\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -4192,11 +4633,20 @@ require (?s)innerone.*innertwo.*outerthree.*outerfour
         secondaryError: &errors.errorString{s:"innerone\ninnertwo"},
     },
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func47\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -4406,11 +4856,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -4421,11 +4880,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -4595,11 +5063,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "send tcp unixhello",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "net/*net.OpError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"net/*net.OpError", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "net/*net.OpError",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "net/*net.OpError",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -4610,11 +5087,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "send tcp unixhello",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "net/*net.OpError",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"net/*net.OpError", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "net/*net.OpError",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "net/*net.OpError",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -4955,11 +5441,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/pkg/errors/*errors.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/pkg/errors/*errors.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/pkg/errors/*errors.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func30\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -4970,11 +5465,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/pkg/errors/*errors.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/pkg/errors/*errors.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/pkg/errors/*errors.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/pkg/errors/*errors.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func30\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -5229,11 +5733,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "safe outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -5244,11 +5757,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "safe outerthree\nouterfour",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrSafeFormat",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -5334,11 +5856,20 @@ require (?s)innerone.*innertwo
     secondaryError: &errbase.opaqueWrapper{
         cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
         prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func58\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -5352,11 +5883,20 @@ require (?s)innerone.*innertwo
     secondaryError: &errbase.opaqueWrapper{
         cause:   &errutil.leafError{msg:"outerthree\nouterfour"},
         prefix:  "",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func58\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -5526,11 +6066,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func44\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -5541,11 +6090,20 @@ require (?s)innerone.*innertwo
 &errbase.opaqueWrapper{
     cause:   &errors.errorString{s:"innerone\ninnertwo"},
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func44\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -5926,11 +6484,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         prefix: "new-stylew ‹outerthree›\n‹outerfour›",
     },
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func48\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -5944,11 +6511,20 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         prefix: "new-stylew ‹outerthree›\n‹outerfour›",
     },
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func48\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -6141,21 +6717,39 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         secondaryError: &errbase.opaqueWrapper{
             cause:   &errutil.leafError{msg:"payload"},
             prefix:  "",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func59\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
             messageType: 0,
         },
     },
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func59\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -6172,21 +6766,39 @@ require (?s)outerthree.*outerfour.*innerone.*innertwo
         secondaryError: &errbase.opaqueWrapper{
             cause:   &errutil.leafError{msg:"payload"},
             prefix:  "",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func59\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
             messageType: 0,
         },
     },
     prefix:  "",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/withstack/*withstack.withStack",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/withstack/*withstack.withStack", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/withstack/*withstack.withStack",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: {"\ngithub.com/cockroachdb/errors/fmttests.init.func59\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2.1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective.func1\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirective\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runDirectiveOrSubTest\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.runTestInternal\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.RunTest\n\<path>:<lineno>\ngithub.com/cockroachdb/errors/fmttests.TestDatadriven.func2\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk\n\<path>:<lineno>\ngithub.com/cockroachdb/datadriven.Walk.func1\n\<path>:<lineno>\ntesting.tRunner\n\<path>:<lineno>\nruntime.goexit\n\<path>:<lineno>"},
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }

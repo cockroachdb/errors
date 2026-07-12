@@ -23,13 +23,15 @@ import (
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/errorspb"
 	"github.com/cockroachdb/errors/testutils"
+	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 )
 
-func genEncoded(mt errorspb.MessageType) errorspb.EncodedError {
-	return errorspb.EncodedError{
+func genEncoded(mt errorspb.MessageType) *errorspb.EncodedError {
+	return &errorspb.EncodedError{
 		Error: &errorspb.EncodedError_Wrapper{
 			Wrapper: &errorspb.EncodedWrapper{
-				Cause: errorspb.EncodedError{
+				Cause: &errorspb.EncodedError{
 					Error: &errorspb.EncodedError_Leaf{
 						Leaf: &errorspb.EncodedErrorLeaf{
 							Message: "leaf-error-msg",
@@ -37,7 +39,7 @@ func genEncoded(mt errorspb.MessageType) errorspb.EncodedError {
 					},
 				},
 				Message:     "wrapper-error-msg: leaf-error-msg: extra info",
-				Details:     errorspb.EncodedErrorDetails{},
+				Details:     &errorspb.EncodedErrorDetails{},
 				MessageType: mt,
 			},
 		},
@@ -69,16 +71,16 @@ func TestEncodeDecodeNewVersion(t *testing.T) {
 		),
 	)
 
-	errNew := errorspb.EncodedError{
+	errNew := &errorspb.EncodedError{
 		Error: &errorspb.EncodedError_Wrapper{
 			Wrapper: &errorspb.EncodedWrapper{
-				Cause: errorspb.EncodedError{
+				Cause: &errorspb.EncodedError{
 					Error: &errorspb.EncodedError_Leaf{
 						Leaf: &errorspb.EncodedErrorLeaf{
 							Message: "leaf-error-msg",
-							Details: errorspb.EncodedErrorDetails{
+							Details: &errorspb.EncodedErrorDetails{
 								OriginalTypeName:  "errors/*errors.errorString",
-								ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName: "errors/*errors.errorString", Extension: ""},
+								ErrorTypeMark:     &errorspb.ErrorTypeMark{FamilyName: "errors/*errors.errorString", Extension: ""},
 								ReportablePayload: nil,
 								FullDetails:       nil,
 							},
@@ -86,9 +88,9 @@ func TestEncodeDecodeNewVersion(t *testing.T) {
 					},
 				},
 				Message: "wrapper-error-msg: leaf-error-msg: extra info",
-				Details: errorspb.EncodedErrorDetails{
+				Details: &errorspb.EncodedErrorDetails{
 					OriginalTypeName:  "fmt/*fmt.wrapError",
-					ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName: "fmt/*fmt.wrapError", Extension: ""},
+					ErrorTypeMark:     &errorspb.ErrorTypeMark{FamilyName: "fmt/*fmt.wrapError", Extension: ""},
 					ReportablePayload: nil,
 					FullDetails:       nil,
 				},
@@ -97,7 +99,7 @@ func TestEncodeDecodeNewVersion(t *testing.T) {
 		},
 	}
 
-	tt.CheckDeepEqual(errNewEncoded, errNew)
+	require.True(t, proto.Equal(&errNewEncoded, errNew), "encoded error differs from expected")
 	newErr := errbase.DecodeError(context.Background(), errNew)
 
 	// New version correctly decodes error

@@ -37,7 +37,7 @@ func TestReportableStackTrace(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
 		enc := errbase.EncodeError(context.Background(), err)
-		err = errbase.DecodeError(context.Background(), enc)
+		err = errbase.DecodeError(context.Background(), &enc)
 		t.Run("remote", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
@@ -49,7 +49,7 @@ func TestReportableStackTrace(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
 		enc := errbase.EncodeError(context.Background(), err)
-		err = errbase.DecodeError(context.Background(), enc)
+		err = errbase.DecodeError(context.Background(), &enc)
 		t.Run("remote", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
@@ -61,7 +61,7 @@ func TestReportableStackTrace(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})
 		enc := errbase.EncodeError(context.Background(), err)
-		err = errbase.DecodeError(context.Background(), enc)
+		err = errbase.DecodeError(context.Background(), &enc)
 		t.Run("remote", func(t *testing.T) {
 			checkStackTrace(t, err, 0)
 		})

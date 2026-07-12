@@ -1,9 +1,8 @@
 syntax = "proto3";
 package cockroach.errorspb;
-option go_package = "errorspb";
+option go_package = "github.com/cockroachdb/errors/errorspb";
 
 import "google/protobuf/any.proto";
-import "gogoproto/gogo.proto";
 
 // EncodedError is the wire-encodable representation
 // of an error (or error cause chain).
@@ -25,7 +24,7 @@ message EncodedErrorLeaf {
   string message = 1;
 
   // The error details.
-  EncodedErrorDetails details = 2 [(gogoproto.nullable) = false];
+  EncodedErrorDetails details = 2;
 
   // multierror_causes is a list of errors that contain the causal tree
   // of this leaf. If this field is not empty, then this leaf encodes
@@ -49,7 +48,7 @@ message EncodedErrorDetails {
   // identifying a decode function.
   // See the `markers` error package and the
   // RFC on error handling for details.
-  ErrorTypeMark error_type_mark = 2 [(gogoproto.nullable) = false];
+  ErrorTypeMark error_type_mark = 2;
 
   // The reportable payload (optional), which is as descriptive as
   // possible but may not contain PII.
@@ -81,7 +80,7 @@ enum MessageType {
 // of an error wrapper.
 message EncodedWrapper {
   // The cause error. Mandatory.
-  EncodedError cause = 1 [(gogoproto.nullable) = false];
+  EncodedError cause = 1;
 
   // The wrapper message. This could either be a full error message
   // that can be printed independently, or a (potentially empty) prefix
@@ -95,7 +94,7 @@ message EncodedWrapper {
   string message = 2;
 
   // The error details.
-  EncodedErrorDetails details = 3 [(gogoproto.nullable) = false];
+  EncodedErrorDetails details = 3;
 
   // message_type encodes the interpretation of `message`. Prior
   // versions will not set this field and it will be left as `PREFIX`.
