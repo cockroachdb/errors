@@ -4,11 +4,20 @@ opaque
 ----
 &errbase.opaqueLeaf{
     msg:     "inner\ninner2ndline",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
 }
 =====
@@ -17,11 +26,20 @@ opaque
 == %#v
 &errbase.opaqueLeaf{
     msg:     "inner\ninner2ndline",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
 }
 == Error()
@@ -92,11 +110,20 @@ fmt outer outer2ndline
 &fmttests.werrFmt{
     cause: &errbase.opaqueLeaf{
         msg:     "inner\ninner2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
     },
     msg: "outer\nouter2ndline",
@@ -108,11 +135,20 @@ fmt outer outer2ndline
 &fmttests.werrFmt{
     cause: &errbase.opaqueLeaf{
         msg:     "inner\ninner2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
     },
     msg: "outer\nouter2ndline",
@@ -204,19 +240,37 @@ opaque
 &errbase.opaqueWrapper{
     cause: &errbase.opaqueLeaf{
         msg:     "inner\ninner2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
     },
     prefix:  "outer\nouter2ndline",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -227,19 +281,37 @@ opaque
 &errbase.opaqueWrapper{
     cause: &errbase.opaqueLeaf{
         msg:     "inner\ninner2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
     },
     prefix:  "outer\nouter2ndline",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -332,19 +404,37 @@ fmt outer outer2ndline
     cause: &errbase.opaqueWrapper{
         cause: &errbase.opaqueLeaf{
             msg:     "inner\ninner2ndline",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: nil,
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
         },
         prefix:  "middle\nmiddle2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -358,19 +448,37 @@ fmt outer outer2ndline
     cause: &errbase.opaqueWrapper{
         cause: &errbase.opaqueLeaf{
             msg:     "inner\ninner2ndline",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: nil,
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
         },
         prefix:  "middle\nmiddle2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -484,28 +592,55 @@ opaque
     cause: &errbase.opaqueWrapper{
         cause: &errbase.opaqueLeaf{
             msg:     "inner\ninner2ndline",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: nil,
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
         },
         prefix:  "middle\nmiddle2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
     prefix:  "outer\nouter2ndline",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -517,28 +652,55 @@ opaque
     cause: &errbase.opaqueWrapper{
         cause: &errbase.opaqueLeaf{
             msg:     "inner\ninner2ndline",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: nil,
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
         },
         prefix:  "middle\nmiddle2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
     prefix:  "outer\nouter2ndline",
-    details: errorspb.EncodedErrorDetails{
-        OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-        ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+    details: &errorspb.EncodedErrorDetails{
+        state:            impl.MessageState{},
+        OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+        ErrorTypeMark:    &errorspb.ErrorTypeMark{
+            state:         impl.MessageState{},
+            FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            Extension:     "",
+            unknownFields: nil,
+            sizeCache:     0,
+        },
         ReportablePayload: nil,
-        FullDetails:       (*types.Any)(nil),
+        FullDetails:       (*anypb.Any)(nil),
+        unknownFields:     nil,
+        sizeCache:         0,
     },
     messageType: 0,
 }
@@ -652,28 +814,55 @@ fmt extern extern2ndline
         cause: &errbase.opaqueWrapper{
             cause: &errbase.opaqueLeaf{
                 msg:     "inner\ninner2ndline",
-                details: errorspb.EncodedErrorDetails{
-                    OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-                    ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+                details: &errorspb.EncodedErrorDetails{
+                    state:            impl.MessageState{},
+                    OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                    ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                        state:         impl.MessageState{},
+                        FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                        Extension:     "",
+                        unknownFields: nil,
+                        sizeCache:     0,
+                    },
                     ReportablePayload: nil,
-                    FullDetails:       (*types.Any)(nil),
+                    FullDetails:       (*anypb.Any)(nil),
+                    unknownFields:     nil,
+                    sizeCache:         0,
                 },
             },
             prefix:  "middle\nmiddle2ndline",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: nil,
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
             messageType: 0,
         },
         prefix:  "outer\nouter2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },
@@ -688,28 +877,55 @@ fmt extern extern2ndline
         cause: &errbase.opaqueWrapper{
             cause: &errbase.opaqueLeaf{
                 msg:     "inner\ninner2ndline",
-                details: errorspb.EncodedErrorDetails{
-                    OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
-                    ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt", Extension:""},
+                details: &errorspb.EncodedErrorDetails{
+                    state:            impl.MessageState{},
+                    OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                    ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                        state:         impl.MessageState{},
+                        FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.errNoFmt",
+                        Extension:     "",
+                        unknownFields: nil,
+                        sizeCache:     0,
+                    },
                     ReportablePayload: nil,
-                    FullDetails:       (*types.Any)(nil),
+                    FullDetails:       (*anypb.Any)(nil),
+                    unknownFields:     nil,
+                    sizeCache:         0,
                 },
             },
             prefix:  "middle\nmiddle2ndline",
-            details: errorspb.EncodedErrorDetails{
-                OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-                ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+            details: &errorspb.EncodedErrorDetails{
+                state:            impl.MessageState{},
+                OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                    state:         impl.MessageState{},
+                    FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                    Extension:     "",
+                    unknownFields: nil,
+                    sizeCache:     0,
+                },
                 ReportablePayload: nil,
-                FullDetails:       (*types.Any)(nil),
+                FullDetails:       (*anypb.Any)(nil),
+                unknownFields:     nil,
+                sizeCache:         0,
             },
             messageType: 0,
         },
         prefix:  "outer\nouter2ndline",
-        details: errorspb.EncodedErrorDetails{
-            OriginalTypeName:  "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
-            ErrorTypeMark:     errorspb.ErrorTypeMark{FamilyName:"github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt", Extension:""},
+        details: &errorspb.EncodedErrorDetails{
+            state:            impl.MessageState{},
+            OriginalTypeName: "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+            ErrorTypeMark:    &errorspb.ErrorTypeMark{
+                state:         impl.MessageState{},
+                FamilyName:    "github.com/cockroachdb/errors/fmttests/*fmttests.werrNoFmt",
+                Extension:     "",
+                unknownFields: nil,
+                sizeCache:     0,
+            },
             ReportablePayload: nil,
-            FullDetails:       (*types.Any)(nil),
+            FullDetails:       (*anypb.Any)(nil),
+            unknownFields:     nil,
+            sizeCache:         0,
         },
         messageType: 0,
     },

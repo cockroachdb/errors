@@ -21,7 +21,7 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/cockroachdb/errors/errbase"
 	"github.com/cockroachdb/errors/markers"
-	"github.com/gogo/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 // This file demonstrates how to add a wrapper type not otherwise

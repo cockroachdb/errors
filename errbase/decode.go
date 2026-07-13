@@ -18,14 +18,13 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors/errorspb"
-	"github.com/gogo/protobuf/proto"
-	"github.com/gogo/protobuf/types"
+	"google.golang.org/protobuf/proto"
 )
 
 // DecodeError decodes an error.
 //
 // Can only be called if the EncodedError is set (see IsSet()).
-func DecodeError(ctx context.Context, enc EncodedError) error {
+func DecodeError(ctx context.Context, enc *EncodedError) error {
 	if w := enc.GetWrapper(); w != nil {
 		return decodeWrapper(ctx, w)
 	}
@@ -35,23 +34,22 @@ func DecodeError(ctx context.Context, enc EncodedError) error {
 func decodeLeaf(ctx context.Context, enc *errorspb.EncodedErrorLeaf) error {
 	// In case there is a detailed payload, decode it.
 	var payload proto.Message
-	if enc.Details.FullDetails != nil {
-		var d types.DynamicAny
-		err := types.UnmarshalAny(enc.Details.FullDetails, &d)
+	if fd := enc.GetDetails().GetFullDetails(); fd != nil {
+		d, err := fd.UnmarshalNew()
 		if err != nil {
 			// It's OK if we can't decode. We'll use
 			// the opaque type below.
 			warningFn(ctx, "error while unmarshalling error: %+v", err)
 		} else {
-			payload = d.Message
+			payload = d
 		}
 	}
 
 	// Do we have a leaf decoder for this type?
-	typeKey := TypeKey(enc.Details.ErrorTypeMark.FamilyName)
+	typeKey := TypeKey(enc.GetDetails().GetErrorTypeMark().GetFamilyName())
 	if decoder, ok := leafDecoders[typeKey]; ok {
 		// Yes, use it.
-		genErr := decoder(ctx, enc.Message, enc.Details.ReportablePayload, payload)
+		genErr := decoder(ctx, enc.Message, enc.GetDetails().GetReportablePayload(), payload)
 		if genErr != nil {
 			// Decoding succeeded. Use this.
 			return genErr
@@ -60,9 +58,9 @@ func decodeLeaf(ctx context.Context, enc *errorspb.EncodedErrorLeaf) error {
 	} else if decoder, ok := multiCauseDecoders[typeKey]; ok {
 		causes := make([]error, len(enc.MultierrorCauses))
 		for i, e := range enc.MultierrorCauses {
-			causes[i] = DecodeError(ctx, *e)
+			causes[i] = DecodeError(ctx, e)
 		}
-		genErr := decoder(ctx, causes, enc.Message, enc.Details.ReportablePayload, payload)
+		genErr := decoder(ctx, causes, enc.Message, enc.GetDetails().GetReportablePayload(), payload)
 		if genErr != nil {
 			return genErr
 		}
@@ -78,7 +76,7 @@ func decodeLeaf(ctx context.Context, enc *errorspb.EncodedErrorLeaf) error {
 	if len(enc.MultierrorCauses) > 0 {
 		causes := make([]error, len(enc.MultierrorCauses))
 		for i, e := range enc.MultierrorCauses {
-			causes[i] = DecodeError(ctx, *e)
+			causes[i] = DecodeError(ctx, e)
 		}
 		leaf := &opaqueLeafCauses{
 			causes: causes,
@@ -103,23 +101,22 @@ func decodeWrapper(ctx context.Context, enc *errorspb.EncodedWrapper) error {
 
 	// In case there is a detailed payload, decode it.
 	var payload proto.Message
-	if enc.Details.FullDetails != nil {
-		var d types.DynamicAny
-		err := types.UnmarshalAny(enc.Details.FullDetails, &d)
+	if fd := enc.GetDetails().GetFullDetails(); fd != nil {
+		d, err := fd.UnmarshalNew()
 		if err != nil {
 			// It's OK if we can't decode. We'll use
 			// the opaque type below.
 			warningFn(ctx, "error while unmarshalling wrapper error: %+v", err)
 		} else {
-			payload = d.Message
+			payload = d
 		}
 	}
 
 	// Do we have a wrapper decoder for this?
-	typeKey := TypeKey(enc.Details.ErrorTypeMark.FamilyName)
+	typeKey := TypeKey(enc.GetDetails().GetErrorTypeMark().GetFamilyName())
 	if decoder, ok := decoders[typeKey]; ok {
 		// Yes, use it.
-		genErr := decoder(ctx, cause, enc.Message, enc.Details.ReportablePayload, payload)
+		genErr := decoder(ctx, cause, enc.Message, enc.GetDetails().GetReportablePayload(), payload)
 		if genErr != nil {
 			// Decoding succeeded. Use this.
 			return genErr

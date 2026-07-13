@@ -30,7 +30,7 @@ func TestHTTP(t *testing.T) {
 
 	// Simulate a network transfer.
 	enc := errors.EncodeError(context.Background(), err)
-	otherErr := errors.DecodeError(context.Background(), enc)
+	otherErr := errors.DecodeError(context.Background(), &enc)
 
 	tt := testutils.T{T: t}
 

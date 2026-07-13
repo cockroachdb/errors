@@ -28,13 +28,14 @@ import (
 	"github.com/cockroachdb/errors/testutils"
 	"github.com/kr/pretty"
 	pkgErr "github.com/pkg/errors"
+	"google.golang.org/protobuf/proto"
 )
 
 func network(t *testing.T, err error) error {
 	t.Helper()
 	enc := errbase.EncodeError(context.Background(), err)
-	t.Logf("encoded: %# v", pretty.Formatter(enc))
-	newErr := errbase.DecodeError(context.Background(), enc)
+	t.Logf("encoded: %# v", pretty.Formatter(&enc))
+	newErr := errbase.DecodeError(context.Background(), &enc)
 	t.Logf("decoded: %# v", pretty.Formatter(newErr))
 	return newErr
 }
@@ -188,8 +189,12 @@ func TestAdaptProtoErrors(t *testing.T) {
 	// In any case, the library preserves the error message.
 	tt.CheckEqual(newErr.Error(), origErr.Error())
 
-	// Moreover, it preserves the entire structure.
-	tt.CheckDeepEqual(newErr, origErr)
+	// Moreover, it preserves the entire structure. Proto v2 messages
+	// carry internal bookkeeping state that reflect.DeepEqual would
+	// also (unreliably) compare, so use proto.Equal instead.
+	newErrProto, ok := newErr.(proto.Message)
+	tt.Check(ok)
+	tt.Check(proto.Equal(newErrProto, origErr))
 }
 
 func TestAdaptProtoErrorsWithWrapper(t *testing.T) {
@@ -206,8 +211,13 @@ func TestAdaptProtoErrorsWithWrapper(t *testing.T) {
 	// In any case, the library preserves the error message.
 	tt.CheckEqual(newErr.Error(), origErr.Error())
 
-	// Moreover, it preserves the entire structure.
-	tt.CheckDeepEqual(newErr, origErr)
+	// Moreover, it preserves the entire structure, including the
+	// wrapped proto message. Proto v2 messages carry internal
+	// bookkeeping state that reflect.DeepEqual would also (unreliably)
+	// compare, so compare the wrapped cause with proto.Equal instead.
+	newCause, ok := goErr.Unwrap(newErr).(proto.Message)
+	tt.Check(ok)
+	tt.Check(proto.Equal(newCause, rErr))
 }
 
 func TestAdaptContextCanceled(t *testing.T) {

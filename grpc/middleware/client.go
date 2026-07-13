@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors"
-	"github.com/gogo/status"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 )
 
 func UnaryClientInterceptor(
@@ -25,7 +25,7 @@ func UnaryClientInterceptor(
 	for _, det := range st.Details() {
 		switch t := det.(type) {
 		case *errors.EncodedError:
-			reconstituted = errors.DecodeError(ctx, *t)
+			reconstituted = errors.DecodeError(ctx, t)
 		}
 	}
 

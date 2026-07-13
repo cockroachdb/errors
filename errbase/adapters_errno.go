@@ -12,6 +12,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+//go:build !plan9
 // +build !plan9
 
 package errbase
@@ -23,7 +24,7 @@ import (
 	"syscall"
 
 	"github.com/cockroachdb/errors/errorspb"
-	"github.com/gogo/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 const thisArch = runtime.GOOS + ":" + runtime.GOARCH

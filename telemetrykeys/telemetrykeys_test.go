@@ -53,7 +53,7 @@ func TestTelemetry(t *testing.T) {
 	tt.Check(strings.Contains(errV, `keys: [b c]`))
 
 	enc := errbase.EncodeError(context.Background(), err)
-	newErr := errbase.DecodeError(context.Background(), enc)
+	newErr := errbase.DecodeError(context.Background(), &enc)
 
 	tt.Check(markers.Is(newErr, baseErr))
 	tt.CheckStringEqual(newErr.Error(), "hello: world")

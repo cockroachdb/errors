@@ -63,7 +63,7 @@ func TestSecondaryErrorMaskedDetails(t *testing.T) {
 
 	// Simulate a network traversal.
 	enc := errbase.EncodeError(context.Background(), b)
-	newB := errbase.DecodeError(context.Background(), enc)
+	newB := errbase.DecodeError(context.Background(), &enc)
 
 	t.Logf("decoded: %# v", pretty.Formatter(newB))
 

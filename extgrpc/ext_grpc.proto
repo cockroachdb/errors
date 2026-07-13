@@ -1,6 +1,6 @@
 syntax = "proto3";
 package cockroach.errors.extgrpc;
-option go_package = "extgrpc";
+option go_package = "github.com/cockroachdb/errors/extgrpc";
 
 message EncodedGrpcCode {
 	uint32 code = 1;

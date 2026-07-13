@@ -12,6 +12,7 @@
 // implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
+//go:build !plan9
 // +build !plan9
 
 package errbase_test
@@ -26,7 +27,7 @@ import (
 	"github.com/cockroachdb/errors/errorspb"
 	"github.com/cockroachdb/errors/oserror"
 	"github.com/cockroachdb/errors/testutils"
-	"github.com/gogo/protobuf/types"
+	"google.golang.org/protobuf/types/known/anypb"
 )
 
 func TestAdaptErrno(t *testing.T) {
@@ -46,21 +47,21 @@ func TestAdaptErrno(t *testing.T) {
 		enc := errbase.EncodeError(context.Background(), origErr)
 
 		// Trick the decoder into thinking the error comes from a different platform.
-		details := &enc.Error.(*errorspb.EncodedError_Leaf).Leaf.Details
-		var d types.DynamicAny
-		if err := types.UnmarshalAny(details.FullDetails, &d); err != nil {
+		details := enc.Error.(*errorspb.EncodedError_Leaf).Leaf.Details
+		d, err := details.FullDetails.UnmarshalNew()
+		if err != nil {
 			t.Fatal(err)
 		}
-		errnoDetails := d.Message.(*errorspb.ErrnoPayload)
+		errnoDetails := d.(*errorspb.ErrnoPayload)
 		errnoDetails.Arch = "OTHER"
-		any, err := types.MarshalAny(errnoDetails)
+		any, err := anypb.New(errnoDetails)
 		if err != nil {
 			t.Fatal(err)
 		}
 		details.FullDetails = any
 
 		// Now decode the error. This produces an OpaqueErrno payload.
-		dec := errbase.DecodeError(context.Background(), enc)
+		dec := errbase.DecodeError(context.Background(), &enc)
 		if _, ok := dec.(*errbase.OpaqueErrno); !ok {
 			t.Fatalf("expected OpaqueErrno, got %T", dec)
 		}

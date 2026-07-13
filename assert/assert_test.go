@@ -45,7 +45,7 @@ func TestAssert(t *testing.T) {
 	tt.CheckEqual(err.Error(), "hello: world")
 
 	enc := errbase.EncodeError(context.Background(), err)
-	newErr := errbase.DecodeError(context.Background(), enc)
+	newErr := errbase.DecodeError(context.Background(), &enc)
 
 	tt.Check(markers.Is(newErr, baseErr))
 

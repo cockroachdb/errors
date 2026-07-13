@@ -40,7 +40,7 @@ type EncodedError = errbase.EncodedError
 func EncodeError(ctx context.Context, err error) EncodedError { return errbase.EncodeError(ctx, err) }
 
 // DecodeError decodes an error.
-func DecodeError(ctx context.Context, enc EncodedError) error { return errbase.DecodeError(ctx, enc) }
+func DecodeError(ctx context.Context, enc *EncodedError) error { return errbase.DecodeError(ctx, enc) }
 
 // SafeDetailer is an interface that can be implemented by errors that
 // can provide PII-free additional strings suitable for reporting or

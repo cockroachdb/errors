@@ -83,7 +83,7 @@ func TestWithContext(t *testing.T) {
 	tt.Run("local", func(tt testutils.T) { theTest(tt, decoratedErr) })
 
 	enc := errbase.EncodeError(context.Background(), decoratedErr)
-	newErr := errbase.DecodeError(context.Background(), enc)
+	newErr := errbase.DecodeError(context.Background(), &enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 }
@@ -137,7 +137,7 @@ func TestTagRedactionInSafeDetails(t *testing.T) {
 	tt.Run("local", func(tt testutils.T) { theTest(tt, decoratedErr) })
 
 	enc := errbase.EncodeError(context.Background(), decoratedErr)
-	newErr := errbase.DecodeError(context.Background(), enc)
+	newErr := errbase.DecodeError(context.Background(), &enc)
 
 	tt.Run("remote", func(tt testutils.T) { theTest(tt, newErr) })
 

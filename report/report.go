@@ -174,12 +174,12 @@ func BuildSentryReport(err error) (event *sentry.Event, extraDetails map[string]
 		fullTypeName := details[i].OriginalTypeName
 		mark := details[i].ErrorTypeMark
 		fm := "*"
-		if fullTypeName != mark.FamilyName {
+		if mark != nil && fullTypeName != mark.FamilyName {
 			// fullTypeName can be different from the family when an error type has
 			// been renamed or moved.
 			fm = mark.FamilyName
 		}
-		fmt.Fprintf(&typesBuf, "%s (%s::%s)\n", fullTypeName, fm, mark.Extension)
+		fmt.Fprintf(&typesBuf, "%s (%s::%s)\n", fullTypeName, fm, mark.GetExtension())
 		shortTypename := lastPathComponent(fullTypeName)
 		if i == len(details)-1 {
 			leafErrorType = shortTypename
