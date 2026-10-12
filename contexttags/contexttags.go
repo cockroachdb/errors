@@ -100,7 +100,7 @@ func redactableTagsIterate(b *logtags.Buffer, fn func(i int, s redact.Redactable
 		k := t.Key()
 		v := t.Value()
 		eq := empty
-		var val interface{} = empty
+		var val any = empty
 		if v != nil {
 			if len(k) > 1 {
 				eq = "="

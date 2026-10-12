@@ -56,14 +56,14 @@ func NewWithDepth(depth int, msg string) error {
 // strings that may contain PII information.
 //
 // See the doc of `New()` for more details.
-func Newf(format string, args ...interface{}) error {
+func Newf(format string, args ...any) error {
 	return NewWithDepthf(1, format, args...)
 }
 
 // NewWithDepthf is like Newf() except the depth to capture the stack
 // trace is configurable.
 // See the doc of `New()` for more details.
-func NewWithDepthf(depth int, format string, args ...interface{}) error {
+func NewWithDepthf(depth int, format string, args ...any) error {
 	// If there's the verb %w in here, shortcut to fmt.Errorf()
 	// and store the safe details as extra payload. That's
 	// because we don't want to re-implement the error wrapping
@@ -133,14 +133,14 @@ func WrapWithDepth(depth int, err error, msg string) error {
 // - everything when formatting with `%+v`.
 // - stack trace, format, and redacted details via `errors.GetSafeDetails()`.
 // - stack trace, format, and redacted details in Sentry reports.
-func Wrapf(err error, format string, args ...interface{}) error {
+func Wrapf(err error, format string, args ...any) error {
 	return WrapWithDepthf(1, err, format, args...)
 }
 
 // WrapWithDepthf is like Wrapf except the depth to capture the stack
 // trace is configurable.
 // The the doc of `Wrapf()` for more details.
-func WrapWithDepthf(depth int, err error, format string, args ...interface{}) error {
+func WrapWithDepthf(depth int, err error, format string, args ...any) error {
 	if err == nil {
 		return nil
 	}

@@ -87,7 +87,7 @@ import (
 // provided by the library, but could impact error types defined by
 // 3rd parties. This limitation may be lifted in a later version.
 //
-func BuildSentryReport(err error) (*sentry.Event, map[string]interface{}) {
+func BuildSentryReport(err error) (*sentry.Event, map[string]any) {
 	return report.BuildSentryReport(err)
 }
 

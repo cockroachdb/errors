@@ -41,7 +41,7 @@ func WithAssertionFailure(err error) error {
 // HasAssertionFailure returns true if the error or any of its causes
 // is an assertion failure annotation.
 func HasAssertionFailure(err error) bool {
-	_, ok := markers.If(err, func(err error) (v interface{}, ok bool) {
+	_, ok := markers.If(err, func(err error) (v any, ok bool) {
 		v, ok = err.(*withAssertionFailure)
 		return
 	})

@@ -39,7 +39,7 @@ func WithHint(err error, msg string) error { return hintdetail.WithHint(err, msg
 
 // WithHintf is a helper that formats the hint.
 // See the documentation of WithHint() for details.
-func WithHintf(err error, format string, args ...interface{}) error {
+func WithHintf(err error, format string, args ...any) error {
 	return hintdetail.WithHintf(err, format, args...)
 }
 
@@ -59,7 +59,7 @@ func WithDetail(err error, msg string) error { return hintdetail.WithDetail(err,
 
 // WithDetailf is a helper that formats the detail string.
 // See the documentation of WithDetail() for details.
-func WithDetailf(err error, format string, args ...interface{}) error {
+func WithDetailf(err error, format string, args ...any) error {
 	return hintdetail.WithDetailf(err, format, args...)
 }
 

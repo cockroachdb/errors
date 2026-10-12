@@ -99,7 +99,7 @@ Error types: (1) *errors.withStack (2) *errors.fundamental`)
 	})
 }
 
-func fmtClean(x interface{}) string {
+func fmtClean(x any) string {
 	spv := fmt.Sprintf("%+v", x)
 	spv = fileref.ReplaceAllString(spv, "<path>:<lineno>")
 	spv = strings.ReplaceAll(spv, "\t", "<tab>")

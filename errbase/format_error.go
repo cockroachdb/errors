@@ -871,17 +871,17 @@ func (s *printer) Detail() bool {
 	return ((*state)(s)).detail()
 }
 
-func (s *printer) Print(args ...interface{}) {
+func (s *printer) Print(args ...any) {
 	s.enhanceArgs(args)
 	fmt.Fprint((*state)(s), args...)
 }
 
-func (s *printer) Printf(format string, args ...interface{}) {
+func (s *printer) Printf(format string, args ...any) {
 	s.enhanceArgs(args)
 	fmt.Fprintf((*state)(s), format, args...)
 }
 
-func (s *printer) enhanceArgs(args []interface{}) {
+func (s *printer) enhanceArgs(args []any) {
 	prevStack := s.lastStack
 	lastSeen := prevStack
 	for i := range args {
@@ -908,17 +908,17 @@ func (s *safePrinter) Detail() bool {
 	return ((*state)(s)).detail()
 }
 
-func (s *safePrinter) Print(args ...interface{}) {
+func (s *safePrinter) Print(args ...any) {
 	s.enhanceArgs(args)
 	redact.Fprint((*state)(s), args...)
 }
 
-func (s *safePrinter) Printf(format string, args ...interface{}) {
+func (s *safePrinter) Printf(format string, args ...any) {
 	s.enhanceArgs(args)
 	redact.Fprintf((*state)(s), format, args...)
 }
 
-func (s *safePrinter) enhanceArgs(args []interface{}) {
+func (s *safePrinter) enhanceArgs(args []any) {
 	prevStack := s.lastStack
 	lastSeen := prevStack
 	for i := range args {

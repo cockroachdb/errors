@@ -34,7 +34,7 @@ func WithMessage(err error, message string) error {
 // If err is nil, WithMessagef returns nil.
 // The message is formatted as per redact.Sprintf,
 // to separate safe and unsafe strings for Sentry reporting.
-func WithMessagef(err error, format string, args ...interface{}) error {
+func WithMessagef(err error, format string, args ...any) error {
 	if err == nil {
 		return nil
 	}

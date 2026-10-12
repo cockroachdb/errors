@@ -42,7 +42,7 @@ func WithIssueLink(err error, issue IssueLink) error {
 // HasIssueLink returns true iff the error or one of its
 // causes has a linked issue payload.
 func HasIssueLink(err error) bool {
-	_, ok := markers.If(err, func(err error) (v interface{}, ok bool) {
+	_, ok := markers.If(err, func(err error) (v any, ok bool) {
 		v, ok = err.(*withIssueLink)
 		return
 	})
@@ -81,7 +81,7 @@ func UnimplementedError(issueLink IssueLink, msg string) error {
 
 // UnimplementedErrorf creates a new leaf error that indicates that
 // some feature was not (yet) implemented. The message is formatted.
-func UnimplementedErrorf(issueLink IssueLink, format string, args ...interface{}) error {
+func UnimplementedErrorf(issueLink IssueLink, format string, args ...any) error {
 	return &unimplementedError{IssueLink: issueLink, msg: fmt.Sprintf(format, args...)}
 }
 

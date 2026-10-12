@@ -37,7 +37,7 @@ func TestUnimplementedError(t *testing.T) {
 	theTest := func(tt testutils.T, err error) {
 		tt.Check(issuelink.HasUnimplementedError(err))
 		tt.Check(issuelink.IsUnimplementedError(errbase.UnwrapAll(err)))
-		if _, ok := markers.If(err, func(err error) (interface{}, bool) { return nil, issuelink.IsUnimplementedError(err) }); !ok {
+		if _, ok := markers.If(err, func(err error) (any, bool) { return nil, issuelink.IsUnimplementedError(err) }); !ok {
 			t.Error("woops")
 		}
 

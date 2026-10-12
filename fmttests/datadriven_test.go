@@ -602,7 +602,7 @@ func TestDatadriven(t *testing.T) {
 
 				// Result buffer.
 				var buf bytes.Buffer
-				reportIrregular := func(format string, args ...interface{}) {
+				reportIrregular := func(format string, args ...any) {
 					s := fmt.Sprintf(format, args...)
 					fmt.Fprint(&buf, s)
 					if accepted(s) {

@@ -59,7 +59,7 @@ func HandledWithSafeMessage(err error, msg redact.RedactableString) error {
 
 // HandledWithMessagef is like HandledWithMessagef except the message
 // is formatted.
-func HandledWithMessagef(err error, format string, args ...interface{}) error {
+func HandledWithMessagef(err error, format string, args ...any) error {
 	if err == nil {
 		return nil
 	}

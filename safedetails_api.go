@@ -32,7 +32,7 @@ import (
 // - via `errors.GetSafeDetails()`
 // - when formatting with `%+v`.
 // - in Sentry reports.
-func WithSafeDetails(err error, format string, args ...interface{}) error {
+func WithSafeDetails(err error, format string, args ...any) error {
 	return safedetails.WithSafeDetails(err, format, args...)
 }
 
@@ -47,10 +47,10 @@ type SafeMessager = redact.SafeMessager
 // strings in error objects and reports.
 //
 // NB: this is obsolete. Use redact.Safe instead.
-func Safe(v interface{}) redact.SafeValue { return safedetails.Safe(v) }
+func Safe(v any) redact.SafeValue { return safedetails.Safe(v) }
 
 // Redact returns a redacted version of the supplied item that is safe to use in
 // anonymized reporting.
 //
 // NB: this interface is obsolete. Use redact.Sprint() directly.
-func Redact(r interface{}) string { return safedetails.Redact(r) }
+func Redact(r any) string { return safedetails.Redact(r) }

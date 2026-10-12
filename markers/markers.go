@@ -115,7 +115,7 @@ func tryDelegateToIsMethod(err, reference error) bool {
 // matches that of referenceType.
 func HasType(err error, referenceType error) bool {
 	typ := reflect.TypeOf(referenceType)
-	_, isType := If(err, func(err error) (interface{}, bool) {
+	_, isType := If(err, func(err error) (any, bool) {
 		return nil, reflect.TypeOf(err) == typ
 	})
 	return isType
@@ -125,15 +125,15 @@ func HasType(err error, referenceType error) bool {
 // interface pointed to by referenceInterface. The type of referenceInterface
 // must be a pointer to an interface type. If referenceInterface is not a
 // pointer to an interface, this function will panic.
-func HasInterface(err error, referenceInterface interface{}) bool {
+func HasInterface(err error, referenceInterface any) bool {
 	iface := getInterfaceType("HasInterface", referenceInterface)
-	_, isType := If(err, func(err error) (interface{}, bool) {
+	_, isType := If(err, func(err error) (any, bool) {
 		return nil, reflect.TypeOf(err).Implements(iface)
 	})
 	return isType
 }
 
-func getInterfaceType(context string, referenceInterface interface{}) reflect.Type {
+func getInterfaceType(context string, referenceInterface any) reflect.Type {
 	typ := reflect.TypeOf(referenceInterface)
 	if typ == nil || typ.Kind() != reflect.Ptr || typ.Elem().Kind() != reflect.Interface {
 		panic(fmt.Errorf("errors.%s: referenceInterface must be a pointer to an interface, "+
@@ -148,7 +148,7 @@ func getInterfaceType(context string, referenceInterface interface{}) reflect.Ty
 // Note: if any of the error types has been migrated from a previous
 // package location or a different type, ensure that
 // RegisterTypeMigration() was called prior to If().
-func If(err error, pred func(err error) (interface{}, bool)) (interface{}, bool) {
+func If(err error, pred func(err error) (any, bool)) (any, bool) {
 	for c := err; c != nil; c = errbase.UnwrapOnce(c) {
 		if v, ok := pred(c); ok {
 			return v, ok

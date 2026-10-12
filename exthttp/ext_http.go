@@ -43,7 +43,7 @@ func WrapWithHTTPCode(err error, code int) error {
 
 // GetHTTPCode retrieves the HTTP code from a stack of causes.
 func GetHTTPCode(err error, defaultCode int) int {
-	if v, ok := markers.If(err, func(err error) (interface{}, bool) {
+	if v, ok := markers.If(err, func(err error) (any, bool) {
 		if w, ok := err.(*withHTTPCode); ok {
 			return w.code, true
 		}

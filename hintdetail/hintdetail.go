@@ -40,7 +40,7 @@ func WithHint(err error, msg string) error {
 }
 
 // WithHintf is a helper that formats the hint.
-func WithHintf(err error, format string, args ...interface{}) error {
+func WithHintf(err error, format string, args ...any) error {
 	if err == nil {
 		return nil
 	}
@@ -117,7 +117,7 @@ func WithDetail(err error, msg string) error {
 }
 
 // WithDetailf is a helper that formats the detail string.
-func WithDetailf(err error, format string, args ...interface{}) error {
+func WithDetailf(err error, format string, args ...any) error {
 	if err == nil {
 		return nil
 	}
