@@ -444,7 +444,7 @@ In short:
   exactly as follows:
 
   ```go
-  func (e *yourType) Format(s *fmt.State, verb rune) { errors.FormatError(e, s, verb) }
+  func (e *yourType) Format(s fmt.State, verb rune) { errors.FormatError(e, s, verb) }
   ```
 
   (If you do not provide this redirection for your own custom wrapper
