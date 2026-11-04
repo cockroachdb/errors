@@ -268,11 +268,13 @@ func encodeMark(_ context.Context, err error) (msg string, _ []string, payload p
 
 func decodeMark(_ context.Context, cause error, _ string, _ []string, payload proto.Message) error {
 	m, ok := payload.(*errorspb.MarkPayload)
-	if !ok {
+	if !ok || len(m.Types) == 0 {
 		// If this ever happens, this means some version of the library
-		// (presumably future) changed the payload type, and we're
-		// receiving this here. In this case, give up and let
-		// DecodeError use the opaque type.
+		// (presumably future) changed the payload type or stopped
+		// filling in the type marks, and we're receiving this here. In
+		// this case, give up and let DecodeError use the opaque type.
+		// A mark without any type would also break SafeFormatError
+		// below, which reports types[0].
 		return nil
 	}
 	return &withMark{cause: cause, mark: errorMark{msg: m.Msg, types: m.Types}}
