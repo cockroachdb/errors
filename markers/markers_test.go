@@ -24,8 +24,10 @@ import (
 	"testing"
 
 	"github.com/cockroachdb/errors/errbase"
+	"github.com/cockroachdb/errors/errorspb"
 	"github.com/cockroachdb/errors/markers"
 	"github.com/cockroachdb/errors/testutils"
+	"github.com/gogo/protobuf/types"
 	pkgErr "github.com/pkg/errors"
 )
 
@@ -802,4 +804,32 @@ func (e errorUncomparable) Error() string {
 func (errorUncomparable) Is(target error) bool {
 	_, ok := target.(errorUncomparable)
 	return ok
+}
+
+// TestDecodeMarkWithoutTypes checks that a MarkPayload that arrives
+// without any type marks does not break the formatting of the decoded
+// error. The payload is built by hand because the local encoder always
+// emits at least one type mark; a peer running a different version of
+// the library is not bound by that.
+func TestDecodeMarkWithoutTypes(t *testing.T) {
+	ctx := context.Background()
+
+	enc := errbase.EncodeError(ctx, markers.Mark(errors.New("boom"), errors.New("refmsg")))
+	w := enc.GetWrapper()
+	if w == nil {
+		t.Fatalf("expected a wrapper, got %+v", enc)
+	}
+	payload, err := types.MarshalAny(&errorspb.MarkPayload{Msg: "refmsg"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	w.Details.FullDetails = payload
+
+	decoded := errbase.DecodeError(ctx, enc)
+	if s := decoded.Error(); s != "boom" {
+		t.Errorf("Error(): expected %q, got %q", "boom", s)
+	}
+	if s := fmt.Sprintf("%+v", decoded); strings.Contains(s, "PANIC=") {
+		t.Errorf("formatting the decoded error panicked: %s", s)
+	}
 }
