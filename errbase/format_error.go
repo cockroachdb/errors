@@ -363,6 +363,7 @@ func (s *state) formatSingleLineOutput() {
 // error with increased indentation based in the depth.
 func (s *state) formatRecursive(err error, isOutermost, withDetail, withDepth bool, depth int) int {
 	cause := UnwrapOnce(err)
+	var causes []error
 	numChildren := 0
 	if cause != nil {
 		// Recurse first, which populates entries list starting from innermost
@@ -372,14 +373,14 @@ func (s *state) formatRecursive(err error, isOutermost, withDetail, withDepth bo
 		// Otherwise, we maintain "straight" vertical formatting by keeping the
 		// parent callers `withDepth` value of `false` by default.
 		numChildren += s.formatRecursive(cause, false, withDetail, withDepth, depth+1)
-	}
-
-	causes := UnwrapMulti(err)
-	for _, c := range causes {
-		// Override `withDepth` to true for all child entries ensuring they have
-		// indentation applied during formatting to distinguish them from
-		// parents.
-		numChildren += s.formatRecursive(c, false, withDetail, true, depth+1)
+	} else {
+		causes = UnwrapMulti(err)
+		for _, c := range causes {
+			// Override `withDepth` to true for all child entries ensuring they have
+			// indentation applied during formatting to distinguish them from
+			// parents.
+			numChildren += s.formatRecursive(c, false, withDetail, true, depth+1)
+		}
 	}
 	// inserted := len(s.entries) - 1 - startChildren
 

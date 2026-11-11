@@ -47,6 +47,9 @@ func WithStackDepth(err error, depth int) error {
 	if err == nil {
 		return nil
 	}
+	if _, ok := err.(interface{ Unwrap() []error }); ok {
+		return &withStackMulti{cause: err, stack: callers(depth + 1)}
+	}
 	return &withStack{cause: err, stack: callers(depth + 1)}
 }
 
@@ -80,5 +83,43 @@ func (w *withStack) SafeFormatError(p errbase.Printer) error {
 
 // SafeDetails implements the errbase.SafeDetailer interface.
 func (w *withStack) SafeDetails() []string {
+	return []string{fmt.Sprintf("%+v", w.StackTrace())}
+}
+
+type withStackMulti struct {
+	cause error
+
+	*stack
+}
+
+var _ error = (*withStackMulti)(nil)
+var _ fmt.Formatter = (*withStackMulti)(nil)
+var _ errbase.SafeFormatter = (*withStackMulti)(nil)
+var _ errbase.SafeDetailer = (*withStackMulti)(nil)
+
+func (w *withStackMulti) Error() string { return w.cause.Error() }
+func (w *withStackMulti) Cause() error  { return w.cause }
+func (w *withStackMulti) Unwrap() []error {
+	if u, ok := w.cause.(interface{ Unwrap() []error }); ok {
+		return u.Unwrap()
+	}
+	return nil
+}
+
+// Format implements the fmt.Formatter interface.
+func (w *withStackMulti) Format(s fmt.State, verb rune) { errbase.FormatError(w, s, verb) }
+
+// SafeFormatError implements the errbase.SafeFormatter interface.
+func (w *withStackMulti) SafeFormatError(p errbase.Printer) error {
+	if p.Detail() {
+		p.Printf("attached stack trace")
+	}
+	// We do not print the stack trace ourselves - errbase.FormatError()
+	// does this for us.
+	return w.cause
+}
+
+// SafeDetails implements the errbase.SafeDetailer interface.
+func (w *withStackMulti) SafeDetails() []string {
 	return []string{fmt.Sprintf("%+v", w.StackTrace())}
 }

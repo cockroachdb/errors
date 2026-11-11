@@ -409,8 +409,9 @@ func visitAllMulti(err error, f func(error)) {
 	f(err)
 	if e := errbase.UnwrapOnce(err); e != nil {
 		visitAllMulti(e, f)
-	}
-	for _, e := range errbase.UnwrapMulti(err) {
-		visitAllMulti(e, f)
+	} else {
+		for _, e := range errbase.UnwrapMulti(err) {
+			visitAllMulti(e, f)
+		}
 	}
 }
