@@ -50,7 +50,7 @@ func GetOneLineSource(err error) (file string, line int, fn string, ok bool) {
 		details := sd.SafeDetails()
 		if len(details) > 0 {
 			switch errbase.GetTypeKey(err) {
-			case pkgFundamental, pkgWithStackName, ourWithStackName:
+			case pkgFundamental, pkgWithStackName, ourWithStackName, ourWithStackMultiName:
 				return getOneLineSourceFromPrintedStack(details[0])
 			}
 		}

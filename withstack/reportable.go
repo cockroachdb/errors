@@ -57,7 +57,7 @@ func GetReportableStackTrace(err error) *ReportableStackTrace {
 		details := sd.SafeDetails()
 		if len(details) > 0 {
 			switch errbase.GetTypeKey(err) {
-			case pkgFundamental, pkgWithStackName, ourWithStackName:
+			case pkgFundamental, pkgWithStackName, ourWithStackName, ourWithStackMultiName:
 				return parsePrintedStack(details[0])
 			}
 		}
@@ -195,10 +195,12 @@ func parsePrintedStackEntry(
 var pkgFundamental errbase.TypeKey
 var pkgWithStackName errbase.TypeKey
 var ourWithStackName errbase.TypeKey
+var ourWithStackMultiName errbase.TypeKey
 
 func init() {
 	err := errors.New("")
 	pkgFundamental = errbase.GetTypeKey(pkgErr.New(""))
 	pkgWithStackName = errbase.GetTypeKey(pkgErr.WithStack(err))
 	ourWithStackName = errbase.GetTypeKey(WithStack(err))
+	ourWithStackMultiName = errbase.GetTypeKey(&withStackMulti{})
 }
